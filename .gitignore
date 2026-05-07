@@ -1,0 +1,5 @@
+.netlify/
+.gemini/
+node_modules/
+*.log
+.DS_Store
