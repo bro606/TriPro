@@ -1,0 +1,3664 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriPro — Premium Industrial Workshop</title>
+  <meta name="description"
+    content="TriPro — Professional AKFA frames, glass services and wooden products manufacturing workshop in Tashkent, Uzbekistan.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+
+  <style>
+    /* ══════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════ */
+    :root {
+      --navy: #020617;
+      --navy-light: #0f172a;
+      --slate: #1e293b;
+      --slate-mid: #334155;
+      --slate-light: #64748b;
+      --gold: #f59e0b;
+      --gold-light: #fbbf24;
+      --gold-deep: #d97706;
+      --gold-dim: rgba(245, 158, 11, 0.08);
+      --gold-border: rgba(245, 158, 11, 0.2);
+      --gold-glow: rgba(245, 158, 11, 0.4);
+      --white: #ffffff;
+      --off-white: #f8fafc;
+      --surface: #f1f5f9;
+      --card: #ffffff;
+      --card-glass: rgba(255, 255, 255, 0.8);
+      --border: rgba(0, 0, 0, 0.08);
+      --text: #020617;
+      --text-muted: #64748b;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      --shadow-gold: 0 10px 25px -5px rgba(245, 158, 11, 0.3);
+      --gradient-gold: linear-gradient(135deg, var(--gold), var(--gold-light));
+      --gradient-dark: linear-gradient(135deg, var(--navy) 0%, #1e293b 100%);
+      --radius: 16px;
+      --radius-sm: 8px;
+      --radius-lg: 24px;
+      --radius-full: 9999px;
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      --transition: all 0.3s var(--ease);
+    }
+
+    /* ══════════════════════════════════════
+   RESET & BASE
+══════════════════════════════════════ */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--off-white);
+      color: var(--text);
+      line-height: 1.65;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: 'Playfair Display', serif;
+      line-height: 1.2;
+    }
+
+    h4,
+    h5,
+    .label-font {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* ══════════════════════════════════════
+   SCROLLBAR
+══════════════════════════════════════ */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--navy);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--gold);
+      border-radius: 3px;
+    }
+
+    /* ══════════════════════════════════════
+   HEADER — GLASSMORPHISM
+══════════════════════════════════════ */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+      transition: var(--transition);
+    }
+
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 90px;
+    }
+
+    .logo-mark {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .logo-img {
+      height: 76px;
+      width: 76px;
+      object-fit: contain;
+      border-radius: 8px;
+      flex-shrink: 0;
+      filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.3));
+      transition: var(--transition);
+    }
+
+    .footer-logo-wrap {
+      margin-bottom: 24px;
+    }
+
+    .footer-logo-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+    }
+
+    .footer-logo-img {
+      height: 72px;
+      width: 72px;
+      object-fit: contain;
+      border-radius: 12px;
+      filter: drop-shadow(0 2px 12px rgba(245, 158, 11, 0.25));
+    }
+
+    @media (max-width: 700px) {
+      .logo-img {
+        height: 56px;
+        width: 56px;
+      }
+
+      .logo-text {
+        font-size: 1.4rem;
+      }
+    }
+
+    .logo-text {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: 1.5px;
+    }
+
+    .logo-text span {
+      color: var(--gold);
+    }
+
+    .mobile-lang-wrap {
+      display: none !important;
+    }
+
+    /* ══════════════════════════════════════
+       MOBILE SIDE DRAWER (Premium Minimal)
+    ══════════════════════════════════════ */
+    .side-drawer-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(4px);
+      z-index: 1099;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .side-drawer-overlay.open {
+      opacity: 1;
+    }
+
+    .side-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100dvh;
+      width: 72vw;
+      max-width: 280px;
+      background: linear-gradient(160deg, #060e1f 0%, #0a1628 60%, #0f1e3a 100%);
+      border-left: 1px solid rgba(245, 158, 11, 0.2);
+      box-shadow: -20px 0 60px rgba(0, 0, 0, 0.6);
+      z-index: 1100;
+      transform: translateX(110%);
+      transition: transform 0.42s cubic-bezier(0.77, 0, 0.175, 1);
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .side-drawer.open {
+      transform: translateX(0);
+    }
+
+    /* Glow strip on left edge */
+    .side-drawer::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10%;
+      height: 80%;
+      width: 1.5px;
+      background: linear-gradient(180deg, transparent, rgba(245, 158, 11, 0.6), transparent);
+    }
+
+    /* Drawer header */
+    .drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 22px 16px;
+      border-bottom: 1px solid rgba(245, 158, 11, 0.1);
+    }
+
+    .drawer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .drawer-logo-img {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.3));
+    }
+
+    .drawer-logo-text {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+
+    .drawer-logo-text span {
+      color: var(--gold);
+    }
+
+    .drawer-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .drawer-close:hover {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .drawer-close svg {
+      width: 16px;
+      height: 16px;
+      stroke: rgba(255, 255, 255, 0.7);
+      fill: none;
+      stroke-width: 2.2;
+    }
+
+    /* Drawer nav links */
+    .drawer-nav {
+      flex: 1;
+      padding: 12px 12px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+    }
+
+    .drawer-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 16px;
+      border-radius: 14px;
+      color: rgba(255, 255, 255, 0.65);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      position: relative;
+      letter-spacing: 0.3px;
+    }
+
+    .drawer-link svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      flex-shrink: 0;
+      opacity: 0.75;
+      transition: inherit;
+    }
+
+    .drawer-link:hover,
+    .drawer-link.active {
+      background: rgba(245, 158, 11, 0.08);
+      color: var(--gold);
+    }
+
+    .drawer-link.active svg {
+      opacity: 1;
+      filter: drop-shadow(0 0 5px var(--gold-glow));
+    }
+
+    .drawer-link .drawer-arrow {
+      margin-left: auto;
+      opacity: 0.3;
+      font-size: 0.75rem;
+    }
+
+    /* Drawer footer – language switcher */
+    .drawer-footer {
+      padding: 16px 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .drawer-lang-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.25);
+      margin-bottom: 10px;
+    }
+
+    .drawer-lang-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* ══════════════════════════════════════
+       MOBILE BOTTOM NAV
+    ══════════════════════════════════════ */
+    /* ══════════════════════════════════════
+       MOBILE BOTTOM NAV — PILL STYLE
+    ══════════════════════════════════════ */
+    .mobile-nav-bar {
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: clamp(280px, 92%, 480px);
+      background: linear-gradient(160deg, rgba(5, 10, 28, 0.97) 0%, rgba(12, 20, 44, 0.96) 100%);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 999px;
+      z-index: 1002;
+      padding: 6px 8px;
+      display: none;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2px;
+      box-shadow:
+        0 16px 40px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(245, 158, 11, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      animation: navReveal 0.7s var(--ease) both;
+    }
+
+    @keyframes navReveal {
+      from {
+        transform: translate(-50%, 90px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .mobile-nav-bar {
+        display: flex !important;
+      }
+
+      body {
+        padding-bottom: 86px !important;
+      }
+    }
+
+    /* ─── Each nav item ─── */
+    .mobile-nav-item {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      color: rgba(255, 255, 255, 0.38);
+      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.73rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      transition: all 0.38s cubic-bezier(0.34, 1.4, 0.64, 1);
+      flex: 0 0 auto;
+      height: 42px;
+      padding: 0 14px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .mobile-nav-item svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      fill: none;
+      flex-shrink: 0;
+      transition: inherit;
+    }
+
+    /* Remove old indicator strip */
+    .mobile-nav-item .nav-indicator {
+      display: none !important;
+    }
+
+    /* Hide label by default (inactive items = icon only) */
+    .mobile-nav-label {
+      display: none;
+      font-size: 0.73rem;
+      font-weight: 700;
+    }
+
+    /* ─── ACTIVE: gold pill with icon + text ─── */
+    .mobile-nav-item.active {
+      color: #020617;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      box-shadow:
+        0 4px 16px rgba(245, 158, 11, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      flex: 1 1 auto;
+      max-width: 146px;
+      padding: 0 18px;
+    }
+
+    .mobile-nav-item.active svg {
+      stroke-width: 2.4;
+    }
+
+    /* Show label ONLY on active item */
+    .mobile-nav-item.active .mobile-nav-label {
+      display: inline;
+    }
+
+    .mobile-nav-item:not(.active):hover {
+      color: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .mobile-nav-item:active {
+      transform: scale(0.91);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    nav a {
+      color: rgba(255, 255, 255, 0.72);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: var(--transition);
+      white-space: nowrap;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    nav a:hover,
+    nav a.active {
+      background: rgba(212, 175, 55, 0.12);
+      color: var(--gold);
+    }
+
+    .lang-switcher {
+      display: flex;
+      gap: 4px;
+      margin-left: 20px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: rgba(255, 255, 255, 0.6);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 5px 11px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .lang-btn.active,
+    .lang-btn:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--navy);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: all 0.4s var(--ease);
+      transform-origin: center;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* ══════════════════════════════════════
+   PAGES
+══════════════════════════════════════ */
+    .page {
+      display: none;
+      animation: fadeUp 0.45s var(--ease);
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes pulse-gold {
+      0% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+      }
+
+      70% {
+        box-shadow: 0 0 0 15px rgba(245, 158, 11, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+    }
+
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 {
+      transition-delay: 0.1s;
+    }
+
+    .reveal-delay-2 {
+      transition-delay: 0.2s;
+    }
+
+    .reveal-delay-3 {
+      transition-delay: 0.3s;
+    }
+
+    .reveal-delay-4 {
+      transition-delay: 0.4s;
+    }
+
+    /* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+    .hero {
+      min-height: 85vh;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+      top: -200px;
+      right: -200px;
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: 0;
+      animation: fadeIn 2s ease;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(30, 58, 138, 0.3) 0%, transparent 70%);
+      bottom: -100px;
+      left: -100px;
+      border-radius: 50%;
+      filter: blur(60px);
+      z-index: 0;
+    }
+
+    .hero-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 120px 32px 100px;
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gold-dim);
+      border: 1px solid var(--gold-border);
+      color: var(--gold-light);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      border-radius: var(--radius-full);
+      margin-bottom: 32px;
+      backdrop-filter: blur(10px);
+      animation: fadeUp 0.8s var(--ease);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 5.5vw, 4.5rem);
+      color: var(--white);
+      line-height: 1.05;
+      margin-bottom: 24px;
+      font-weight: 800;
+      animation: fadeUp 1s var(--ease) 0.1s both;
+    }
+
+    .hero h1 .accent {
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 15px var(--gold-glow));
+    }
+
+    .hero-desc {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1.15rem;
+      max-width: 540px;
+      margin-bottom: 48px;
+      font-weight: 400;
+      line-height: 1.8;
+      animation: fadeUp 1s var(--ease) 0.2s both;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      animation: fadeUp 1s var(--ease) 0.3s both;
+    }
+
+    .hero-visual {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      animation: scaleIn 1.2s var(--ease);
+    }
+
+    .hero-stat-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .h-stat {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      backdrop-filter: blur(12px);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .h-stat::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent, rgba(245, 158, 11, 0.05), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s var(--ease);
+    }
+
+    .h-stat:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--gold-border);
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .h-stat:hover::before {
+      transform: translateX(100%);
+    }
+
+    .h-stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .h-stat-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    /* ══════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      border-radius: var(--radius-sm);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 0.88rem;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      border: none;
+      transition: var(--transition);
+      text-decoration: none;
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0);
+      transition: var(--transition);
+    }
+
+    .btn:hover::before {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--navy);
+      box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+    }
+
+    .btn-gold:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(212, 175, 55, 0.45);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      color: var(--white);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .btn-navy {
+      background: var(--navy);
+      color: var(--white);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .btn-navy:hover {
+      background: var(--navy-light);
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .btn-tg {
+      background: #229ED9;
+      color: var(--white);
+    }
+
+    .btn-tg:hover {
+      background: #1a8cbf;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(34, 158, 217, 0.35);
+    }
+
+    .btn-wa {
+      background: #25D366;
+      color: var(--white);
+    }
+
+    .btn-wa:hover {
+      background: #1db954;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
+    }
+
+    .btn-sm {
+      padding: 9px 20px;
+      font-size: 0.8rem;
+    }
+
+    .btn-full {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-danger {
+      background: #EF4444;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #DC2626;
+      transform: translateY(-1px);
+    }
+
+    .btn-success-outline {
+      background: transparent;
+      border: 1.5px solid #22C55E;
+      color: #22C55E;
+    }
+
+    .btn-success-outline:hover {
+      background: #22c55e20;
+      transform: translateY(-1px);
+    }
+
+    /* ══════════════════════════════════════
+   SECTION STRUCTURE
+══════════════════════════════════════ */
+    .section {
+      padding: 96px 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+
+    .section-label::before,
+    .section-label::after {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.5;
+    }
+
+    .section-header h2 {
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 560px;
+      margin: 0 auto;
+      font-weight: 400;
+    }
+
+    /* ══════════════════════════════════════
+   BENTO GRID — SERVICES
+══════════════════════════════════════ */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto;
+      gap: 20px;
+    }
+
+    .bento-card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      padding: 40px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bento-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(245, 158, 11, 0.1) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .bento-card:hover {
+      box-shadow: var(--shadow-xl);
+      transform: translateY(-8px);
+      border-color: var(--gold-border);
+    }
+
+    .bento-card:hover::after {
+      opacity: 1;
+    }
+
+    .bento-card.span-2 {
+      grid-column: span 2;
+    }
+
+    .bento-card.span-full {
+      grid-column: 1 / -1;
+    }
+
+    .bc-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--navy);
+      border-radius: 18px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .bento-card:hover .bc-icon {
+      background: var(--gold);
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .bc-icon svg {
+      width: 30px;
+      height: 30px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 2;
+      transition: var(--transition);
+    }
+
+    .bento-card:hover .bc-icon svg {
+      stroke: var(--navy);
+    }
+
+    .bc-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold-deep);
+      margin-bottom: 12px;
+    }
+
+    .bento-card h3 {
+      font-size: 1.6rem;
+      color: var(--navy);
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+
+    .bento-card p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 32px;
+      flex-grow: 1;
+    }
+
+    .bc-price {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--navy);
+      background: var(--gold-dim);
+      border-left: 4px solid var(--gold);
+      padding: 12px 24px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin-bottom: 24px;
+    }
+
+    /* ══════════════════════════════════════
+   STATS BAR
+══════════════════════════════════════ */
+    .stats-strip {
+      background: var(--navy);
+      padding: 72px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stats-strip::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 70% 30%, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .stats-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .stat-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: -24px;
+      top: 15%;
+      height: 70%;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.1), transparent);
+    }
+
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 12px;
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.2));
+    }
+
+    .stat-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* ══════════════════════════════════════
+   PORTFOLIO GRID
+══════════════════════════════════════ */
+    .portfolio-masonry {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .p-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .p-card:hover {
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--gold-border);
+    }
+
+    .p-thumb {
+      width: 100%;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .p-thumb.t-akfa {
+      background: linear-gradient(135deg, #E8EEF7, #CFD9EF);
+    }
+
+    .p-thumb.t-glass {
+      background: linear-gradient(135deg, #E0F4FB, #B8E8F5);
+    }
+
+    .p-thumb.t-wood {
+      background: linear-gradient(135deg, #FEF3CD, #FDDFA0);
+    }
+
+    .p-thumb svg {
+      width: 60px;
+      height: 60px;
+      opacity: 0.25;
+    }
+
+    .p-thumb.t-akfa svg {
+      stroke: var(--navy);
+    }
+
+    .p-thumb.t-glass svg {
+      stroke: #0891B2;
+    }
+
+    .p-thumb.t-wood svg {
+      stroke: #92400E;
+    }
+
+    .p-mask {
+      position: absolute;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: var(--transition);
+      flex-direction: column;
+      gap: 12px;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .p-card:hover .p-mask {
+      opacity: 1;
+    }
+
+    .p-mask-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .p-mask-sub {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem;
+      color: var(--gold);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .p-info {
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .p-info-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .p-tag {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .p-tag.tag-akfa {
+      background: rgba(15, 23, 42, 0.08);
+      color: var(--navy);
+    }
+
+    .p-tag.tag-glass {
+      background: rgba(8, 145, 178, 0.1);
+      color: #0891B2;
+    }
+
+    .p-tag.tag-wood {
+      background: rgba(146, 64, 14, 0.1);
+      color: #92400E;
+    }
+
+    /* ══════════════════════════════════════
+   CALCULATOR
+══════════════════════════════════════ */
+    .calc-container {
+      max-width: 640px;
+      margin: 0 auto;
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    .calc-header {
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      padding: 32px 36px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+    }
+
+    .calc-header-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--gold-dim);
+      border: 1px solid var(--gold-border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .calc-header-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .calc-header h3 {
+      color: var(--white);
+      font-size: 1.3rem;
+      margin-bottom: 2px;
+    }
+
+    .calc-header p {
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 0.85rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .calc-body {
+      padding: 36px;
+    }
+
+    .calc-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .calc-row.single {
+      grid-template-columns: 1fr;
+    }
+
+    .calc-field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .calc-field label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    .calc-field input,
+    .calc-field select {
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: var(--off-white);
+      transition: var(--transition);
+      outline: none;
+    }
+
+    .calc-field input:focus,
+    .calc-field select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+      background: var(--white);
+    }
+
+    .calc-result {
+      background: linear-gradient(135deg, var(--navy), var(--slate));
+      border-radius: var(--radius);
+      padding: 28px;
+      text-align: center;
+      margin-top: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .calc-result::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .result-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 10px;
+    }
+
+    .result-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .result-detail {
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.4);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .calc-save-btn {
+      margin-top: 20px;
+    }
+
+    /* ══════════════════════════════════════
+   PAGE HERO (inner pages)
+══════════════════════════════════════ */
+    .page-hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #162032 100%);
+      padding: 80px 32px 64px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-hero::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: var(--off-white);
+      clip-path: ellipse(60% 100% at 50% 100%);
+    }
+
+    .page-hero h1 {
+      color: var(--white);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      margin-bottom: 12px;
+    }
+
+    .page-hero p {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 1rem;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .page-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold-dim);
+      border: 1px solid var(--gold-border);
+      color: var(--gold);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    /* ══════════════════════════════════════
+   AKFA CARDS GRID
+══════════════════════════════════════ */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .p-service-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .p-service-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-color: rgba(212, 175, 55, 0.2);
+    }
+
+    .psc-thumb {
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .psc-thumb.t-akfa {
+      background: linear-gradient(135deg, #E8EEF7, #CFD9EF);
+    }
+
+    .psc-thumb.t-glass {
+      background: linear-gradient(135deg, #E0F4FB, #B8E8F5);
+    }
+
+    .psc-thumb.t-wood {
+      background: linear-gradient(135deg, #FEF3CD, #FDDFA0);
+    }
+
+    .psc-thumb svg {
+      width: 52px;
+      height: 52px;
+      opacity: 0.22;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .psc-thumb.t-akfa svg {
+      stroke: var(--navy);
+    }
+
+    .psc-thumb.t-glass svg {
+      stroke: #0891B2;
+    }
+
+    .psc-thumb.t-wood svg {
+      stroke: #92400E;
+    }
+
+    .psc-body {
+      padding: 24px;
+    }
+
+    .psc-body h3 {
+      font-size: 1.15rem;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .psc-body p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 18px;
+      line-height: 1.7;
+    }
+
+    .psc-price {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--navy);
+      background: var(--gold-dim);
+      border: 1px solid var(--gold-border);
+      padding: 6px 14px;
+      border-radius: 7px;
+      margin-bottom: 18px;
+    }
+
+    /* ══════════════════════════════════════
+   CONTACT PAGE
+══════════════════════════════════════ */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .contact-info h3 {
+      font-size: 1.5rem;
+      color: var(--navy);
+      margin-bottom: 24px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 14px;
+      text-decoration: none;
+      color: var(--text);
+      transition: var(--transition);
+    }
+
+    .contact-item:hover {
+      border-color: rgba(212, 175, 55, 0.3);
+      box-shadow: var(--shadow-md);
+      transform: translateX(4px);
+    }
+
+    .contact-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .ci-phone {
+      background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+    }
+
+    .ci-tg {
+      background: linear-gradient(135deg, #E0F7FE, #B3ECF8);
+    }
+
+    .ci-wa {
+      background: linear-gradient(135deg, #ECFDF5, #D1FAE5);
+    }
+
+    .contact-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .ci-phone svg {
+      stroke: #1E40AF;
+    }
+
+    .ci-tg svg {
+      stroke: #0891B2;
+    }
+
+    .ci-wa svg {
+      stroke: #059669;
+    }
+
+    .contact-item-text {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--navy);
+    }
+
+    .contact-item-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      margin-top: 1px;
+    }
+
+    .map-wrap {
+      margin-top: 28px;
+      background: linear-gradient(135deg, #E8EEF7, #CFD9EF);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      height: 280px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+    }
+
+    .map-wrap svg {
+      width: 40px;
+      height: 40px;
+      stroke: var(--navy);
+      opacity: 0.3;
+      stroke-width: 1.5;
+      fill: none;
+    }
+
+    .map-wrap-city {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--navy);
+    }
+
+    .map-wrap-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* CONTACT FORM — GLASSMORPHISM */
+    .contact-form-wrap {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(212, 175, 55, 0.15);
+      box-shadow: var(--shadow-md);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-form-wrap::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .contact-form-wrap h3 {
+      font-size: 1.6rem;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .contact-form-wrap>p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+    }
+
+    /* Contact section logo watermark */
+    .contact-logo-mark {
+      text-align: center;
+      margin-bottom: 40px;
+      opacity: 0.06;
+      pointer-events: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      font-family: 'Playfair Display', serif;
+      font-size: 8rem;
+      font-weight: 800;
+      color: var(--navy);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-field label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.73rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+
+    .form-field input,
+    .form-field textarea {
+      padding: 13px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: var(--off-white);
+      transition: var(--transition);
+      outline: none;
+      resize: vertical;
+    }
+
+    .form-field input:focus,
+    .form-field textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+      background: var(--white);
+    }
+
+    .form-field textarea {
+      min-height: 120px;
+    }
+
+    .form-success {
+      background: #F0FDF4;
+      color: #166534;
+      border: 1px solid #BBF7D0;
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-align: center;
+      margin-top: 16px;
+      display: none;
+    }
+
+    /* ══════════════════════════════════════
+   CTA SECTION
+══════════════════════════════════════ */
+    .cta-section {
+      background: linear-gradient(135deg, var(--navy) 0%, #1a2840 100%);
+      padding: 80px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+    }
+
+    .cta-section h2 {
+      color: var(--white);
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-section p {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 1.05rem;
+      margin-bottom: 36px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-btns {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ══════════════════════════════════════
+   FLOATING SOCIAL
+══════════════════════════════════════ */
+    .social-float {
+      position: fixed;
+      bottom: 30px;
+      right: 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 998;
+      transition: bottom 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+      .social-float {
+        bottom: 96px;
+        right: 16px;
+      }
+    }
+
+    .sf-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      transition: var(--transition);
+      text-decoration: none;
+      border: none;
+    }
+
+    .sf-btn:hover {
+      transform: scale(1.12) translateY(-2px);
+    }
+
+    .sf-tg {
+      background: #229ED9;
+    }
+
+    .sf-wa {
+      background: #25D366;
+    }
+
+    .sf-btn svg {
+      width: 24px;
+      height: 24px;
+      fill: white;
+    }
+
+    /* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+    footer {
+      background: var(--navy);
+      border-top: 1px solid rgba(212, 175, 55, 0.1);
+      padding: 64px 32px 32px;
+    }
+
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2.5fr 1fr 1fr;
+      gap: 52px;
+      margin-bottom: 48px;
+    }
+
+    .footer-logo-wrap {
+      margin-bottom: 16px;
+    }
+
+    .footer-desc {
+      color: rgba(255, 255, 255, 0.45);
+      font-size: 0.9rem;
+      max-width: 280px;
+      line-height: 1.75;
+    }
+
+    .footer-col h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.35);
+      margin-bottom: 20px;
+    }
+
+    .footer-col a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 0.88rem;
+      text-decoration: none;
+      margin-bottom: 12px;
+      transition: var(--transition);
+      font-weight: 400;
+    }
+
+    .footer-col a:hover {
+      color: var(--gold);
+      transform: translateX(3px);
+    }
+
+    .footer-bottom {
+      max-width: 1280px;
+      margin: 0 auto;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-bottom p {
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 0.82rem;
+    }
+
+    /* Footer logo */
+    .footer-logo-display {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* ══════════════════════════════════════
+   PORTFOLIO FILTER BUTTONS
+══════════════════════════════════════ */
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+
+    .filter-btn {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 9px 22px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: var(--card);
+      color: var(--slate);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--navy);
+      color: var(--gold);
+      border-color: var(--navy);
+    }
+
+    /* ══════════════════════════════════════
+   SCROLL ANIMATIONS
+══════════════════════════════════════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+    }
+
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 {
+      transition-delay: 0.1s;
+    }
+
+    .reveal-delay-2 {
+      transition-delay: 0.2s;
+    }
+
+    .reveal-delay-3 {
+      transition-delay: 0.3s;
+    }
+
+    /* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+    @media (max-width: 1100px) {
+      .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .bento-card.span-2 {
+        grid-column: span 1;
+      }
+
+      nav a {
+        padding: 8px 10px;
+        font-size: 0.75rem;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      .hero-visual {
+        display: block;
+        margin-top: 20px;
+      }
+
+      .hero-stat-cards {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .h-stat {
+        padding: 20px 16px;
+      }
+
+      .h-stat-num {
+        font-size: 1.8rem;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-inner {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .stats-inner {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stat-item:nth-child(2)::after {
+        display: none;
+      }
+
+      .stat-item:nth-child(4)::after {
+        display: none;
+      }
+    }
+
+    @media (max-width: 700px) {
+
+      /* MOBILE: hide desktop side nav, show hamburger */
+      nav {
+        display: none !important;
+      }
+
+      .hamburger {
+        display: flex;
+        z-index: 1101;
+        position: relative;
+      }
+
+      .side-drawer-overlay {
+        display: block;
+        pointer-events: none;
+      }
+
+      .side-drawer-overlay.open {
+        pointer-events: all;
+      }
+
+      .lang-switcher {
+        display: none !important;
+      }
+
+      .footer-inner {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .bento-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section {
+        padding: 64px 20px;
+      }
+
+      .hero-content {
+        padding: 80px 20px 60px;
+      }
+    }
+
+    /* ══════════════════════════════════════
+   FOOTER DISCLAIMER
+══════════════════════════════════════ */
+    .footer-disclaimer {
+      border-top: 1px solid rgba(212, 175, 55, 0.2);
+      padding: 18px 40px;
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    .footer-disclaimer p {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .footer-disclaimer strong {
+      color: var(--gold);
+    }
+
+    @media (max-width: 600px) {
+      .footer-disclaimer {
+        padding: 16px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ──────────────────────────────────────
+     HEADER
+────────────────────────────────────── -->
+  <header>
+    <div class="header-inner">
+      <a class="logo-mark" href="#" onclick="showPage('home'); return false;" id="site-logo-header">
+        <img src="logo.png" alt="TriPro Logo" class="logo-img">
+        <div class="logo-text">Tri<span>Pro</span></div>
+      </a>
+
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav id="main-nav">
+        <a href="#" onclick="showPage('home'); return false;" class="active" data-page="home" data-uz="Bosh sahifa"
+          data-ru="Главная" data-en="Home">Bosh sahifa</a>
+        <a href="#" onclick="showPage('akfa'); return false;" data-page="akfa" data-uz="AKFA Romlar" data-ru="AKFA Рамы"
+          data-en="AKFA Frames">AKFA Romlar</a>
+        <a href="#" onclick="showPage('oynak'); return false;" data-page="oynak" data-uz="Oynak Xizmatlari"
+          data-ru="Стеклянные услуги" data-en="Glass Services">Oynak Xizmatlari</a>
+        <a href="#" onclick="showPage('taxta'); return false;" data-page="taxta" data-uz="Taxta цex"
+          data-ru="Деревообработка" data-en="Wood Workshop">Taxta цex</a>
+        <a href="#" onclick="showPage('portfolio'); return false;" data-page="portfolio" data-uz="Portfolio"
+          data-ru="Портфолио" data-en="Portfolio">Portfolio</a>
+        <a href="#" onclick="showPage('contact'); return false;" data-page="contact" data-uz="Bog'lanish"
+          data-ru="Контакты" data-en="Contact">Bog'lanish</a>
+
+        <div class="mobile-lang-wrap">
+          <div class="mobile-lang-label">Language / Til</div>
+          <div style="display: flex; gap: 8px;">
+            <button class="lang-btn active" onclick="setLang('uz')">UZ</button>
+            <button class="lang-btn" onclick="setLang('ru')">RU</button>
+            <button class="lang-btn" onclick="setLang('en')">EN</button>
+          </div>
+        </div>
+      </nav>
+
+      <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('uz')">UZ</button>
+        <button class="lang-btn" onclick="setLang('ru')">RU</button>
+        <button class="lang-btn" onclick="setLang('en')">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════
+     PREMIUM SIDE DRAWER
+  ══════════════════════════════════════ -->
+  <div class="side-drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+  <div class="side-drawer" id="side-drawer">
+    <div class="drawer-header">
+      <div class="drawer-logo">
+        <img src="logo.png" alt="TriPro" class="drawer-logo-img">
+        <span class="drawer-logo-text">Tri<span>Pro</span></span>
+      </div>
+      <button class="drawer-close" onclick="closeDrawer()">
+        <svg viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+    <div class="drawer-nav">
+      <a href="#" class="drawer-link active" data-drawer="home"
+        onclick="showPage('home'); closeDrawer(); return false;">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg>
+        <span>Bosh sahifa</span><span class="drawer-arrow">›</span>
+      </a>
+      <a href="#" class="drawer-link" data-drawer="akfa" onclick="showPage('akfa'); closeDrawer(); return false;">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <line x1="3" y1="9" x2="21" y2="9" />
+          <line x1="9" y1="3" x2="9" y2="21" />
+        </svg>
+        <span>AKFA Romlar</span><span class="drawer-arrow">›</span>
+      </a>
+      <a href="#" class="drawer-link" data-drawer="oynak" onclick="showPage('oynak'); closeDrawer(); return false;">
+        <svg viewBox="0 0 24 24">
+          <polygon points="12 2 20 7 20 17 12 22 4 17 4 7 12 2" />
+          <line x1="12" y1="2" x2="12" y2="22" />
+        </svg>
+        <span>Oynak Xizmatlari</span><span class="drawer-arrow">›</span>
+      </a>
+      <a href="#" class="drawer-link" data-drawer="taxta" onclick="showPage('taxta'); closeDrawer(); return false;">
+        <svg viewBox="0 0 24 24">
+          <path d="M20 14c0 4.418-3.582 8-8 8S4 18.418 4 14C4 9.582 12 2 12 2s8 7.582 8 12z" />
+        </svg>
+        <span>Taxta цex</span><span class="drawer-arrow">›</span>
+      </a>
+      <a href="#" class="drawer-link" data-drawer="portfolio"
+        onclick="showPage('portfolio'); closeDrawer(); return false;">
+        <svg viewBox="0 0 24 24">
+          <rect x="2" y="7" width="20" height="14" rx="2" />
+          <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" />
+        </svg>
+        <span>Portfolio</span><span class="drawer-arrow">›</span>
+      </a>
+      <a href="#" class="drawer-link" data-drawer="contact" onclick="showPage('contact'); closeDrawer(); return false;">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.63 19.79 19.79 0 011 1.18 2 2 0 013 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 7a16 16 0 006.29 6.29l.354-.354a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14z" />
+        </svg>
+        <span>Bog'lanish</span><span class="drawer-arrow">›</span>
+      </a>
+    </div>
+    <div class="drawer-footer">
+      <div class="drawer-lang-label">Til / Язык / Language</div>
+      <div class="drawer-lang-btns">
+        <button class="lang-btn active" onclick="setLang('uz')">UZ</button>
+        <button class="lang-btn" onclick="setLang('ru')">RU</button>
+        <button class="lang-btn" onclick="setLang('en')">EN</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="social-float">
+    <a href="https://t.me/tripro_uz" class="sf-btn sf-tg" title="Telegram" target="_blank">
+      <svg viewBox="0 0 24 24">
+        <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" />
+      </svg>
+    </a>
+    <a href="https://wa.me/998996156006" class="sf-btn sf-wa" title="WhatsApp" target="_blank">
+      <svg viewBox="0 0 24 24" fill="white">
+        <path
+          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+      </svg>
+    </a>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     HOME PAGE
+══════════════════════════════════════ -->
+  <div class="page active" id="page-home">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-geo">
+        <svg viewBox="0 0 1400 700" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="geo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#D4AF37" stop-opacity="0.06" />
+              <stop offset="100%" stop-color="#D4AF37" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+          <polygon points="700,0 1400,0 1400,700 500,700" fill="url(#geo-grad)" />
+          <polygon points="1000,0 1400,0 1400,400" fill="rgba(212,175,55,0.04)" />
+          <circle cx="1200" cy="350" r="220" fill="none" stroke="rgba(212,175,55,0.06)" stroke-width="1" />
+          <circle cx="1200" cy="350" r="120" fill="none" stroke="rgba(212,175,55,0.05)" stroke-width="1" />
+          <line x1="0" y1="0" x2="1400" y2="700" stroke="rgba(212,175,55,0.03)" stroke-width="1" />
+        </svg>
+      </div>
+      <div class="hero-content">
+        <div>
+          <div class="hero-badge" id="hero-badge">Ishonchli Ishlab Chiqarish цexi</div>
+          <h1 id="hero-title">Sifatli <span class="accent">AKFA Romlar</span>,<br>Oynak va Yog'och Mahsulotlar</h1>
+          <p class="hero-desc" id="hero-desc">TriPro — AKFA romlar, oynak xizmatlari va asalari yashiklari ishlab
+            chiqarish bilan shug'ullanuvchi ishonchli цex.</p>
+          <div class="hero-btns">
+            <button class="btn btn-gold" onclick="showPage('contact')" id="hero-btn1">Biz bilan bog'laning</button>
+            <a href="https://t.me/tripro_uz" class="btn btn-outline" target="_blank" id="hero-btn-tg">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" />
+              </svg>
+              Telegram
+            </a>
+            <a href="https://wa.me/998996156006" class="btn btn-outline" target="_blank" id="hero-btn-wa">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+              </svg>
+              WhatsApp
+            </a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-stat-cards">
+            <div class="h-stat reveal">
+              <div class="h-stat-num">500+</div>
+              <div class="h-stat-label" id="stat1">Bajarilgan loyihalar</div>
+            </div>
+            <div class="h-stat reveal reveal-delay-1">
+              <div class="h-stat-num">15+</div>
+              <div class="h-stat-label" id="stat2">Yillik tajriba</div>
+            </div>
+            <div class="h-stat reveal reveal-delay-2">
+              <div class="h-stat-num">3</div>
+              <div class="h-stat-label" id="stat3">Asosiy xizmat yo'nalishi</div>
+            </div>
+            <div class="h-stat reveal reveal-delay-3">
+              <div class="h-stat-num">100%</div>
+              <div class="h-stat-label" id="stat4">Mijoz mamnuniyati</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Strip -->
+    <div class="stats-strip">
+      <div class="stats-inner">
+        <div class="stat-item reveal">
+          <div class="stat-num">500+</div>
+          <div class="stat-label" id="stat-s1">Bajarilgan loyihalar</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-1">
+          <div class="stat-num">15+</div>
+          <div class="stat-label" id="stat-s2">Yillik tajriba</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-2">
+          <div class="stat-num">3</div>
+          <div class="stat-label" id="stat-s3">Xizmat yo'nalishi</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-3">
+          <div class="stat-num">100%</div>
+          <div class="stat-label" id="stat-s4">Mijoz mamnuniyati</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Services Bento Grid -->
+    <section style="background: var(--off-white); padding: 96px 32px;">
+      <div style="max-width: 1280px; margin: 0 auto;">
+        <div class="section-header">
+          <div class="section-label" id="s-label-services">Xizmatlarimiz</div>
+          <h2 id="s-title-services">Biz nima taklif qilamiz?</h2>
+          <p id="s-desc-services">Professional ishlab chiqarish va o'rnatish xizmatlari</p>
+        </div>
+        <div class="bento-grid">
+          <!-- AKFA — span 2 -->
+          <div class="bento-card span-2 reveal">
+            <div class="bc-icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <line x1="3" y1="9" x2="21" y2="9" />
+                <line x1="3" y1="15" x2="21" y2="15" />
+                <line x1="9" y1="3" x2="9" y2="21" />
+                <line x1="15" y1="3" x2="15" y2="21" />
+              </svg>
+            </div>
+            <div class="bc-label" id="svc1-label">AKFA Romlar</div>
+            <h3 id="svc1-title">AKFA Romlar</h3>
+            <p id="svc1-desc">Alyumin, plastik va balkon AKFA romlarini professional o'rnatish. Yuqori sifat va kafolat.
+            </p>
+            <div class="bc-price" id="svc1-price">$35 / m²</div>
+            <button class="btn btn-navy btn-sm" onclick="showPage('akfa')" id="svc1-btn">Batafsil</button>
+          </div>
+          <!-- Glass -->
+          <div class="bento-card reveal reveal-delay-1">
+            <div class="bc-icon">
+              <svg viewBox="0 0 24 24">
+                <polygon points="12 2 20 7 20 17 12 22 4 17 4 7 12 2" />
+                <line x1="12" y1="2" x2="12" y2="22" />
+                <line x1="4" y1="7" x2="20" y2="7" />
+              </svg>
+            </div>
+            <div class="bc-label" id="svc2-label">Oynak Xizmatlari</div>
+            <h3 id="svc2-title">Oynak Xizmatlari</h3>
+            <p id="svc2-desc">Oynak kesish, stiklopaket qilish va germetika xizmatlari. Tez va sifatli.</p>
+            <div class="bc-price" id="svc2-price">$5 dan boshlab</div>
+            <button class="btn btn-navy btn-sm" onclick="showPage('oynak')" id="svc2-btn">Batafsil</button>
+          </div>
+          <!-- Wood -->
+          <div class="bento-card reveal reveal-delay-2" style="background: linear-gradient(135deg, #FEFDF8, #FFFBEB);">
+            <div class="bc-icon" style="background: linear-gradient(135deg, #92400E, #B45309);">
+              <svg viewBox="0 0 24 24">
+                <path d="M20 14c0 4.418-3.582 8-8 8S4 18.418 4 14C4 9.582 12 2 12 2s8 7.582 8 12z" />
+                <line x1="12" y1="9" x2="12" y2="22" />
+              </svg>
+            </div>
+            <div class="bc-label" id="svc3-label">Taxta цex</div>
+            <h3 id="svc3-title">Taxta цex (Asalari Yashiklari)</h3>
+            <p id="svc3-desc">Asalari yashiklari, randetal, karmushka va boshqa yog'och mahsulotlar buyurtmaga.</p>
+            <div class="bc-price" id="svc3-price">$5 dan boshlab</div>
+            <button class="btn btn-navy btn-sm" onclick="showPage('taxta')" id="svc3-btn">Batafsil</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Portfolio preview -->
+    <section style="padding: 96px 32px;">
+      <div style="max-width: 1280px; margin: 0 auto;">
+        <div class="section-header">
+          <div class="section-label" id="s-label-portfolio">Ishlarimiz</div>
+          <h2 id="s-title-portfolio">Portfolio</h2>
+          <p id="s-desc-portfolio">Bajarilgan ishlarimizdan namunalar</p>
+        </div>
+        <div class="portfolio-masonry">
+          <div class="p-card reveal" onclick="showPage('portfolio')">
+            <div class="p-thumb t-akfa">
+              <svg viewBox="0 0 24 24" stroke="#0F172A" fill="none" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <line x1="3" y1="9" x2="21" y2="9" />
+                <line x1="9" y1="3" x2="9" y2="21" />
+              </svg>
+              <div class="p-mask">
+                <div class="p-mask-title">AKFA Romlar </div>
+                <div class="p-mask-sub">Ko'rish</div>
+              </div>
+            </div>
+            <div class="p-info">
+              <div class="p-info-title">AKFA Romlar </div>
+              <span class="p-tag tag-akfa">AKFA</span>
+            </div>
+          </div>
+          <div class="p-card reveal reveal-delay-1" onclick="showPage('portfolio')">
+            <div class="p-thumb t-glass">
+              <svg viewBox="0 0 24 24" stroke="#0891B2" fill="none" stroke-width="1.5">
+                <polygon points="12 2 20 7 20 17 12 22 4 17 4 7 12 2" />
+                <line x1="12" y1="2" x2="12" y2="22" />
+              </svg>
+              <div class="p-mask">
+                <div class="p-mask-title">Oynak o'rnatish</div>
+                <div class="p-mask-sub">Ko'rish</div>
+              </div>
+            </div>
+            <div class="p-info">
+              <div class="p-info-title">Oynak o'rnatish</div>
+              <span class="p-tag tag-glass">Oynak</span>
+            </div>
+          </div>
+          <div class="p-card reveal reveal-delay-2" onclick="showPage('portfolio')">
+            <div class="p-thumb t-wood">
+              <svg viewBox="0 0 24 24" stroke="#92400E" fill="none" stroke-width="1.5">
+                <path d="M20 14c0 4.418-3.582 8-8 8S4 18.418 4 14C4 9.582 12 2 12 2s8 7.582 8 12z" />
+              </svg>
+              <div class="p-mask">
+                <div class="p-mask-title">Asalari yashiklari</div>
+                <div class="p-mask-sub">Ko'rish</div>
+              </div>
+            </div>
+            <div class="p-info">
+              <div class="p-info-title">Asalari yashiklari</div>
+              <span class="p-tag tag-wood">Yog'och</span>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center; margin-top:40px;">
+          <button class="btn btn-navy" onclick="showPage('portfolio')" id="more-portfolio-btn">Barcha ishlarni
+            ko'rish</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <h2 id="cta-title">Biz bilan ishlashni boshlang</h2>
+      <p id="cta-desc">Bepul konsultatsiya va narx hisoblash uchun bog'laning</p>
+      <div class="cta-btns">
+        <a href="tel:+998901234567" class="btn btn-gold">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.63 19.79 19.79 0 011 1.18 2 2 0 013 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 7a16 16 0 006.29 6.29l1.36-1.36a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14z" />
+          </svg>
+          +998 99 615 60 06
+        </a>
+        <a href="https://t.me/tripro_uz" class="btn btn-tg" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" />
+          </svg>
+          Telegram
+        </a>
+        <a href="https://wa.me/998996156006" class="btn btn-wa" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+          </svg>
+          WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     AKFA PAGE
+══════════════════════════════════════ -->
+  <div class="page" id="page-akfa">
+    <div class="page-hero">
+      <div class="page-hero-badge">Premium Xizmat</div>
+      <h1 id="akfa-hero-title">AKFA Romlar</h1>
+      <p id="akfa-hero-desc">Professional AKFA rom o'rnatish xizmatlari va narxlar</p>
+    </div>
+    <div class="section">
+      <div class="cards-grid" id="grid-akfa">
+        <!-- Dynamic Firebase CMS blocks will render here -->
+      </div>
+
+      <!-- CALCULATOR -->
+      <div style="margin-top: 80px;">
+        <div class="section-header">
+          <div class="section-label">Kalkulyator</div>
+          <h2>Narx Hisoblash</h2>
+          <p>O'lchamlarni kiriting va umumiy narxni ko'ring</p>
+        </div>
+        <div class="calc-container reveal">
+          <div class="calc-header">
+            <div class="calc-header-icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="4" y="2" width="16" height="20" rx="2" />
+                <line x1="8" y1="10" x2="16" y2="10" />
+                <line x1="8" y1="14" x2="16" y2="14" />
+                <line x1="8" y1="18" x2="12" y2="18" />
+                <line x1="8" y1="6" x2="16" y2="6" />
+              </svg>
+            </div>
+            <div>
+              <h3>AKFA Rom Kalkulyatori</h3>
+              <p>Eni, bo'yi va rom turini kiriting</p>
+            </div>
+          </div>
+          <div class="calc-body">
+            <div class="calc-row">
+              <div class="calc-field">
+                <label>eni (sm)</label>
+                <input type="number" id="calc-width" placeholder="70" min="1" step="1" oninput="calcPrice()">
+              </div>
+              <div class="calc-field">
+                <label>Bo'yi(sm)</label>
+                <input type="number" id="calc-height" placeholder="230" min="1" step="1" oninput="calcPrice()">
+              </div>
+            </div>
+            <div class="calc-row single">
+              <div class="calc-field">
+                <label>Rom turi (narx m² uchun)</label>
+                <select id="calc-price" onchange="calcPrice()">
+                  <option value="35">Plastik AKFA Rom — $35/m²</option>
+                  <option value="38">Balkon Romlari — $38/m²</option>
+                  <option value="40">AKFA Eshik Romlari — $40/m²</option>
+                  <option value="45">Alyumin AKFA Rom — $45/m²</option>
+                  <option value="50">Tijorat Binolar Romlari — $50/m²</option>
+                </select>
+              </div>
+            </div>
+            <div class="calc-row single">
+              <div class="calc-field">
+                <label>Dona soni</label>
+                <input type="number" id="calc-qty" placeholder="1" min="1" value="1" oninput="calcPrice()">
+              </div>
+            </div>
+            <div class="calc-result" id="calc-result">
+              <div class="result-label">Taxminiy umumiy narx</div>
+              <div class="result-value" id="calc-output">$0.00</div>
+              <div class="result-detail" id="calc-detail">Eni × Boyi × Narx × Soni</div>
+            </div>
+            <button class="btn btn-gold btn-full calc-save-btn" id="calc-save-btn" onclick="saveCalcToFirebase()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
+                <polyline points="17 21 17 13 7 13 7 21" />
+                <polyline points="7 3 7 8 15 8" />
+              </svg>
+              Hisob-kitobni saqlash
+            </button>
+            <div id="calc-saved-msg"
+              style="display:none; margin-top:12px; text-align:center; color:#16A34A; font-family:'Montserrat',sans-serif; font-size:0.82rem; font-weight:600;">
+              Saqlandi!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     OYNAK PAGE
+══════════════════════════════════════ -->
+  <div class="page" id="page-oynak">
+    <div class="page-hero">
+      <div class="page-hero-badge">Steklo Xizmatlari</div>
+      <h1>Oynak Xizmatlari</h1>
+      <p>Professional oynak kesish, o'rnatish va germetika xizmatlari</p>
+    </div>
+    <div class="section">
+      <div class="cards-grid" id="grid-glass">
+        <!-- Dynamic Firebase CMS blocks will render here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     TAXTA PAGE
+══════════════════════════════════════ -->
+  <div class="page" id="page-taxta">
+    <div class="page-hero">
+      <div class="page-hero-badge">Yog'och Mahsulotlar</div>
+      <h1>Taxta цex — Asalari Yashiklari</h1>
+      <p>Yuqori sifatli yog'och mahsulotlar va asalari yashiklari ishlab chiqarish</p>
+    </div>
+    <div class="section">
+      <div class="cards-grid" id="grid-wood">
+        <!-- Dynamic Firebase CMS blocks will render here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     PORTFOLIO PAGE
+══════════════════════════════════════ -->
+  <div class="page" id="page-portfolio">
+    <div class="page-hero">
+      <div class="page-hero-badge">Bizning Ishlar</div>
+      <h1>Portfolio</h1>
+      <p>Bajarilgan ishlarimizdan namunalar</p>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <div class="section-label">Ishlarimiz</div>
+        <h2>Bajarilgan Loyihalar</h2>
+        <p>AKFA romlar, oynak va yog'och mahsulotlar bo'yicha bajarilgan ishlar</p>
+      </div>
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterPortfolio('all', this)">Hammasi</button>
+        <button class="filter-btn" onclick="filterPortfolio('akfa', this)">AKFA Romlar</button>
+        <button class="filter-btn" onclick="filterPortfolio('glass', this)">Oynak</button>
+        <button class="filter-btn" onclick="filterPortfolio('wood', this)">Yog'och</button>
+      </div>
+      <div class="portfolio-masonry" id="portfolio-grid">
+        <!-- Dynamic Firebase CMS Portfolio items will render here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     CONTACT PAGE
+══════════════════════════════════════ -->
+  <div class="page" id="page-contact">
+    <div class="page-hero">
+      <div class="page-hero-badge">24/7 Aloqa</div>
+      <h1 id="contact-hero-title">Bog'lanish</h1>
+      <p id="contact-hero-desc">Biz bilan istalgan vaqt bog'laning — bepul maslahat beramiz</p>
+    </div>
+    <div class="section">
+      <div class="contact-grid">
+        <div>
+          <div class="contact-info">
+            <h3 id="contact-info-title">Aloqa Ma'lumotlari</h3>
+            <a href="tel:+998996156006" class="contact-item">
+              <div class="contact-icon ci-phone">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.63 19.79 19.79 0 011 1.18 2 2 0 013 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 7a16 16 0 006.29 6.29l1.36-1.36a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14z" />
+                </svg>
+              </div>
+              <div>
+                <div class="contact-item-text">+998 99 615 60 06</div>
+                <div class="contact-item-sub">Qo'ng'iroq qiling</div>
+              </div>
+            </a>
+            <a href="https://t.me/tripro_uz" class="contact-item" target="_blank">
+              <div class="contact-icon ci-tg">
+                <svg viewBox="0 0 24 24">
+                  <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" />
+                </svg>
+              </div>
+              <div>
+                <div class="contact-item-text">@tripro_uz — Telegram</div>
+                <div class="contact-item-sub">Yozing yoki qo'ng'iroq qiling</div>
+              </div>
+            </a>
+            <a href="https://wa.me/998996156006" class="contact-item" target="_blank">
+              <div class="contact-icon ci-wa">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a3.178 3.178 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z" />
+                </svg>
+              </div>
+              <div>
+                <div class="contact-item-text">+998 90 123 45 67 — WhatsApp</div>
+                <div class="contact-item-sub">Xabar yuboring</div>
+              </div>
+            </a>
+          </div>
+          <div class="map-wrap" style="height: 380px; padding: 0; background: #eee;">
+            <iframe src="https://maps.google.com/maps?q=40.316423,71.850114&z=17&output=embed" width="100%"
+              height="100%" style="border:0; border-radius: var(--radius);" allowfullscreen="" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+          </div>
+        </div>
+
+        <!-- Contact Form with Logo Watermark -->
+        <div class="contact-form-wrap" style="position: relative; overflow: hidden;">
+          <div class="contact-logo-mark">TriPro</div>
+          <div style="position: relative; z-index: 1;">
+            <h3 id="contact-form-title">Xabar Yuborish</h3>
+            <p
+              style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 28px; font-family: 'Inter', sans-serif;">
+              Formani to'ldiring, tez orada javob beramiz.</p>
+            <div class="form-field">
+              <label id="cf-name-label">Ismingiz</label>
+              <input type="text" id="cf-name" placeholder="Ism Familiya">
+            </div>
+            <div class="form-field">
+              <label id="cf-phone-label">Telefon raqam</label>
+              <input type="tel" id="cf-phone" placeholder="+998 90 000 00 00">
+            </div>
+            <div class="form-field">
+              <label id="cf-msg-label">Xabar</label>
+              <textarea id="cf-msg" placeholder="Xizmatingiz haqida yozing..."></textarea>
+            </div>
+            <button class="btn btn-gold btn-full" onclick="submitForm()" id="cf-submit-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+              Yuborish
+            </button>
+            <div class="form-success" id="form-success">Xabaringiz yuborildi! Tez orada bog'lanamiz.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+  <!-- ══════════════════════════════════════
+     SERVICES PAGE (HUB)
+  ══════════════════════════════════════ -->
+  <div class="page" id="page-services">
+    <div class="page-hero">
+      <div class="page-hero-badge" id="s-hub-label">Barcha Xizmatlar</div>
+      <h1 id="s-hub-title">Xizmatlarimiz</h1>
+      <p id="s-hub-desc">Professional ishlab chiqarish va o'rnatish yo'nalishlari</p>
+    </div>
+    <div class="section">
+      <div class="bento-grid">
+        <div class="bento-card reveal" onclick="showPage('akfa')">
+          <div class="bc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <line x1="3" y1="9" x2="21" y2="9" />
+              <line x1="9" y1="3" x2="9" y2="21" />
+            </svg></div>
+          <h3 id="svc-hub-akfa">AKFA Romlar</h3>
+          <p id="svc-hub-akfa-desc">Alyumin va plastik bloklar</p>
+          <button class="btn btn-navy btn-sm" id="svc-hub-btn1">Ko'rish</button>
+        </div>
+        <div class="bento-card reveal reveal-delay-1" onclick="showPage('oynak')">
+          <div class="bc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 20 7 20 17 12 22 4 17 4 7 12 2" />
+            </svg></div>
+          <h3 id="svc-hub-glass">Oynak</h3>
+          <p id="svc-hub-glass-desc">Kesish va o'rnatish</p>
+          <button class="btn btn-navy btn-sm" id="svc-hub-btn2">Ko'rish</button>
+        </div>
+        <div class="bento-card reveal reveal-delay-2" onclick="showPage('taxta')">
+          <div class="bc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 14c0 4.418-3.582 8-8 8S4 18.418 4 14C4 9.582 12 2 12 2s8 7.582 8 12z" />
+            </svg></div>
+          <h3 id="svc-hub-wood">Taxta цex</h3>
+          <p id="svc-hub-wood-desc">Yog'och mahsulotlar</p>
+          <button class="btn btn-navy btn-sm" id="svc-hub-btn3">Ko'rish</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     ABOUT PAGE
+  ══════════════════════════════════════ -->
+  <div class="page" id="page-about">
+    <div class="page-hero">
+      <div class="page-hero-badge" id="about-hero-badge">Kompaniya haqida</div>
+      <h1 id="about-hero-title">TriPro</h1>
+      <p id="about-hero-desc">Sifat va ishonch timsoli</p>
+    </div>
+    <div class="section">
+      <div class="contact-grid">
+        <div class="reveal">
+          <h2 style="margin-bottom: 24px; font-family: 'Playfair Display', serif;" id="about-q-title">Biz kimmiz?</h2>
+          <p style="color: var(--text-muted); margin-bottom: 20px;" id="about-p1">TriPro — bu ko'p yillik tajribaga ega
+            bo'lgan industrial ishlab chiqarish majmuasi. Biz mijozlarimizga eng so'nggi texnologiyalar asosida
+            tayyorlangan mahsulotlarni taqdim etamiz.</p>
+          <p style="color: var(--text-muted);" id="about-p2">Bizning asosiy maqsadimiz — sifatli va chidamli mahsulotlar
+            orqali mijozlar ishonchini qozonish.</p>
+        </div>
+        <div class="h-stat reveal reveal-delay-1"
+          style="background: var(--white); border-radius: 20px; border: 1px solid var(--border);">
+          <h3 style="margin-bottom: 16px;" id="about-v-title">Bizning qadriyatlarimiz:</h3>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 12px;">
+            <li style="display: flex; align-items: center; gap: 10px; color: var(--text-muted);"><span
+                style="color: var(--gold);">★</span> <span id="v1">Sifat nazorati</span></li>
+            <li style="display: flex; align-items: center; gap: 10px; color: var(--text-muted);"><span
+                style="color: var(--gold);">★</span> <span id="v2">Zamonaviy texnologiyalar</span></li>
+            <li style="display: flex; align-items: center; gap: 10px; color: var(--text-muted);"><span
+                style="color: var(--gold);">★</span> <span id="v3">O'z vaqtida yetkazib berish</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo-wrap">
+          <div class="footer-logo-display">
+            <img src="logo.png" alt="TriPro Logo" class="footer-logo-img">
+            <div class="logo-text" style="color: white;">Tri<span>Pro</span></div>
+          </div>
+        </div>
+        <p class="footer-desc">AKFA romlar, oynak xizmatlari va asalari yashiklari ishlab chiqarish bilan
+          shug'ullanuvchi ishonchli цex.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Sahifalar</h4>
+        <a href="#" onclick="showPage('home'); return false;">Bosh sahifa</a>
+        <a href="#" onclick="showPage('akfa'); return false;">AKFA Romlar</a>
+        <a href="#" onclick="showPage('oynak'); return false;">Oynak Xizmatlari</a>
+        <a href="#" onclick="showPage('taxta'); return false;">Taxta цex</a>
+        <a href="#" onclick="showPage('portfolio'); return false;">Portfolio</a>
+        <a href="#" onclick="showPage('contact'); return false;">Bog'lanish</a>
+      </div>
+      <div class="footer-col">
+        <h4>Aloqa</h4>
+        <a href="tel:+998996156006">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.63 19.79 19.79 0 011 1.18 2 2 0 013 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 7a16 16 0 006.29 6.29l1.36-1.36a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14z" />
+          </svg>
+          +998 99 615 60 06
+        </a>
+        <a href="https://t.me/tripro_uz" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" />
+          </svg>
+          Telegram
+        </a>
+        <a href="https://wa.me/998996156006" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="opacity:0.7">
+            <path
+              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a3.178 3.178 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z" />
+          </svg>
+          WhatsApp
+        </a>
+      </div>
+    </div>
+    <div class="footer-disclaimer">
+      <p>⚠️ <strong>Diqqat:</strong> Ushbu hisob-kitob dastlabki va taxminiy xarakterga ega. Yakuniy narx mutaxassis
+        tomonidan o'lchov ishlari olib borilgandan so'ng, tanlangan material va sarf-xarajatlar asosida aniqlanadi.</p>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 TriPro.</p>
+      <p>Professional ishlab chiqarish</p>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════
+     MOBILE BOTTOM NAV BAR
+  ══════════════════════════════════════ -->
+  <!-- ══════════════════════════════════════
+     MOBILE BOTTOM NAV BAR — FUTURISTIC UPGRADE
+  ══════════════════════════════════════ -->
+  <nav class="mobile-nav-bar">
+    <a href="#" class="mobile-nav-item active" onclick="showPage('home'); return false;" data-nav="home">
+      <div class="nav-indicator"></div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+        <polyline points="9 22 9 12 15 12 15 22" />
+      </svg>
+      <span class="mobile-nav-label" id="nav-home">Bosh sahifa</span>
+    </a>
+    <a href="#" class="mobile-nav-item" onclick="showPage('services'); return false;" data-nav="services">
+      <div class="nav-indicator"></div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+        <line x1="3" y1="9" x2="21" y2="9" />
+        <line x1="9" y1="21" x2="9" y2="9" />
+      </svg>
+      <span class="mobile-nav-label" id="nav-services">Xizmatlar</span>
+    </a>
+    <a href="#" class="mobile-nav-item" onclick="showPage('portfolio'); return false;" data-nav="portfolio">
+      <div class="nav-indicator"></div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+        <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" />
+      </svg>
+      <span class="mobile-nav-label" id="nav-portfolio">Portfolio</span>
+    </a>
+
+    <a href="#" class="mobile-nav-item" onclick="showPage('contact'); return false;" data-nav="contact">
+      <div class="nav-indicator"></div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path
+          d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.63 19.79 19.79 0 011 1.18 2 2 0 013 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 7a16 16 0 006.29 6.29l1.36-1.36a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14z" />
+      </svg>
+      <span class="mobile-nav-label" id="nav-contact">Bog'lanish</span>
+    </a>
+  </nav>
+
+
+
+  <!-- ══════════════════════════════════════
+     FIREBASE SDK
+══════════════════════════════════════ -->
+  <!-- TODO: Replace with your own Firebase config keys -->
+  <script type="module">
+    // ─── FIREBASE CONFIG — REPLACE WITH YOUR OWN KEYS ───
+    const firebaseConfig = {
+      apiKey: "AIzaSyCzSFLTNJQItcW8RF1LteZ1pWi4aXX5ZJk",
+      authDomain: "tripro-d6f16.firebaseapp.com",
+      databaseURL: "https://tripro-d6f16-default-rtdb.firebaseio.com",
+      projectId: "tripro-d6f16",
+      storageBucket: "tripro-d6f16.firebasestorage.app",
+      messagingSenderId: "581495600669",
+      appId: "1:581495600669:web:da0d2727be542bec0178f4"
+    };
+    window.firebaseConfig = firebaseConfig; // Make it global for other scripts if needed
+
+    // Only init Firebase if real keys are provided
+    const isFirebaseConfigured =
+      firebaseConfig.apiKey !== "YOUR_API_KEY" &&
+      !firebaseConfig.databaseURL.includes("YOUR_PROJECT");
+
+    async function initFirebase() {
+      if (!isFirebaseConfigured) {
+        console.info('TriPro: Firebase keys not set — using localStorage mode.');
+        window._firebaseReady = false;
+        return;
+      }
+      try {
+        const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+        const { getDatabase, ref, push, set, get, child, update, onValue } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js');
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        window._firebaseDB = db;
+        window._firebaseRef = ref;
+        window._firebasePush = push;
+        window._firebaseSet = set;
+        window._firebaseGet = get;
+        window._firebaseChild = child;
+        window._firebaseUpdate = update;
+        window._firebaseReady = true;
+        console.log('Firebase initialized successfully');
+
+        // Listen to CMS changes immediately after init
+        onValue(ref(db, 'services'), (snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+            let services = Object.entries(data).map(([k, v]) => ({ ...v, id: k }));
+            if (window.renderSiteServices) window.renderSiteServices(services);
+          } else {
+            if (window.renderSiteServices) window.renderSiteServices([]);
+          }
+        });
+
+      } catch (e) {
+        console.warn('Firebase init failed:', e.message);
+        window._firebaseReady = false;
+      }
+    }
+    initFirebase();
+  </script>
+
+  <script>
+    /* ══════════════════════════════════════
+       MAIN APPLICATION SCRIPT
+    ══════════════════════════════════════ */
+
+    // ─── PAGE NAVIGATION ───
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      // Update desktop nav active states
+      document.querySelectorAll('nav a').forEach(a => {
+        a.classList.toggle('active', a.dataset.page === pageId);
+      });
+      // Update bottom mobile nav active states
+      document.querySelectorAll('.mobile-nav-item').forEach(a => {
+        a.classList.toggle('active', a.dataset.nav === pageId);
+      });
+      // Update drawer link active states
+      document.querySelectorAll('.drawer-link').forEach(a => {
+        a.classList.toggle('active', a.dataset.drawer === pageId);
+      });
+      const target = document.getElementById('page-' + pageId);
+      if (target) target.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Re-trigger scroll reveals after page switch
+      setTimeout(runReveal, 100);
+      return false;
+    }
+
+    // ─── SIDE DRAWER ───
+    function openDrawer() {
+      document.getElementById('side-drawer').classList.add('open');
+      document.getElementById('drawer-overlay').classList.add('open');
+      document.getElementById('hamburger').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDrawer() {
+      document.getElementById('side-drawer').classList.remove('open');
+      document.getElementById('drawer-overlay').classList.remove('open');
+      document.getElementById('hamburger').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    function closeMenu() { closeDrawer(); }
+
+    document.getElementById('hamburger').addEventListener('click', function () {
+      if (this.classList.contains('active')) {
+        closeDrawer();
+      } else {
+        openDrawer();
+      }
+    });
+
+
+    // ─── CALCULATOR ───
+    function calcPrice() {
+      const w = parseFloat(document.getElementById('calc-width').value) || 0;
+      const h = parseFloat(document.getElementById('calc-height').value) || 0;
+      const pricePerSqm = parseFloat(document.getElementById('calc-price').value);
+      const qty = parseInt(document.getElementById('calc-qty').value) || 1;
+
+      const area = (w * h) / 10000;
+      const total = area * pricePerSqm * qty;
+
+      // Format as financial figure
+      const formatted = new Intl.NumberFormat('en-US', {
+        style: 'currency', currency: 'USD', minimumFractionDigits: 2
+      }).format(total);
+
+      document.getElementById('calc-output').textContent = formatted;
+      document.getElementById('calc-detail').textContent =
+        `${w}sm × ${h}sm × $${pricePerSqm}/m² × ${qty} dona = ${formatted}`;
+    }
+
+    function saveCalcToFirebase() {
+      const w = parseFloat(document.getElementById('calc-width').value) || 0;
+      const h = parseFloat(document.getElementById('calc-height').value) || 0;
+      const pricePerSqm = parseFloat(document.getElementById('calc-price').value);
+      const qty = parseInt(document.getElementById('calc-qty').value) || 1;
+      const area = (w * h) / 10000;
+      const total = area * pricePerSqm * qty;
+      const typeText = document.getElementById('calc-price').options[document.getElementById('calc-price').selectedIndex].text;
+
+      const calcData = {
+        width: w, height: h, qty, pricePerSqm, area: area.toFixed(2),
+        total: total.toFixed(2), type: typeText,
+        timestamp: new Date().toISOString(),
+        source: 'calculator',
+        id: Date.now().toString()
+      };
+
+      // Always save to localStorage first
+      try {
+        const saved = JSON.parse(localStorage.getItem('tripro_calcs') || '[]');
+        saved.unshift(calcData);
+        localStorage.setItem('tripro_calcs', JSON.stringify(saved));
+      } catch (e) { console.warn('localStorage calc save failed:', e); }
+
+      // Show success immediately
+      const msgEl = document.getElementById('calc-saved-msg');
+      msgEl.textContent = 'Saqlandi!';
+      msgEl.style.display = 'block';
+      setTimeout(() => { msgEl.style.display = 'none'; }, 3000);
+
+      // Also push to Firebase in background if configured
+      if (window._firebaseReady && window._firebaseDB) {
+        window._firebasePush(window._firebaseRef(window._firebaseDB, 'calculations'), calcData)
+          .catch(e => console.warn('Firebase calc push failed:', e));
+      }
+    }
+
+    // ─── PORTFOLIO FILTER ───
+    function filterPortfolio(cat, btn) {
+      document.querySelectorAll('.portfolio-masonry .p-card').forEach(item => {
+        if (cat === 'all' || item.dataset.cat === cat) {
+          item.style.display = '';
+          setTimeout(() => item.classList.add('in-view'), 50);
+        } else {
+          item.style.display = 'none';
+        }
+      });
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+    }
+
+    // ─── CONTACT FORM ───
+    function submitForm() {
+      const name = document.getElementById('cf-name').value.trim();
+      const phone = document.getElementById('cf-phone').value.trim();
+      const msg = document.getElementById('cf-msg').value.trim();
+
+      if (!name || !phone) {
+        const msgs = {
+          uz: 'Iltimos, ism va telefon kiriting.',
+          ru: 'Пожалуйста, введите имя и телефон.',
+          en: 'Please enter name and phone.'
+        };
+        alert(msgs[currentLang] || msgs.uz);
+        return;
+      }
+
+      const inquiry = {
+        name, phone, message: msg,
+        status: 'new',
+        timestamp: new Date().toISOString(),
+        source: 'contact_form',
+        category: detectCategory(msg),
+        id: Date.now().toString()
+      };
+
+      const btn = document.getElementById('cf-submit-btn');
+      btn.disabled = true;
+      btn.textContent = '...';
+
+      // ─── ALWAYS save to localStorage first (instant, never blocks UI) ───
+      try {
+        const saved = JSON.parse(localStorage.getItem('tripro_inquiries') || '[]');
+        saved.unshift(inquiry);
+        localStorage.setItem('tripro_inquiries', JSON.stringify(saved));
+      } catch (e) { console.warn('localStorage save failed:', e); }
+
+      // ─── Clear form & show success immediately ───
+      document.getElementById('cf-name').value = '';
+      document.getElementById('cf-phone').value = '';
+      document.getElementById('cf-msg').value = '';
+      const success = document.getElementById('form-success');
+      success.style.display = 'block';
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Yuborish';
+      setTimeout(() => success.style.display = 'none', 5000);
+
+      // ─── ALSO push to Firebase in background (if configured) ───
+      if (window._firebaseReady && window._firebaseDB) {
+        window._firebasePush(window._firebaseRef(window._firebaseDB, 'inquiries'), inquiry)
+          .catch(e => console.warn('Firebase push failed:', e));
+      }
+    }
+
+    function detectCategory(msg) {
+      const lower = msg.toLowerCase();
+      if (lower.includes('akfa') || lower.includes('rom') || lower.includes('deraza')) return 'akfa';
+      if (lower.includes('oynak') || lower.includes('stiklo') || lower.includes('шиша')) return 'glass';
+      if (lower.includes('taxta') || lower.includes('yashik') || lower.includes('asalari')) return 'wood';
+      return 'other';
+    }
+
+    // ─── LANGUAGE SWITCHER ───
+    let currentLang = 'uz';
+    const translations = {
+      uz: {
+        'hero-badge': 'Ishonchli Ishlab Chiqarish цexi',
+        'hero-title': 'Sifatli <span class="accent">AKFA Romlar</span>,<br>Oynak va Yog\'och Mahsulotlar',
+        'hero-desc': 'TriPro — AKFA romlar, oynak xizmatlari va asalari yashiklari ishlab chiqarish bilan shug\'ullanuvchi ishonchli цex.',
+        'hero-btn1': 'Biz bilan bog\'laning',
+        'hero-btn-tg': 'Telegram',
+        'hero-btn-wa': 'WhatsApp',
+        'stat1': 'Bajarilgan loyihalar', 'stat2': 'Yillik tajriba',
+        'stat3': 'Asosiy xizmat yo\'nalishi', 'stat4': 'Mijoz mamnuniyati',
+        'stat-s1': 'Bajarilgan loyihalar', 'stat-s2': 'Yillik tajriba',
+        'stat-s3': 'Xizmat yo\'nalishi', 'stat-s4': 'Mijoz mamnuniyati',
+        's-label-services': 'Xizmatlarimiz',
+        's-title-services': 'Biz nima taklif qilamiz?',
+        's-desc-services': 'Professional ishlab chiqarish va o\'rnatish xizmatlari',
+        'svc1-title': 'AKFA Romlar', 'svc1-desc': 'Alyumin, plastik va balkon AKFA romlarini professional o\'rnatish. Yuqori sifat va kafolat.',
+        'svc1-price': '$35 / m²', 'svc1-btn': 'Batafsil',
+        'svc2-title': 'Oynak Xizmatlari', 'svc2-desc': 'Oynak kesish, stiklopaket qilish va germetika xizmatlari. Tez va sifatli.',
+        'svc2-price': '$5 dan boshlab', 'svc2-btn': 'Batafsil',
+        'svc3-title': 'Taxta цex (Asalari Yashiklari)', 'svc3-desc': 'Asalari yashiklari, randetal, karmushka va boshqa yog\'och mahsulotlar buyurtmaga.',
+        'svc3-price': '$5 dan boshlab', 'svc3-btn': 'Batafsil',
+        's-label-portfolio': 'Ishlarimiz', 's-title-portfolio': 'Portfolio', 's-desc-portfolio': 'Bajarilgan ishlarimizdan namunalar',
+        'more-portfolio-btn': 'Barcha ishlarni ko\'rish',
+        'cta-title': 'Biz bilan ishlashni boshlang', 'cta-desc': 'Bepul konsultatsiya va narx hisoblash uchun bog\'laning',
+        'contact-hero-title': 'Bog\'lanish', 'contact-hero-desc': 'Biz bilan istalgan vaqt bog\'laning — bepul maslahat beramiz',
+        'contact-info-title': 'Aloqa Ma\'lumotlari', 'contact-form-title': 'Xabar Yuborish',
+        'cf-name-label': 'Ismingiz', 'cf-phone-label': 'Telefon raqam', 'cf-msg-label': 'Xabar',
+        'cf-submit-btn': 'Yuborish',
+        'akfa-hero-title': 'AKFA Romlar', 'akfa-hero-desc': 'Professional AKFA rom o\'rnatish xizmatlari va narxlar',
+        's-hub-label': 'Barcha Xizmatlar', 's-hub-title': 'Xizmatlarimiz', 's-hub-desc': 'Professional ishlab chiqarish va o\'rnatish yo\'nalishlari',
+        'svc-hub-akfa': 'AKFA Romlar', 'svc-hub-akfa-desc': 'Alyumin va plastik bloklar', 'svc-hub-btn1': 'Ko\'rish',
+        'svc-hub-glass': 'Oynak', 'svc-hub-glass-desc': 'Kesish va o\'rnatish', 'svc-hub-btn2': 'Ko\'rish',
+        'svc-hub-wood': 'Taxta цex', 'svc-hub-wood-desc': 'Yog\'och mahsulotlar', 'svc-hub-btn3': 'Ko\'rish',
+        'about-hero-badge': 'Kompaniya haqida', 'about-hero-title': 'TriPro haqida', 'about-hero-desc': 'Sifat va ishonch timsoli',
+        'about-q-title': 'Biz kimmiz?', 'about-p1': 'TriPro — bu ko\'p yillik tajribaga ega bo\'lgan industrial ishlab chiqarish majmuasi.', 'about-p2': 'Bizning asosiy maqsadimiz — sifatli mahsulotlar orqali mijozlar ishonchini qozonish.',
+        'about-v-title': 'Bizning qadriyatlarimiz:', 'v1': 'Sifat nazorati', 'v2': 'Zamonaviy texnologiyalar', 'v3': 'O\'z vaqtida yetkazib berish',
+        'nav-home': 'Asosiy', 'nav-services': 'Xizmatlar', 'nav-portfolio': 'Portfolio', 'nav-about': 'Biz haqimizda', 'nav-contact': 'Aloqa'
+      },
+      ru: {
+        'hero-badge': 'Надёжный Производственный Цех',
+        'hero-title': 'Качественные <span class="accent">Рамы AKFA</span>,<br>Стекло и Деревянные Изделия',
+        'hero-desc': 'TriPro — надёжный цех по производству рам AKFA, стеклянных услуг и ульев.',
+        'hero-btn1': 'Связаться с нами', 'hero-btn-tg': 'Telegram', 'hero-btn-wa': 'WhatsApp',
+        'stat1': 'Выполненных проектов', 'stat2': 'Лет опыта', 'stat3': 'Направления услуг', 'stat4': 'Удовлетворённость',
+        'stat-s1': 'Выполненных проектов', 'stat-s2': 'Лет опыта', 'stat-s3': 'Направления', 'stat-s4': 'Удовлетворённость',
+        's-label-services': 'Наши услуги', 's-title-services': 'Что мы предлагаем?', 's-desc-services': 'Профессиональное производство и монтаж',
+        'svc1-title': 'Рамы AKFA', 'svc1-desc': 'Профессиональный монтаж алюминиевых, пластиковых и балконных рам AKFA.', 'svc1-price': '$35 / м²', 'svc1-btn': 'Подробнее',
+        'svc2-title': 'Стекольные услуги', 'svc2-desc': 'Резка стекла, стеклопакеты и герметизация. Быстро и качественно.', 'svc2-price': 'От $5', 'svc2-btn': 'Подробнее',
+        'svc3-title': 'Деревообработка (Ульи)', 'svc3-desc': 'Ульи, рейки, кормушки и другие деревянные изделия под заказ.', 'svc3-price': 'От $5', 'svc3-btn': 'Подробнее',
+        's-label-portfolio': 'Наши работы', 's-title-portfolio': 'Портфолио', 's-desc-portfolio': 'Примеры выполненных работ',
+        'more-portfolio-btn': 'Смотреть все работы',
+        'cta-title': 'Начните работать с нами', 'cta-desc': 'Свяжитесь для бесплатной консультации',
+        'contact-hero-title': 'Контакты', 'contact-hero-desc': 'Свяжитесь с нами в любое время',
+        'contact-info-title': 'Контактная информация', 'contact-form-title': 'Отправить сообщение',
+        'cf-name-label': 'Ваше имя', 'cf-phone-label': 'Номер телефона', 'cf-msg-label': 'Сообщение',
+        'cf-submit-btn': 'Отправить',
+        'akfa-hero-title': 'Рамы AKFA', 'akfa-hero-desc': 'Профессиональный монтаж рам AKFA и цены',
+        's-hub-label': 'Все услуги', 's-hub-title': 'Наши услуги', 's-hub-desc': 'Профессиональные направления производства',
+        'svc-hub-akfa': 'Рамы AKFA', 'svc-hub-akfa-desc': 'Алюминиевые и пластиковые блоки', 'svc-hub-btn1': 'Смотреть',
+        'svc-hub-glass': 'Стекло', 'svc-hub-glass-desc': 'Резка и установка', 'svc-hub-btn2': 'Смотреть',
+        'svc-hub-wood': 'Деревообработка', 'svc-hub-wood-desc': 'Деревянные изделия', 'svc-hub-btn3': 'Смотреть',
+        'about-hero-badge': 'О компании', 'about-hero-title': 'О TriPro', 'about-hero-desc': 'Символ качества и надежности',
+        'about-q-title': 'Кто мы?', 'about-p1': 'TriPro — это промышленный комплекс с многолетним опытом.', 'about-p2': 'Наша главная цель — завоевать доверие клиентов через качественную продукцию.',
+        'about-v-title': 'Наши ценности:', 'v1': 'Контроль качества', 'v2': 'Современные технологии', 'v3': 'Своевременная доставка',
+        'nav-home': 'Главная', 'nav-services': 'Услуги', 'nav-portfolio': 'Портфолио', 'nav-about': 'О нас', 'nav-contact': 'Контакт'
+      },
+      en: {
+        'hero-badge': 'Reliable Manufacturing Workshop',
+        'hero-title': 'Quality <span class="accent">AKFA Frames</span>,<br>Glass & Wooden Products',
+        'hero-desc': 'TriPro — a trusted workshop specializing in AKFA frames, glass services, and beehive boxes.',
+        'hero-btn1': 'Contact Us', 'hero-btn-tg': 'Telegram', 'hero-btn-wa': 'WhatsApp',
+        'stat1': 'Completed Projects', 'stat2': 'Years of Experience', 'stat3': 'Service Directions', 'stat4': 'Client Satisfaction',
+        'stat-s1': 'Completed Projects', 'stat-s2': 'Years of Experience', 'stat-s3': 'Directions', 'stat-s4': 'Satisfaction',
+        's-label-services': 'Our Services', 's-title-services': 'What do we offer?', 's-desc-services': 'Professional manufacturing and installation services',
+        'svc1-title': 'AKFA Frames', 'svc1-desc': 'Professional installation of aluminum, plastic and balcony AKFA frames.', 'svc1-price': '$35 / m²', 'svc1-btn': 'Details',
+        'svc2-title': 'Glass Services', 'svc2-desc': 'Glass cutting, double glazing and sealant services. Fast and quality.', 'svc2-price': 'From $5', 'svc2-btn': 'Details',
+        'svc3-title': 'Wood Workshop (Beehives)', 'svc3-desc': 'Beehive boxes, planks, feeders and other wooden products. Custom orders.', 'svc3-price': 'From $5', 'svc3-btn': 'Details',
+        's-label-portfolio': 'Our Work', 's-title-portfolio': 'Portfolio', 's-desc-portfolio': 'Samples of completed work',
+        'more-portfolio-btn': 'View all work',
+        'cta-title': 'Start working with us', 'cta-desc': 'Contact us for a free consultation',
+        'contact-hero-title': 'Contact', 'contact-hero-desc': 'Reach out to us anytime — free consultation',
+        'contact-info-title': 'Contact Information', 'contact-form-title': 'Send a Message',
+        'cf-name-label': 'Your Name', 'cf-phone-label': 'Phone Number', 'cf-msg-label': 'Message',
+        'cf-submit-btn': 'Send',
+        'akfa-hero-title': 'AKFA Frames', 'akfa-hero-desc': 'Professional AKFA frame installation services and prices',
+        's-hub-label': 'All Services', 's-hub-title': 'Our Services', 's-hub-desc': 'Professional manufacturing and installation directions',
+        'svc-hub-akfa': 'AKFA Frames', 'svc-hub-akfa-desc': 'Aluminum and plastic blocks', 'svc-hub-btn1': 'View',
+        'svc-hub-glass': 'Glass', 'svc-hub-glass-desc': 'Cutting and installation', 'svc-hub-btn2': 'View',
+        'svc-hub-wood': 'Wood Workshop', 'svc-hub-wood-desc': 'Wooden products', 'svc-hub-hub-btn3': 'View',
+        'about-hero-badge': 'About Company', 'about-hero-title': 'About TriPro', 'about-hero-desc': 'Symbol of quality and trust',
+        'about-q-title': 'Who are we?', 'about-p1': 'TriPro is an industrial manufacturing complex with years of experience.', 'about-p2': 'Our main goal is to gain client trust through quality products.',
+        'about-v-title': 'Our values:', 'v1': 'Quality control', 'v2': 'Modern technologies', 'v3': 'On-time delivery',
+        'nav-home': 'Home', 'nav-services': 'Services', 'nav-portfolio': 'Portfolio', 'nav-about': 'About Us', 'nav-contact': 'Contact'
+      }
+    };
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-btn').forEach(b => {
+        b.classList.toggle('active', b.textContent === lang.toUpperCase());
+      });
+      document.querySelectorAll('nav a[data-uz]').forEach(a => {
+        a.textContent = a.getAttribute('data-' + lang) || a.getAttribute('data-uz');
+      });
+      const t = translations[lang];
+      Object.keys(t).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = t[id];
+      });
+      const placeholders = {
+        uz: { 'cf-name': 'Ism Familiya', 'cf-phone': '+998 90 000 00 00', 'cf-msg': 'Xizmatingiz haqida yozing...' },
+        ru: { 'cf-name': 'Имя Фамилия', 'cf-phone': '+998 90 000 00 00', 'cf-msg': 'Напишите о вашей услуге...' },
+        en: { 'cf-name': 'Full Name', 'cf-phone': '+998 90 000 00 00', 'cf-msg': 'Write about your service...' },
+      };
+      Object.keys(placeholders[lang]).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.placeholder = placeholders[lang][id];
+      });
+    }
+
+    // ─── SCROLL REVEAL ───
+    function runReveal() {
+      const els = document.querySelectorAll('.reveal:not(.in-view)');
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('in-view');
+            observer.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      els.forEach(el => observer.observe(el));
+    }
+    runReveal();
+    document.addEventListener('DOMContentLoaded', () => {
+      runReveal();
+      createFloatingShapes();
+    });
+
+    // ─── BENTO SPOTLIGHT EFFECT ───
+    document.addEventListener('mousemove', (e) => {
+      document.querySelectorAll('.bento-card').forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        card.style.setProperty('--mouse-x', `${x}%`);
+        card.style.setProperty('--mouse-y', `${y}%`);
+      });
+    });
+
+    // ─── DECORATIVE FLOATING SHAPES ───
+    function createFloatingShapes() {
+      const hero = document.querySelector('.hero');
+      if (!hero) return;
+      for (let i = 0; i < 5; i++) {
+        const shape = document.createElement('div');
+        const size = Math.random() * 100 + 50;
+        shape.style.cssText = `
+          position: absolute;
+          width: ${size}px;
+          height: ${size}px;
+          background: rgba(245, 158, 11, 0.03);
+          border: 1px solid rgba(245, 158, 11, 0.05);
+          border-radius: ${Math.random() > 0.5 ? '50%' : '20%'};
+          top: ${Math.random() * 100}%;
+          left: ${Math.random() * 100}%;
+          pointer-events: none;
+          z-index: 1;
+          animation: float ${Math.random() * 5 + 5}s infinite ease-in-out;
+        `;
+        hero.appendChild(shape);
+      }
+    }
+
+    // ─── MICRO-INTERACTIONS: BUTTON RIPPLE ───
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn');
+      if (!btn) return;
+      const ripple = document.createElement('span');
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.cssText = `
+    position:absolute; border-radius:50%;
+    width:${size}px; height:${size}px;
+    left:${e.clientX - rect.left - size / 2}px;
+    top:${e.clientY - rect.top - size / 2}px;
+    background:rgba(255,255,255,0.2);
+    animation:ripple 0.5s linear;
+    pointer-events:none;
+  `;
+      if (!btn.style.position || btn.style.position === 'static') btn.style.position = 'relative';
+      btn.appendChild(ripple);
+      ripple.addEventListener('animationend', () => ripple.remove());
+    });
+
+    // --- FIREBASE DOM SERVICES RENDERER ---
+    function renderSiteServices(services) {
+      if (!services) return;
+      const akfaGrid = document.getElementById('grid-akfa');
+      const glassGrid = document.getElementById('grid-glass');
+      const woodGrid = document.getElementById('grid-wood');
+      const portfolioGrid = document.getElementById('portfolio-grid');
+
+      const renderGrid = (gridEl, category, delaySt, themeClass) => {
+        if (!gridEl) return;
+        const items = services.filter(s => s.category === category);
+        if (items.length === 0) {
+          gridEl.innerHTML = `<p style="grid-column: 1/-1; text-align: center; padding: 40px; color: #666; font-style: italic;">Hozircha ma'lumot kiritilmagan...</p>`;
+          return;
+        }
+
+        if (category === 'portfolio') {
+          gridEl.innerHTML = items.map((sv, idx) => {
+            let delayClass = idx % 3 === 1 ? 'reveal-delay-1' : (idx % 3 === 2 ? 'reveal-delay-2' : '');
+
+            // Try to deduce subcategory logic from title if it was ported from basic items
+            let subCat = sv.title.toLowerCase().includes('oynak') || sv.title.toLowerCase().includes('stiklo') ? 'glass' :
+              sv.title.toLowerCase().includes('akfa') || sv.title.toLowerCase().includes('eshik') ? 'akfa' : 'wood';
+
+            let tagTheme = subCat === 'akfa' ? 'tag-akfa' : subCat === 'glass' ? 'tag-glass' : 'tag-wood';
+            let tagColorTitle = subCat === 'akfa' ? 'AKFA' : subCat === 'glass' ? 'Oynak' : 'Yog\'och';
+            let bgTheme = subCat === 'akfa' ? 't-akfa' : subCat === 'glass' ? 't-glass' : 't-wood';
+
+            let iconHtml = subCat === 'akfa' ? `<svg viewBox="0 0 24 24" stroke="#0F172A" fill="none" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="3" x2="9" y2="21" /></svg>` :
+              subCat === 'glass' ? `<svg viewBox="0 0 24 24" stroke="#0891B2" fill="none" stroke-width="1.5"><polygon points="12 2 20 7 20 17 12 22 4 17 4 7 12 2" /><line x1="12" y1="2" x2="12" y2="22" /></svg>` :
+                `<svg viewBox="0 0 24 24" stroke="#92400E" fill="none" stroke-width="1.5"><path d="M20 14c0 4.418-3.582 8-8 8S4 18.418 4 14C4 9.582 12 2 12 2s8 7.582 8 12z" /></svg>`;
+
+            if (sv.imageB64) {
+              iconHtml = `<img src="${sv.imageB64}" style="width:100%; height:100%; object-fit:cover;" />`;
+            }
+
+            return `
+              <div class="p-card reveal ${delayClass}" data-cat="${subCat}">
+                <div class="p-thumb ${bgTheme}">
+                  ${iconHtml}
+                  <div class="p-mask">
+                    <div class="p-mask-title">${sv.title}</div>
+                    <div class="p-mask-sub">${sv.description || ''}</div>
+                  </div>
+                </div>
+                <div class="p-info">
+                  <div class="p-info-title">${sv.title}</div>
+                  <span class="p-tag ${tagTheme}">${tagColorTitle}</span>
+                </div>
+              </div>
+            `;
+          }).join('');
+        } else {
+          // Normal service grid
+          gridEl.innerHTML = items.map((sv, idx) => {
+            let delayClass = idx % 3 === 1 ? 'reveal-delay-1' : (idx % 3 === 2 ? 'reveal-delay-2' : '');
+
+            let iconHtml = category === 'akfa' ? `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="3" x2="9" y2="21" /><line x1="15" y1="3" x2="15" y2="21" /></svg>` :
+              category === 'glass' ? `<svg viewBox="0 0 24 24" stroke="#0891B2"><path d="M6 3h12l4 6-10 13L2 9z" /><path d="M11 3L8 9l4 13 4-13-3-6" /><line x1="2" y1="9" x2="22" y2="9" /></svg>` :
+                `<svg viewBox="0 0 24 24" stroke="#92400E"><path d="M20 14c0 4.418-3.582 8-8 8S4 18.418 4 14C4 9.582 12 2 12 2s8 7.582 8 12z" /><line x1="9" y1="12" x2="15" y2="12" /><line x1="12" y1="9" x2="12" y2="15" /></svg>`;
+
+            if (sv.imageB64) {
+              iconHtml = `<img src="${sv.imageB64}" style="width:100%; height:100%; object-fit:cover;" />`;
+            }
+
+            return `
+              <div class="p-service-card reveal ${delayClass}">
+                <div class="psc-thumb ${themeClass}">
+                  ${iconHtml}
+                </div>
+                <div class="psc-body">
+                  <h3>${sv.title}</h3>
+                  <p>${sv.description}</p>
+                  <div class="psc-price">${sv.price}</div>
+                  <a href="https://t.me/tripro_uz" class="btn btn-gold btn-full btn-sm" target="_blank">Buyurtma berish</a>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        // Retrigger reveal logic after DOM injection
+        setTimeout(runReveal, 100);
+      };
+
+      renderGrid(akfaGrid, 'akfa', 'reveal', 't-akfa');
+      renderGrid(glassGrid, 'glass', 'reveal', 't-glass');
+      renderGrid(woodGrid, 'wood', 'reveal', 't-wood');
+      renderGrid(portfolioGrid, 'portfolio', 'reveal', '');
+    }
+
+    const rippleStyle = document.createElement('style');
+    rippleStyle.textContent = `@keyframes ripple { from { transform: scale(0); opacity: 1; } to { transform: scale(4); opacity: 0; } }`;
+    document.head.appendChild(rippleStyle);
+  </script>
+</body>
+
+</html>

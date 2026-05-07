@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriPro Admin Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0F172A;
+      --navy-light: #1E293B;
+      --gold: #D4AF37;
+      --gold-light: #E8C84E;
+      --white: #FFFFFF;
+      --text: #0F172A;
+      --text-muted: #64748B;
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--navy) 0%, #162032 60%, #0d1826 100%);
+      color: var(--white);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Background decoration */
+    .bg-shape {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, rgba(0,0,0,0) 70%);
+      top: -200px;
+      right: -200px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .login-wrapper {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      padding: 50px;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(212, 175, 55, 0.1);
+      position: relative;
+      z-index: 10;
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .brand-logo {
+      height: 64px;
+      width: 64px;
+      object-fit: contain;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.4));
+    }
+
+    .brand h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      margin-bottom: 5px;
+      letter-spacing: 1px;
+    }
+
+    .brand h1 span {
+      color: var(--gold);
+    }
+
+    .brand p {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .input-group {
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .input-group label {
+      display: block;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: var(--white);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: var(--transition);
+      outline: none;
+    }
+
+    .input-group input:focus {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+    }
+
+    .error-msg {
+      color: #EF4444;
+      font-size: 0.85rem;
+      margin-top: 10px;
+      display: none;
+      text-align: center;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--navy);
+      border: none;
+      border-radius: 12px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 10px;
+      text-transform: uppercase;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="bg-shape"></div>
+  <div class="bg-shape" style="top: auto; bottom: -200px; left: -200px; right: auto;"></div>
+
+  <div class="login-wrapper">
+    <div class="brand">
+      <img src="../logo.png" alt="TriPro Logo" class="brand-logo">
+      <h1>TriPro <span>Admin</span></h1>
+      <p>Boshqaruv Tizimi</p>
+    </div>
+
+    <form id="loginForm">
+      <div class="input-group">
+        <label for="username">Login</label>
+        <input type="text" id="username" placeholder="Loginni kiriting" autocomplete="off" required>
+      </div>
+
+      <div class="input-group">
+        <label for="password">Parol</label>
+        <input type="password" id="password" placeholder="••••••••" required>
+      </div>
+
+      <div class="error-msg" id="errorMsg">Login yoki parol noto'g'ri!</div>
+
+      <button type="submit" class="btn-login">Kirish</button>
+    </form>
+
+    <div class="footer">
+      TriPro Control Center &copy; 2026
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value;
+      const errorMsg = document.getElementById('errorMsg');
+
+      // Yangi login va parol: tripro / 2025
+      if (user === 'tripro' && pass === '2025') {
+        errorMsg.style.display = 'none';
+        
+        // Muvaffaqiyatli kirish
+        const btn = document.querySelector('.btn-login');
+        btn.innerHTML = "Kirilmoqda...";
+        btn.style.background = "#22C55E";
+        btn.style.color = "white";
+
+        setTimeout(() => {
+          // Bitta orqaga qaytib admin.html-ga yo'naltiramiz, chunki bu admin/index.html da
+          window.location.href = '../admin.html';
+        }, 800);
+      } else {
+        errorMsg.style.display = 'block';
+        
+        const form = document.querySelector('.login-wrapper');
+        form.animate([
+          { transform: 'translateX(0)' },
+          { transform: 'translateX(-10px)' },
+          { transform: 'translateX(10px)' },
+          { transform: 'translateX(-10px)' },
+          { transform: 'translateX(10px)' },
+          { transform: 'translateX(0)' },
+        ], { duration: 400, easing: 'ease-in-out' });
+      }
+    });
+  </script>
+</body>
+</html>
