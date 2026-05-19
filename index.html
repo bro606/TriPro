@@ -4,9 +4,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TriPro — Premium Industrial Workshop</title>
+  <title>TriPro — AKFA Romlar, Oynak va Yog'och Mahsulotlar</title>
   <meta name="description"
-    content="TriPro — Professional AKFA frames, glass services and wooden products manufacturing workshop in Tashkent, Uzbekistan.">
+    content="TriPro — AKFA romlar, oynak xizmatlari va yog'och mahsulotlar ishlab chiqarish. Farg'ona, Uzbekistan.">
+  <meta property="og:title" content="TriPro — AKFA Romlar, Oynak va Yog'och Mahsulotlar">
+  <meta property="og:description" content="AKFA romlar, oynak kesish, stiklopaket va asalari yashiklari ishlab chiqarish. Farg'ona, Uzbekistan.">
+  <meta property="og:image" content="logo.png">
+  <meta property="og:url" content="https://tripro.uz">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TriPro — AKFA Romlar, Oynak va Yog'och Mahsulotlar">
+  <meta name="twitter:description" content="AKFA romlar, oynak xizmatlari va yog'och mahsulotlar ishlab chiqarish. Farg'ona, Uzbekistan.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -1074,7 +1082,8 @@
     .bento-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: auto;
+      grid-auto-rows: auto;
+      grid-auto-flow: dense;
       gap: 20px;
     }
 
@@ -1117,6 +1126,29 @@
 
     .bento-card.span-full {
       grid-column: 1 / -1;
+    }
+
+    .promo-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #DC2626;
+      color: white;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      z-index: 10;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+      animation: badge-pulse 2s infinite;
+    }
+
+    @keyframes badge-pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
     }
 
     .bc-icon {
@@ -1617,6 +1649,7 @@
       box-shadow: var(--shadow-sm);
       overflow: hidden;
       transition: var(--transition);
+      position: relative;
     }
 
     .p-service-card:hover {
@@ -2285,6 +2318,234 @@
       }
     }
 
+    /* ─── EXTRA SMALL (480px) ─── */
+    @media (max-width: 480px) {
+      .header-inner {
+        padding: 0 16px;
+        height: 72px;
+      }
+
+      .logo-img {
+        height: 44px;
+        width: 44px;
+      }
+
+      .logo-text {
+        font-size: 1.2rem;
+      }
+
+      .hero h1 {
+        font-size: clamp(2rem, 10vw, 2.8rem);
+      }
+
+      .hero-desc {
+        font-size: 0.95rem;
+        margin-bottom: 32px;
+      }
+
+      .hero-content {
+        padding: 64px 16px 40px;
+        gap: 32px;
+      }
+
+      .hero-badge {
+        font-size: 0.65rem;
+        padding: 7px 14px;
+      }
+
+      .h-stat {
+        padding: 16px 14px;
+      }
+
+      .h-stat-num {
+        font-size: 1.5rem;
+      }
+
+      .h-stat-label {
+        font-size: 0.7rem;
+      }
+
+      .hero-stat-cards {
+        gap: 8px;
+      }
+
+      .btn {
+        padding: 11px 20px;
+        font-size: 0.8rem;
+      }
+
+      .section {
+        padding: 48px 16px;
+      }
+
+      .section-header {
+        margin-bottom: 40px;
+      }
+
+      .section-header h2 {
+        font-size: clamp(1.5rem, 6vw, 1.9rem);
+      }
+
+      .section-header p {
+        font-size: 0.9rem;
+      }
+
+      .bento-card {
+        padding: 24px;
+      }
+
+      .bento-card h3 {
+        font-size: 1.3rem;
+      }
+
+      .bc-icon {
+        width: 52px;
+        height: 52px;
+        margin-bottom: 20px;
+      }
+
+      .bc-icon svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .bc-price {
+        font-size: 1rem;
+        padding: 10px 16px;
+      }
+
+      .stats-strip {
+        padding: 48px 16px;
+      }
+
+      .stats-inner {
+        gap: 24px;
+      }
+
+      .stat-num {
+        font-size: 2.5rem;
+      }
+
+      .page-hero {
+        padding: 56px 16px 48px;
+      }
+
+      .calc-header {
+        padding: 24px;
+      }
+
+      .calc-body {
+        padding: 24px;
+      }
+
+      .calc-row {
+        grid-template-columns: 1fr;
+      }
+
+      .calc-result {
+        padding: 20px;
+      }
+
+      .result-value {
+        font-size: 2.2rem;
+      }
+
+      .contact-form-wrap {
+        padding: 24px;
+      }
+
+      .contact-form-wrap h3 {
+        font-size: 1.3rem;
+      }
+
+      .contact-item {
+        padding: 12px 16px;
+      }
+
+      .cta-section {
+        padding: 56px 16px;
+      }
+
+      footer {
+        padding: 48px 16px 24px;
+      }
+
+      .footer-logo-img {
+        height: 56px;
+        width: 56px;
+      }
+
+      .footer-desc {
+        max-width: 100%;
+        text-align: center;
+      }
+
+      .portfolio-masonry {
+        grid-template-columns: 1fr;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mobile-nav-bar {
+        padding: 0 12px;
+      }
+
+      .mobile-nav-item.active {
+        max-width: 120px;
+      }
+    }
+
+    /* ─── TINY (380px) ─── */
+    @media (max-width: 380px) {
+      .hero h1 {
+        font-size: 1.6rem;
+      }
+
+      .hero-stat-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-inner {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .stat-num {
+        font-size: 2rem;
+      }
+
+      .stat-label {
+        font-size: 0.7rem;
+      }
+
+      .mobile-nav-item.active {
+        max-width: 90px;
+        padding: 0 8px;
+      }
+
+      .mobile-nav-label {
+        font-size: 0.55rem;
+      }
+
+      .bento-grid {
+        gap: 14px;
+      }
+
+      .bento-card {
+        padding: 18px;
+      }
+
+      .section {
+        padding: 40px 12px;
+      }
+
+      .hero-content {
+        padding: 48px 12px 32px;
+      }
+    }
+
     /* ══════════════════════════════════════
    FOOTER DISCLAIMER
 ══════════════════════════════════════ */
@@ -2443,7 +2704,7 @@
         <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" />
       </svg>
     </a>
-    <a href="https://wa.me/998996156006" class="sf-btn sf-wa" title="WhatsApp" target="_blank">
+    <a href="https://wa.me/998906335787" class="sf-btn sf-wa" title="WhatsApp" target="_blank">
       <svg viewBox="0 0 24 24" fill="white">
         <path
           d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
@@ -2488,7 +2749,7 @@
               </svg>
               Telegram
             </a>
-            <a href="https://wa.me/998996156006" class="btn btn-outline" target="_blank" id="hero-btn-wa">
+            <a href="https://wa.me/998906335787" class="btn btn-outline" target="_blank" id="hero-btn-wa">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
@@ -2550,54 +2811,8 @@
           <h2 id="s-title-services">Biz nima taklif qilamiz?</h2>
           <p id="s-desc-services">Professional ishlab chiqarish va o'rnatish xizmatlari</p>
         </div>
-        <div class="bento-grid">
-          <!-- AKFA — span 2 -->
-          <div class="bento-card span-2 reveal">
-            <div class="bc-icon">
-              <svg viewBox="0 0 24 24">
-                <rect x="3" y="3" width="18" height="18" rx="2" />
-                <line x1="3" y1="9" x2="21" y2="9" />
-                <line x1="3" y1="15" x2="21" y2="15" />
-                <line x1="9" y1="3" x2="9" y2="21" />
-                <line x1="15" y1="3" x2="15" y2="21" />
-              </svg>
-            </div>
-            <div class="bc-label" id="svc1-label">AKFA Romlar</div>
-            <h3 id="svc1-title">AKFA Romlar</h3>
-            <p id="svc1-desc">Alyumin, plastik va balkon AKFA romlarini professional o'rnatish. Yuqori sifat va kafolat.
-            </p>
-            <div class="bc-price" id="svc1-price">$35 / m²</div>
-            <button class="btn btn-navy btn-sm" onclick="showPage('akfa')" id="svc1-btn">Batafsil</button>
-          </div>
-          <!-- Glass -->
-          <div class="bento-card reveal reveal-delay-1">
-            <div class="bc-icon">
-              <svg viewBox="0 0 24 24">
-                <polygon points="12 2 20 7 20 17 12 22 4 17 4 7 12 2" />
-                <line x1="12" y1="2" x2="12" y2="22" />
-                <line x1="4" y1="7" x2="20" y2="7" />
-              </svg>
-            </div>
-            <div class="bc-label" id="svc2-label">Oynak Xizmatlari</div>
-            <h3 id="svc2-title">Oynak Xizmatlari</h3>
-            <p id="svc2-desc">Oynak kesish, stiklopaket qilish va germetika xizmatlari. Tez va sifatli.</p>
-            <div class="bc-price" id="svc2-price">$5 dan boshlab</div>
-            <button class="btn btn-navy btn-sm" onclick="showPage('oynak')" id="svc2-btn">Batafsil</button>
-          </div>
-          <!-- Wood -->
-          <div class="bento-card reveal reveal-delay-2" style="background: linear-gradient(135deg, #FEFDF8, #FFFBEB);">
-            <div class="bc-icon" style="background: linear-gradient(135deg, #92400E, #B45309);">
-              <svg viewBox="0 0 24 24">
-                <path d="M20 14c0 4.418-3.582 8-8 8S4 18.418 4 14C4 9.582 12 2 12 2s8 7.582 8 12z" />
-                <line x1="12" y1="9" x2="12" y2="22" />
-              </svg>
-            </div>
-            <div class="bc-label" id="svc3-label">Taxta цex</div>
-            <h3 id="svc3-title">Taxta цex (Asalari Yashiklari)</h3>
-            <p id="svc3-desc">Asalari yashiklari, randetal, karmushka va boshqa yog'och mahsulotlar buyurtmaga.</p>
-            <div class="bc-price" id="svc3-price">$5 dan boshlab</div>
-            <button class="btn btn-navy btn-sm" onclick="showPage('taxta')" id="svc3-btn">Batafsil</button>
-          </div>
+        <div class="bento-grid" id="home-bento-grid">
+          <!-- Dynamic Bento Cards will be rendered here -->
         </div>
       </div>
     </section>
@@ -2672,13 +2887,13 @@
       <h2 id="cta-title">Biz bilan ishlashni boshlang</h2>
       <p id="cta-desc">Bepul konsultatsiya va narx hisoblash uchun bog'laning</p>
       <div class="cta-btns">
-        <a href="tel:+998901234567" class="btn btn-gold">
+        <a href="tel:+998906335787" class="btn btn-gold">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
             <path
               d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.63 19.79 19.79 0 011 1.18 2 2 0 013 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 7a16 16 0 006.29 6.29l1.36-1.36a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14z" />
           </svg>
-          +998 99 615 60 06
+          +998 90 633 57 87
         </a>
         <a href="https://t.me/tripro_uz" class="btn btn-tg" target="_blank">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -2687,7 +2902,7 @@
           </svg>
           Telegram
         </a>
-        <a href="https://wa.me/998996156006" class="btn btn-wa" target="_blank">
+        <a href="https://wa.me/998906335787" class="btn btn-wa" target="_blank">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <path
               d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
@@ -2750,11 +2965,7 @@
               <div class="calc-field">
                 <label>Rom turi (narx m² uchun)</label>
                 <select id="calc-price" onchange="calcPrice()">
-                  <option value="35">Plastik AKFA Rom — $35/m²</option>
-                  <option value="38">Balkon Romlari — $38/m²</option>
-                  <option value="40">AKFA Eshik Romlari — $40/m²</option>
-                  <option value="45">Alyumin AKFA Rom — $45/m²</option>
-                  <option value="50">Tijorat Binolar Romlari — $50/m²</option>
+                  <option value="">— Tanlang —</option>
                 </select>
               </div>
             </div>
@@ -2860,6 +3071,30 @@
         <div>
           <div class="contact-info">
             <h3 id="contact-info-title">Aloqa Ma'lumotlari</h3>
+            <a href="tel:+998906335787" class="contact-item">
+              <div class="contact-icon ci-phone">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.63 19.79 19.79 0 011 1.18 2 2 0 013 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 7a16 16 0 006.29 6.29l1.36-1.36a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14z" />
+                </svg>
+              </div>
+              <div>
+                <div class="contact-item-text">+998 90 633 57 87</div>
+                <div class="contact-item-sub">Qo'ng'iroq qiling</div>
+              </div>
+            </a>
+            <a href="tel:+998958936787" class="contact-item">
+              <div class="contact-icon ci-phone">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.63 19.79 19.79 0 011 1.18 2 2 0 013 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 7a16 16 0 006.29 6.29l1.36-1.36a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14z" />
+                </svg>
+              </div>
+              <div>
+                <div class="contact-item-text">+998 95 893 67 87</div>
+                <div class="contact-item-sub">Qo'ng'iroq qiling</div>
+              </div>
+            </a>
             <a href="tel:+998996156006" class="contact-item">
               <div class="contact-icon ci-phone">
                 <svg viewBox="0 0 24 24">
@@ -2883,7 +3118,7 @@
                 <div class="contact-item-sub">Yozing yoki qo'ng'iroq qiling</div>
               </div>
             </a>
-            <a href="https://wa.me/998996156006" class="contact-item" target="_blank">
+            <a href="https://wa.me/998906335787" class="contact-item" target="_blank">
               <div class="contact-icon ci-wa">
                 <svg viewBox="0 0 24 24">
                   <path
@@ -2891,12 +3126,21 @@
                 </svg>
               </div>
               <div>
-                <div class="contact-item-text">+998 90 123 45 67 — WhatsApp</div>
+                <div class="contact-item-text">+998 90 633 57 87 — WhatsApp</div>
                 <div class="contact-item-sub">Xabar yuboring</div>
               </div>
             </a>
           </div>
-          <div class="map-wrap" style="height: 380px; padding: 0; background: #eee;">
+          <div style="margin-top:28px; padding:16px 20px; background:var(--card); border:1px solid var(--border); border-radius:var(--radius-sm); box-shadow:var(--shadow-sm);">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <div>
+                <div style="font-weight:600; color:var(--navy);">Google Mapsda ko'rish</div>
+                <div style="font-size:0.82rem; color:var(--text-muted);">Aniq manzilni olish uchun qo'ng'iroq qiling</div>
+              </div>
+            </div>
+          </div>
+          <div class="map-wrap" style="height: 280px; padding: 0; background: #eee; display:block;">
             <iframe src="https://maps.google.com/maps?q=40.316423,71.850114&z=17&output=embed" width="100%"
               height="100%" style="border:0; border-radius: var(--radius);" allowfullscreen="" loading="lazy"
               referrerpolicy="no-referrer-when-downgrade">
@@ -3042,6 +3286,22 @@
       </div>
       <div class="footer-col">
         <h4>Aloqa</h4>
+        <a href="tel:+998906335787">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.63 19.79 19.79 0 011 1.18 2 2 0 013 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 7a16 16 0 006.29 6.29l1.36-1.36a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14z" />
+          </svg>
+          +998 90 633 57 87
+        </a>
+        <a href="tel:+998958936787">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.63 19.79 19.79 0 011 1.18 2 2 0 013 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 7a16 16 0 006.29 6.29l1.36-1.36a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14z" />
+          </svg>
+          +998 95 893 67 87
+        </a>
         <a href="tel:+998996156006">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
@@ -3057,7 +3317,7 @@
           </svg>
           Telegram
         </a>
-        <a href="https://wa.me/998996156006" target="_blank">
+        <a href="https://wa.me/998906335787" target="_blank">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="opacity:0.7">
             <path
               d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a3.178 3.178 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z" />
@@ -3150,9 +3410,9 @@
         return;
       }
       try {
-        const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+        const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
         const { getDatabase, ref, push, set, get, child, update, onValue } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js');
-        const app = initializeApp(firebaseConfig);
+        const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
         const db = getDatabase(app);
         window._firebaseDB = db;
         window._firebaseRef = ref;
@@ -3175,12 +3435,112 @@
           }
         });
 
+        // Listen for homeContent changes and update the page
+        onValue(ref(db, 'homeContent'), (snap) => {
+          if (!snap.exists()) return;
+          const d = snap.val();
+          if (d.hero) {
+            const badge = document.getElementById('hero-badge');
+            const titleEl = document.getElementById('hero-title');
+            const descEl  = document.getElementById('hero-desc');
+            if (badge  && d.hero.badge)  badge.textContent = d.hero.badge;
+            if (descEl && d.hero.desc)   descEl.textContent = d.hero.desc;
+            if (titleEl && (d.hero.title || d.hero.accent || d.hero.title2)) {
+              const t  = d.hero.title  || 'Sifatli';
+              const ac = d.hero.accent || 'AKFA Romlar';
+              const t2 = d.hero.title2 || "Oynak va Yog'och Mahsulotlar";
+              titleEl.innerHTML = `${t} <span class="accent">${ac}</span>,<br>${t2}`;
+            }
+          }
+          if (d.stats) {
+            ['s1','s2','s3','s4'].forEach(k => {
+              const s = d.stats[k]; if (!s) return;
+              const heroLabel = document.getElementById(`stat${k.charAt(1)}`);
+              const stripLabel = document.getElementById(`stat-s${k.charAt(1)}`);
+              if (heroLabel && s.label) heroLabel.textContent = s.label;
+              if (stripLabel && s.label) stripLabel.textContent = s.label;
+              if (heroLabel && s.num) {
+                const numEl = heroLabel.previousElementSibling;
+                if (numEl && numEl.classList.contains('h-stat-num')) numEl.textContent = s.num;
+              }
+              if (stripLabel && s.num) {
+                const stripNum = stripLabel.previousElementSibling;
+                if (stripNum && stripNum.classList.contains('stat-num')) stripNum.textContent = s.num;
+              }
+            });
+          }
+        });
+
+        // Listen for contactSettings changes and update phone/WhatsApp
+        onValue(ref(db, 'contactSettings'), (snap) => {
+          if (!snap.exists()) return;
+          const d = snap.val();
+          window._contactData = d;
+          localStorage.setItem('tripro_contact_settings', JSON.stringify(d));
+          updateContactDisplay(d);
+        });
+
       } catch (e) {
         console.warn('Firebase init failed:', e.message);
         window._firebaseReady = false;
       }
     }
     initFirebase();
+  </script>
+
+  <script>
+    function updateContactDisplay(data) {
+      if (!data) {
+        try { data = JSON.parse(localStorage.getItem('tripro_contact_settings')); } catch(e) {}
+        if (!data) return;
+      }
+      const p1 = data.phone1 || '+998906335787';
+      const p2 = data.phone2 || '+998958936787';
+      const p3 = data.phone3 || '+998996156006';
+      const wa = data.whatsapp || '+998906335787';
+      // Update all tel: links that match old numbers
+      document.querySelectorAll('a[href*="tel:"]').forEach(a => {
+        const h = a.getAttribute('href');
+        if (h.includes('+998906335787')) a.setAttribute('href', 'tel:' + p1);
+        else if (h.includes('+998958936787')) a.setAttribute('href', 'tel:' + p2);
+        else if (h.includes('+998996156006')) a.setAttribute('href', 'tel:' + p3);
+      });
+      // Update all wa.me links
+      document.querySelectorAll('a[href*="wa.me/"]').forEach(a => {
+        a.setAttribute('href', 'https://wa.me/' + wa.replace(/\D/g, ''));
+      });
+      // Update displayed phone numbers in text nodes (contact page + footer + CTA)
+      const oldNum1 = '+998 90 633 57 87', newNum1 = formatPhone(p1);
+      const oldNum2 = '+998 95 893 67 87', newNum2 = formatPhone(p2);
+      const oldNum3 = '+998 99 615 60 06', newNum3 = formatPhone(p3);
+      function replaceInText(parent) {
+        if (!parent || parent.nodeType === 3) return;
+        const walker = document.createTreeWalker(parent, 4, null, false);
+        let node;
+        while (node = walker.nextNode()) {
+          if (node.textContent.includes(oldNum1) || node.textContent.includes('+998906335787')) {
+            node.textContent = node.textContent.replace(oldNum1, newNum1).replace('+998906335787', newNum1);
+          }
+          if (node.textContent.includes(oldNum2) || node.textContent.includes('+998958936787')) {
+            node.textContent = node.textContent.replace(oldNum2, newNum2).replace('+998958936787', newNum2);
+          }
+          if (node.textContent.includes(oldNum3) || node.textContent.includes('+998996156006')) {
+            node.textContent = node.textContent.replace(oldNum3, newNum3).replace('+998996156006', newNum3);
+          }
+        }
+      }
+      replaceInText(document.body);
+    }
+    function formatPhone(raw) {
+      const c = raw.replace(/\D/g, '');
+      if (c.length === 12) return '+' + c.slice(0,3) + ' ' + c.slice(3,5) + ' ' + c.slice(5,8) + ' ' + c.slice(8,10) + ' ' + c.slice(10);
+      return raw;
+    }
+    // Load cached contact settings on page start
+    try {
+      const cached = JSON.parse(localStorage.getItem('tripro_contact_settings'));
+      if (cached) updateContactDisplay(cached);
+    } catch(e) {}
   </script>
 
   <script>
@@ -3565,8 +3925,11 @@
     });
 
     // --- FIREBASE DOM SERVICES RENDERER ---
+    const HOME_CATEGORY_PAGES = { akfa: 'akfa', oynak: 'oynak', taxta: 'taxta', 'asalari': 'taxta', 'yog\'och': 'taxta' };
+
     function renderSiteServices(services) {
       if (!services) return;
+      const homeGrid = document.getElementById('home-bento-grid');
       const akfaGrid = document.getElementById('grid-akfa');
       const glassGrid = document.getElementById('grid-glass');
       const woodGrid = document.getElementById('grid-wood');
@@ -3580,68 +3943,126 @@
           return;
         }
 
-        if (category === 'portfolio') {
+        if (category === 'home') {
           gridEl.innerHTML = items.map((sv, idx) => {
-            let delayClass = idx % 3 === 1 ? 'reveal-delay-1' : (idx % 3 === 2 ? 'reveal-delay-2' : '');
-
-            // Try to deduce subcategory logic from title if it was ported from basic items
-            let subCat = sv.title.toLowerCase().includes('oynak') || sv.title.toLowerCase().includes('stiklo') ? 'glass' :
-              sv.title.toLowerCase().includes('akfa') || sv.title.toLowerCase().includes('eshik') ? 'akfa' : 'wood';
-
-            let tagTheme = subCat === 'akfa' ? 'tag-akfa' : subCat === 'glass' ? 'tag-glass' : 'tag-wood';
-            let tagColorTitle = subCat === 'akfa' ? 'AKFA' : subCat === 'glass' ? 'Oynak' : 'Yog\'och';
-            let bgTheme = subCat === 'akfa' ? 't-akfa' : subCat === 'glass' ? 't-glass' : 't-wood';
-
-            let iconHtml = subCat === 'akfa' ? `<svg viewBox="0 0 24 24" stroke="#0F172A" fill="none" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="3" x2="9" y2="21" /></svg>` :
-              subCat === 'glass' ? `<svg viewBox="0 0 24 24" stroke="#0891B2" fill="none" stroke-width="1.5"><polygon points="12 2 20 7 20 17 12 22 4 17 4 7 12 2" /><line x1="12" y1="2" x2="12" y2="22" /></svg>` :
-                `<svg viewBox="0 0 24 24" stroke="#92400E" fill="none" stroke-width="1.5"><path d="M20 14c0 4.418-3.582 8-8 8S4 18.418 4 14C4 9.582 12 2 12 2s8 7.582 8 12z" /></svg>`;
-
-            if (sv.imageB64) {
-              iconHtml = `<img src="${sv.imageB64}" style="width:100%; height:100%; object-fit:cover;" />`;
+            try {
+              let title = sv.title || 'Sarlahasiz xizmat';
+              let desc = sv.description || '';
+              let price = sv.price || '';
+              let delayClass = idx % 3 === 1 ? 'reveal-delay-1' : (idx % 3 === 2 ? 'reveal-delay-2' : '');
+              let spanClass = idx === 0 ? 'span-2' : '';
+              
+              let lowerTitle = title.toLowerCase();
+              let iconHtml = `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="3" x2="9" y2="21" /></svg>`;
+              if (lowerTitle.includes('oynak')) iconHtml = `<svg viewBox="0 0 24 24"><polygon points="12 2 20 7 20 17 12 22 4 17 4 7 12 2" /><line x1="12" y1="2" x2="12" y2="22" /></svg>`;
+              if (lowerTitle.includes('taxta') || lowerTitle.includes('asalari')) iconHtml = `<svg viewBox="0 0 24 24"><path d="M20 14c0 4.418-3.582 8-8 8S4 18.418 4 14C4 9.582 12 2 12 2s8 7.582 8 12z" /></svg>`;
+              
+              if (sv.imageB64) {
+                iconHtml = `<img src="${sv.imageB64}" style="width:100%; height:100%; object-fit:cover;" />`;
+              }
+  
+              // Use category-based page routing
+              const svcCat = (sv.category || '').toLowerCase();
+              let page = sv.category === 'home' ? (HOME_CATEGORY_PAGES[Object.keys(HOME_CATEGORY_PAGES).find(k => lowerTitle.includes(k)) || 'taxta'] || 'taxta') : svcCat;
+  
+              let promoHtml = sv.promo ? `<div class="promo-badge">${sv.promo}</div>` : '';
+  
+              return `
+                <div class="bento-card ${spanClass} reveal ${delayClass}">
+                  ${promoHtml}
+                  <div class="bc-icon">${iconHtml}</div>
+                  <div class="bc-label">Xizmat</div>
+                  <h3>${title}</h3>
+                  <p>${desc}</p>
+                  <div class="bc-price">${price}</div>
+                  <button class="btn btn-navy btn-sm" onclick="showPage('${page}')">Batafsil</button>
+                </div>
+              `;
+            } catch (e) {
+              console.error("Error rendering home service:", e, sv);
+              return '';
             }
-
-            return `
-              <div class="p-card reveal ${delayClass}" data-cat="${subCat}">
-                <div class="p-thumb ${bgTheme}">
-                  ${iconHtml}
-                  <div class="p-mask">
-                    <div class="p-mask-title">${sv.title}</div>
-                    <div class="p-mask-sub">${sv.description || ''}</div>
+          }).join('');
+        } else if (category === 'portfolio') {
+          gridEl.innerHTML = items.map((sv, idx) => {
+            try {
+              let title = sv.title || 'Bajarilgan ish';
+              let delayClass = idx % 3 === 1 ? 'reveal-delay-1' : (idx % 3 === 2 ? 'reveal-delay-2' : '');
+  
+              // Try to deduce subcategory logic from title if it was ported from basic items
+              let subCat = title.toLowerCase().includes('oynak') || title.toLowerCase().includes('stiklo') ? 'glass' :
+                title.toLowerCase().includes('akfa') || title.toLowerCase().includes('eshik') ? 'akfa' : 'wood';
+  
+              let tagTheme = subCat === 'akfa' ? 'tag-akfa' : subCat === 'glass' ? 'tag-glass' : 'tag-wood';
+              let tagColorTitle = subCat === 'akfa' ? 'AKFA' : subCat === 'glass' ? 'Oynak' : 'Yog\'och';
+              let bgTheme = subCat === 'akfa' ? 't-akfa' : subCat === 'glass' ? 't-glass' : 't-wood';
+  
+              let iconHtml = subCat === 'akfa' ? `<svg viewBox="0 0 24 24" stroke="#0F172A" fill="none" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="3" x2="9" y2="21" /></svg>` :
+                subCat === 'glass' ? `<svg viewBox="0 0 24 24" stroke="#0891B2" fill="none" stroke-width="1.5"><polygon points="12 2 20 7 20 17 12 22 4 17 4 7 12 2" /><line x1="12" y1="2" x2="12" y2="22" /></svg>` :
+                  `<svg viewBox="0 0 24 24" stroke="#92400E" fill="none" stroke-width="1.5"><path d="M20 14c0 4.418-3.582 8-8 8S4 18.418 4 14C4 9.582 12 2 12 2s8 7.582 8 12z" /></svg>`;
+  
+              if (sv.imageB64) {
+                iconHtml = `<img src="${sv.imageB64}" style="width:100%; height:100%; object-fit:cover;" />`;
+              }
+  
+              let promoHtml = sv.promo ? `<div class="promo-badge">${sv.promo}</div>` : '';
+  
+              return `
+                <div class="p-card reveal ${delayClass}" data-cat="${subCat}">
+                  ${promoHtml}
+                  <div class="p-thumb ${bgTheme}">
+                    ${iconHtml}
+                    <div class="p-mask">
+                      <div class="p-mask-title">${title}</div>
+                      <div class="p-mask-sub">${sv.description || ''}</div>
+                    </div>
+                  </div>
+                  <div class="p-info">
+                    <div class="p-info-title">${title}</div>
+                    <span class="p-tag ${tagTheme}">${tagColorTitle}</span>
                   </div>
                 </div>
-                <div class="p-info">
-                  <div class="p-info-title">${sv.title}</div>
-                  <span class="p-tag ${tagTheme}">${tagColorTitle}</span>
-                </div>
-              </div>
-            `;
+              `;
+            } catch (e) {
+              console.error("Error rendering portfolio item:", e, sv);
+              return '';
+            }
           }).join('');
         } else {
           // Normal service grid
           gridEl.innerHTML = items.map((sv, idx) => {
-            let delayClass = idx % 3 === 1 ? 'reveal-delay-1' : (idx % 3 === 2 ? 'reveal-delay-2' : '');
-
-            let iconHtml = category === 'akfa' ? `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="3" x2="9" y2="21" /><line x1="15" y1="3" x2="15" y2="21" /></svg>` :
-              category === 'glass' ? `<svg viewBox="0 0 24 24" stroke="#0891B2"><path d="M6 3h12l4 6-10 13L2 9z" /><path d="M11 3L8 9l4 13 4-13-3-6" /><line x1="2" y1="9" x2="22" y2="9" /></svg>` :
-                `<svg viewBox="0 0 24 24" stroke="#92400E"><path d="M20 14c0 4.418-3.582 8-8 8S4 18.418 4 14C4 9.582 12 2 12 2s8 7.582 8 12z" /><line x1="9" y1="12" x2="15" y2="12" /><line x1="12" y1="9" x2="12" y2="15" /></svg>`;
-
-            if (sv.imageB64) {
-              iconHtml = `<img src="${sv.imageB64}" style="width:100%; height:100%; object-fit:cover;" />`;
+            try {
+              let title = sv.title || 'Xizmat';
+              let delayClass = idx % 3 === 1 ? 'reveal-delay-1' : (idx % 3 === 2 ? 'reveal-delay-2' : '');
+  
+              let iconHtml = category === 'akfa' ? `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="3" x2="9" y2="21" /><line x1="15" y1="3" x2="15" y2="21" /></svg>` :
+                category === 'glass' ? `<svg viewBox="0 0 24 24" stroke="#0891B2"><path d="M6 3h12l4 6-10 13L2 9z" /><path d="M11 3L8 9l4 13 4-13-3-6" /><line x1="2" y1="9" x2="22" y2="9" /></svg>` :
+                  `<svg viewBox="0 0 24 24" stroke="#92400E"><path d="M20 14c0 4.418-3.582 8-8 8S4 18.418 4 14C4 9.582 12 2 12 2s8 7.582 8 12z" /><line x1="9" y1="12" x2="15" y2="12" /><line x1="12" y1="9" x2="12" y2="15" /></svg>`;
+  
+              if (sv.imageB64) {
+                iconHtml = `<img src="${sv.imageB64}" style="width:100%; height:100%; object-fit:cover;" />`;
+              }
+  
+              let promoHtml = sv.promo ? `<div class="promo-badge">${sv.promo}</div>` : '';
+  
+              return `
+                <div class="p-service-card reveal ${delayClass}">
+                  ${promoHtml}
+                  <div class="psc-thumb ${themeClass}">
+                    ${iconHtml}
+                  </div>
+                  <div class="psc-body">
+                    <h3>${title}</h3>
+                    <p>${sv.description || ''}</p>
+                    <div class="psc-price">${sv.price || ''}</div>
+                    <a href="https://t.me/tripro_uz" class="btn btn-gold btn-full btn-sm" target="_blank">Buyurtma berish</a>
+                  </div>
+                </div>
+              `;
+            } catch (e) {
+              console.error("Error rendering normal service:", e, sv);
+              return '';
             }
-
-            return `
-              <div class="p-service-card reveal ${delayClass}">
-                <div class="psc-thumb ${themeClass}">
-                  ${iconHtml}
-                </div>
-                <div class="psc-body">
-                  <h3>${sv.title}</h3>
-                  <p>${sv.description}</p>
-                  <div class="psc-price">${sv.price}</div>
-                  <a href="https://t.me/tripro_uz" class="btn btn-gold btn-full btn-sm" target="_blank">Buyurtma berish</a>
-                </div>
-              </div>
-            `;
           }).join('');
         }
 
@@ -3649,15 +4070,83 @@
         setTimeout(runReveal, 100);
       };
 
+      renderGrid(homeGrid, 'home', 'reveal', '');
       renderGrid(akfaGrid, 'akfa', 'reveal', 't-akfa');
       renderGrid(glassGrid, 'glass', 'reveal', 't-glass');
       renderGrid(woodGrid, 'wood', 'reveal', 't-wood');
       renderGrid(portfolioGrid, 'portfolio', 'reveal', '');
+      populateCalculator(services);
+    }
+
+    function populateCalculator(services) {
+      const sel = document.getElementById('calc-price');
+      if (!sel) return;
+      const akfaItems = services.filter(s => s.category === 'akfa');
+      sel.innerHTML = '<option value="">— Tanlang —</option>';
+      akfaItems.forEach(sv => {
+        const priceNum = parseFloat((sv.price || '').replace(/[^0-9.]/g, ''));
+        if (!priceNum || priceNum <= 0) return;
+        const label = sv.title + ' — $' + priceNum + '/m²';
+        const opt = document.createElement('option');
+        opt.value = priceNum;
+        opt.textContent = label;
+        sel.appendChild(opt);
+      });
+      calcPrice();
     }
 
     const rippleStyle = document.createElement('style');
     rippleStyle.textContent = `@keyframes ripple { from { transform: scale(0); opacity: 1; } to { transform: scale(4); opacity: 0; } }`;
     document.head.appendChild(rippleStyle);
+
+    // ─── FIREBASE FALLBACK (agar module scriptda Firebase ulanmasa) ───
+    setTimeout(() => {
+      if (window._firebaseReady) return;
+      (async function fallbackFirebase() {
+        try {
+          const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+          const { getDatabase, ref, onValue, push, set } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js');
+          const cfg = window.firebaseConfig || { apiKey: "AIzaSyCzSFLTNJQItcW8RF1LteZ1pWi4aXX5ZJk", databaseURL: "https://tripro-d6f16-default-rtdb.firebaseio.com", projectId: "tripro-d6f16" };
+          const app = getApps().length === 0 ? initializeApp(cfg) : getApps()[0];
+          const db = getDatabase(app);
+          window._firebaseReady = true;
+          window._firebaseDB = db;
+          window._firebaseRef = ref;
+          window._firebasePush = push;
+          window._firebaseSet = set;
+          
+          onValue(ref(db, 'services'), (snap) => {
+            if (!snap.exists()) { if (window.renderSiteServices) window.renderSiteServices([]); return; }
+            const data = snap.val();
+            const services = Object.entries(data).map(([k, v]) => ({ ...v, id: k }));
+            if (window.renderSiteServices) window.renderSiteServices(services);
+          });
+          onValue(ref(db, 'homeContent'), (snap) => {
+            if (!snap.exists()) return;
+            const d = snap.val();
+            if (d.hero) {
+              const badge = document.getElementById('hero-badge');
+              const titleEl = document.getElementById('hero-title');
+              const descEl  = document.getElementById('hero-desc');
+              if (badge  && d.hero.badge)  badge.textContent = d.hero.badge;
+              if (descEl && d.hero.desc)   descEl.textContent = d.hero.desc;
+              if (titleEl && (d.hero.title || d.hero.accent || d.hero.title2)) {
+                titleEl.innerHTML = `${d.hero.title || 'Sifatli'} <span class="accent">${d.hero.accent || 'AKFA Romlar'}</span>,<br>${d.hero.title2 || "Oynak va Yog'och Mahsulotlar"}`;
+              }
+            }
+            if (d.stats) {
+              ['s1','s2','s3','s4'].forEach(k => {
+                const s = d.stats[k]; if (!s) return;
+                const hl = document.getElementById(`stat${k.charAt(1)}`); const sl = document.getElementById(`stat-s${k.charAt(1)}`);
+                if (hl && s.label) hl.textContent = s.label; if (sl && s.label) sl.textContent = s.label;
+                if (hl && s.num) { const ne = hl.previousElementSibling; if (ne && ne.classList.contains('h-stat-num')) ne.textContent = s.num; }
+                if (sl && s.num) { const sn = sl.previousElementSibling; if (sn && sn.classList.contains('stat-num')) sn.textContent = s.num; }
+              });
+            }
+          });
+        } catch(e) { console.warn('Fallback Firebase init failed:', e.message); }
+      })();
+    }, 0);
   </script>
 </body>
 

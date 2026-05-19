@@ -458,6 +458,7 @@
       }
       .table-section {
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
       }
       .table-header {
         flex-direction: column;
@@ -471,18 +472,418 @@
       .user-profile {
         gap: 10px;
       }
-      #current-manager-name {
-        display: none;
+      .nav-item {
+        padding: 14px 20px;
+        font-size: 0.9rem;
+      }
+      .nav-item svg {
+        width: 20px;
+        height: 20px;
       }
     }
 
     @media (max-width: 480px) {
       .topbar {
-        height: 70px;
+        height: 60px;
+        padding: 0 10px;
       }
       .avatar {
-        width: 35px;
-        height: 35px;
+        width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+      }
+      .user-profile > div:first-child {
+        font-size: 0.75rem;
+      }
+      .user-profile > div:first-child div:first-child {
+        font-size: 0.8rem !important;
+      }
+      .user-profile > div:first-child div:last-child {
+        font-size: 0.7rem !important;
+      }
+      .dashboard-content {
+        padding: 12px;
+      }
+      .page-title {
+        font-size: 1.2rem;
+        margin-bottom: 16px;
+      }
+      .stat-card {
+        padding: 14px;
+      }
+      .stat-value {
+        font-size: 1.6rem;
+      }
+      .stat-title {
+        font-size: 0.75rem;
+      }
+      .stat-icon {
+        width: 34px;
+        height: 34px;
+      }
+      .search-bar {
+        width: 32px;
+        padding: 6px;
+      }
+      .search-bar:focus-within {
+        width: 130px;
+      }
+      .services-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+      }
+      .service-card {
+        padding: 12px;
+      }
+      .service-thumb {
+        height: 100px;
+      }
+      #svc-filter-bar {
+        gap: 5px;
+      }
+      #svc-filter-bar .btn-export {
+        font-size: 0.7rem;
+        padding: 5px 10px;
+      }
+      #homepage-editor > div {
+        padding: 16px !important;
+      }
+      #homepage-editor > div > div[style*="display:flex"]:first-child {
+        flex-direction: column;
+        gap: 10px;
+      }
+      #homepage-editor > div:first-child .section-label,
+      #homepage-editor > div:first-child p {
+        font-size: 0.75rem;
+      }
+      th, td {
+        padding: 8px 10px;
+        font-size: 0.72rem;
+      }
+      th {
+        font-size: 0.65rem;
+      }
+      .action-btns .btn-icon svg {
+        width: 16px;
+        height: 16px;
+      }
+      .table-section {
+        padding: 12px !important;
+        border-radius: 12px;
+      }
+      .table-header h3 {
+        font-size: 1rem;
+      }
+      #modal-title {
+        font-size: 1.1rem;
+      }
+      .modal-overlay > div {
+        padding: 18px !important;
+        margin: 10px;
+      }
+      .settings-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .sidebar {
+        width: 260px;
+      }
+      .section-title {
+        font-size: 1rem;
+      }
+      /* Touch-friendly improvements */
+      .nav-item {
+        padding: 16px 20px;
+        font-size: 0.9rem;
+      }
+      .nav-item svg {
+        width: 20px;
+        height: 20px;
+      }
+      button, .btn-export, button[onclick] {
+        min-height: 44px;
+        font-size: 0.9rem;
+      }
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+      .login-card {
+        padding: 28px 18px 22px;
+        max-width: 340px;
+      }
+      .login-field input {
+        padding: 14px 16px;
+        font-size: 1rem;
+      }
+      .login-btn {
+        padding: 16px;
+        font-size: 1rem;
+      }
+      #tab-contacts input {
+        font-size: 16px;
+        padding: 14px 12px;
+      }
+      #tab-contacts button {
+        min-height: 48px;
+        font-size: 1rem;
+        padding: 14px 32px;
+      }
+      .date-time {
+        display: inline;
+      }
+    }
+    @media (max-width: 480px) {
+      .date-time {
+        display: none;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .topbar {
+        padding: 0 6px;
+        height: 56px;
+      }
+      .user-profile > div:first-child {
+        display: none;
+      }
+      .mobile-toggle {
+        padding: 4px;
+      }
+      .search-bar {
+        display: none;
+      }
+      .page-title {
+        font-size: 1rem;
+      }
+      .dashboard-content {
+        padding: 8px;
+      }
+      th, td {
+        padding: 6px;
+        font-size: 0.65rem;
+      }
+      .service-card h3 {
+        font-size: 0.9rem;
+      }
+      #svc-filter-bar .btn-export {
+        font-size: 0.6rem;
+        padding: 4px 6px;
+      }
+      .services-grid {
+        gap: 8px;
+      }
+      .stat-value {
+        font-size: 1.3rem;
+      }
+      .stat-card {
+        padding: 10px;
+      }
+      #homepage-editor input,
+      #homepage-editor textarea,
+      #homepage-editor select {
+        font-size: 0.8rem !important;
+        padding: 8px 10px !important;
+      }
+      .btn-export,
+      button[onclick*="saveHomeContent"],
+      button[onclick*="openServiceModal"] {
+        font-size: 0.75rem !important;
+        padding: 10px !important;
+      }
+      .nav-item {
+        padding: 14px 16px;
+        font-size: 0.85rem;
+      }
+      .login-card {
+        padding: 24px 14px 18px;
+      }
+      .login-logo-text {
+        font-size: 1.4rem;
+      }
+      .login-btn {
+        padding: 14px;
+      }
+    }
+
+    /* ══════════════════════════════════════
+       LOGIN SCREEN
+    ══════════════════════════════════════ */
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-screen.hidden {
+      display: none;
+    }
+
+    .login-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 48px 40px 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+    }
+
+    .login-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .login-logo-img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      border-radius: 12px;
+      filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.3));
+    }
+
+    .login-logo-text {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: 1.5px;
+    }
+
+    .login-logo-text span {
+      color: var(--gold);
+    }
+
+    .login-sub {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .login-error {
+      background: #FEF2F2;
+      color: #DC2626;
+      font-size: 0.85rem;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      display: none;
+      font-weight: 500;
+      border: 1px solid #FCA5A5;
+      animation: shakeX 0.4s ease;
+    }
+
+    .login-error.show {
+      display: block;
+    }
+
+    @keyframes shakeX {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
+
+    .login-field {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .login-field label {
+      display: block;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .login-field input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--off-white);
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .login-field input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+      background: var(--white);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--navy);
+      border: none;
+      border-radius: 10px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 8px;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(212, 175, 55, 0.35);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .login-footer {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 24px;
+    }
+
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 36px 24px 28px;
+      }
+      .login-logo-text {
+        font-size: 1.6rem;
+      }
+      .login-logo-img {
+        width: 44px;
+        height: 44px;
       }
     }
 
@@ -490,6 +891,37 @@
 </head>
 
 <body>
+
+  <!-- Login Screen -->
+  <div class="login-screen" id="login-screen">
+    <div class="login-card">
+      <div class="login-logo">
+        <img src="logo.png" alt="TriPro" class="login-logo-img">
+        <div class="login-logo-text">Tri<span>Pro</span></div>
+      </div>
+      <div class="login-sub">Admin Panel</div>
+
+      <div class="login-error" id="login-error">Noto'g'ri login yoki parol</div>
+
+      <div class="login-field">
+        <label for="login-username">Login</label>
+        <input type="text" id="login-username" placeholder="Loginni kiriting" autocomplete="username">
+      </div>
+
+      <div class="login-field">
+        <label for="login-password">Parol</label>
+        <input type="password" id="login-password" placeholder="Parolni kiriting" autocomplete="current-password">
+      </div>
+
+      <button class="login-btn" id="login-btn">Kirish</button>
+
+      <div class="login-footer">TriPro © 2026</div>
+      <div style="margin-top:10px; font-size:0.75rem;">
+        <span id="login-default-link" style="color:var(--text-muted); cursor:pointer; text-decoration:underline;">Default login bilan kirish</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Sidebar -->
   <aside class="sidebar">
     <div class="brand">
@@ -516,6 +948,14 @@
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
         Sozlamalar
       </a>
+      <a href="#" class="nav-item" onclick="switchTab('orders', this)">
+        <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"></path><rect x="9" y="3" width="6" height="4" rx="1"></rect><line x1="9" y1="12" x2="15" y2="12"></line><line x1="9" y1="16" x2="13" y2="16"></line></svg>
+        Buyurtmalar
+      </a>
+      <a href="#" class="nav-item" onclick="switchTab('contacts', this)">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        Bog'lanish
+      </a>
       
       <div style="flex-grow: 1;"></div>
     </div>
@@ -536,10 +976,10 @@
       </div>
       <div class="user-profile">
         <div style="text-align: right;">
-          <div style="font-weight: 600; font-size: 0.9rem;" id="current-manager-name">Admin User</div>
-          <div style="color: var(--gold); font-size: 0.8rem; cursor: pointer;" onclick="registerManager()">+ Menejer qo'shish</div>
+          <div style="font-weight: 600; font-size: 0.9rem;">Admin Panel</div>
+          <div style="color: var(--gold); font-size: 0.8rem; cursor:pointer; text-decoration:underline;" onclick="logoutAdmin()" title="Chiqish">Chiqish</div>
         </div>
-        <div class="avatar" id="current-manager-avatar">A</div>
+        <div class="avatar">T</div>
       </div>
     </header>
 
@@ -613,13 +1053,108 @@
       </div>
 
       <!-- Filters -->
-      <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
-        <button class="btn-export" style="background: var(--navy); color: white;" onclick="filterServices('all')">Barchasi</button>
-        <button class="btn-export" onclick="filterServices('home')">Bosh sahifa</button>
-        <button class="btn-export" onclick="filterServices('akfa')">AKFA Romlar</button>
-        <button class="btn-export" onclick="filterServices('glass')">Oynak Xizmatlari</button>
-        <button class="btn-export" onclick="filterServices('wood')">Taxta Cex</button>
-        <button class="btn-export" onclick="filterServices('portfolio')">Portfolio</button>
+      <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;" id="svc-filter-bar">
+        <button class="btn-export" id="filter-btn-all" style="background: var(--navy); color: white;" onclick="filterServices('all')">Barchasi</button>
+        <button class="btn-export" id="filter-btn-home" onclick="showHomepageEditor()">🏠 Bosh sahifa (Tahrir)</button>
+        <button class="btn-export" id="filter-btn-akfa" onclick="filterServices('akfa')">AKFA Romlar</button>
+        <button class="btn-export" id="filter-btn-glass" onclick="filterServices('glass')">Oynak Xizmatlari</button>
+        <button class="btn-export" id="filter-btn-wood" onclick="filterServices('wood')">Taxta Cex</button>
+        <button class="btn-export" id="filter-btn-portfolio" onclick="filterServices('portfolio')">Portfolio</button>
+      </div>
+
+      <!-- Homepage Content Editor -->
+      <div id="homepage-editor" style="display:none;">
+        <div style="background:white; border-radius:16px; padding:30px; border:1px solid var(--border); margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;">
+            <div>
+              <h3 style="font-family:'Montserrat',sans-serif; color:var(--navy); margin-bottom:6px; display:flex; align-items:center; gap:8px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                Hero Qism
+              </h3>
+              <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">Bosh sahifaning yuqori (hero) qismidagi matnlarni tahrirlang.</p>
+            </div>
+            <button onclick="restoreDefaultBento()" style="padding:8px 12px; background:#F0F9FF; color:#0369A1; border:1px solid #BAE6FD; border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
+              Standart bloklarni tiklash
+            </button>
+          </div>
+          <div style="display:grid; gap:15px;">
+            <div>
+              <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase;">Badge matni</label>
+              <input type="text" id="hc-badge" value="Ishonchli Ishlab Chiqarish цexi" style="width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:8px; font-family:inherit; font-size:0.9rem; outline:none;">
+            </div>
+            <div>
+              <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase;">Sarlavha (birinchi qism)</label>
+              <input type="text" id="hc-title" value="Sifatli" style="width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:8px; font-family:inherit; font-size:0.9rem; outline:none;">
+            </div>
+            <div>
+              <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase;">Sarlavha (accent — sariq rang)</label>
+              <input type="text" id="hc-accent" value="AKFA Romlar" style="width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:8px; font-family:inherit; font-size:0.9rem; outline:none;">
+            </div>
+            <div>
+              <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase;">Sarlavha (ikkinchi qator)</label>
+              <input type="text" id="hc-title2" value="Oynak va Yog'och Mahsulotlar" style="width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:8px; font-family:inherit; font-size:0.9rem; outline:none;">
+            </div>
+            <div>
+              <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase;">Tavsif matni</label>
+              <textarea id="hc-desc" rows="3" style="width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:8px; font-family:inherit; font-size:0.9rem; outline:none; resize:vertical;">TriPro — AKFA romlar, oynak xizmatlari va asalari yashiklari ishlab chiqarish bilan shug'ullanuvchi ishonchli цex.</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div style="background:white; border-radius:16px; padding:30px; border:1px solid var(--border); margin-bottom:20px;">
+          <h3 style="font-family:'Montserrat',sans-serif; color:var(--navy); margin-bottom:6px;">📊 Statistikalar (4 dona)</h3>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:20px;">Hero va stats strip qismidagi raqam va labellarni tahrirlang.</p>
+          <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:16px;">
+            <div style="padding:16px; border:1px solid var(--border); border-radius:10px;">
+              <div style="font-weight:700; font-size:0.8rem; color:var(--text-muted); margin-bottom:10px; text-transform:uppercase;">Stat 1</div>
+              <div style="display:grid; gap:8px;">
+                <input type="text" id="hc-s1-num" value="500+" placeholder="Raqam" style="padding:9px 12px; border:1.5px solid var(--border); border-radius:6px; font-family:inherit; outline:none;">
+                <input type="text" id="hc-s1-lbl" value="Bajarilgan loyihalar" placeholder="Label" style="padding:9px 12px; border:1.5px solid var(--border); border-radius:6px; font-family:inherit; outline:none;">
+              </div>
+            </div>
+            <div style="padding:16px; border:1px solid var(--border); border-radius:10px;">
+              <div style="font-weight:700; font-size:0.8rem; color:var(--text-muted); margin-bottom:10px; text-transform:uppercase;">Stat 2</div>
+              <div style="display:grid; gap:8px;">
+                <input type="text" id="hc-s2-num" value="15+" placeholder="Raqam" style="padding:9px 12px; border:1.5px solid var(--border); border-radius:6px; font-family:inherit; outline:none;">
+                <input type="text" id="hc-s2-lbl" value="Yillik tajriba" placeholder="Label" style="padding:9px 12px; border:1.5px solid var(--border); border-radius:6px; font-family:inherit; outline:none;">
+              </div>
+            </div>
+            <div style="padding:16px; border:1px solid var(--border); border-radius:10px;">
+              <div style="font-weight:700; font-size:0.8rem; color:var(--text-muted); margin-bottom:10px; text-transform:uppercase;">Stat 3</div>
+              <div style="display:grid; gap:8px;">
+                <input type="text" id="hc-s3-num" value="3" placeholder="Raqam" style="padding:9px 12px; border:1.5px solid var(--border); border-radius:6px; font-family:inherit; outline:none;">
+                <input type="text" id="hc-s3-lbl" value="Asosiy xizmat yo'nalishi" placeholder="Label" style="padding:9px 12px; border:1.5px solid var(--border); border-radius:6px; font-family:inherit; outline:none;">
+              </div>
+            </div>
+            <div style="padding:16px; border:1px solid var(--border); border-radius:10px;">
+              <div style="font-weight:700; font-size:0.8rem; color:var(--text-muted); margin-bottom:10px; text-transform:uppercase;">Stat 4</div>
+              <div style="display:grid; gap:8px;">
+                <input type="text" id="hc-s4-num" value="100%" placeholder="Raqam" style="padding:9px 12px; border:1.5px solid var(--border); border-radius:6px; font-family:inherit; outline:none;">
+                <input type="text" id="hc-s4-lbl" value="Mijoz mamnuniyati" placeholder="Label" style="padding:9px 12px; border:1.5px solid var(--border); border-radius:6px; font-family:inherit; outline:none;">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Save Button for Homepage Content -->
+        <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:20px;">
+          <button onclick="saveHomeContent(event)" style="flex:1; padding:14px; background:var(--gold); color:white; border:none; border-radius:8px; font-weight:700; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; min-width:200px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Hero va Statslarni Saqlash
+          </button>
+          <div id="hc-save-msg" style="display:none; background:#D1FAE5; color:#065F46; padding:14px 24px; border-radius:8px; font-weight:600; font-size:0.9rem; align-items:center; gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Muvaffaqiyatli saqlandi!
+          </div>
+        </div>
+
+        <!-- Dynamic Blocks Header -->
+        <div style="margin-top: 40px; margin-bottom: 20px; border-top: 1px dashed var(--border); padding-top: 30px;">
+          <h3 style="font-family:'Montserrat',sans-serif; color:var(--navy); margin-bottom:6px;">🗂️ Bosh sahifa bloklari (Dinamik)</h3>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Bosh sahifadagi bento grid bloklarini boshqarish. Yangi blok qo'shish uchun "+ Yangi Xizmat" tugmasidan foydalaning.</p>
+        </div>
       </div>
 
       <!-- Services Grid -->
@@ -632,18 +1167,6 @@
     <div class="dashboard-content" id="tab-settings" style="display: none;">
       <h1 class="page-title">Sozlamalar</h1>
       
-      <div class="table-section" style="padding: 30px; margin-bottom: 20px;">
-        <h3 style="font-family: 'Montserrat', sans-serif; margin-bottom: 20px; color: var(--navy);">Menejer Sozlamalari</h3>
-        <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">Joriy hisob uchun menejer ismini va rasmini tahrirlang.</p>
-        <div style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
-          <div style="flex: 1; max-width: 300px; min-width: 200px;">
-            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">Menejer ismi</label>
-            <input type="text" id="setting-manager-name" placeholder="Masalan: Alisher Vohidov" style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; outline: none; font-family: inherit;">
-          </div>
-          <button onclick="saveManagerSettings()" style="background: var(--navy); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; height: 41px;">Saqlash</button>
-        </div>
-      </div>
-
       <div class="table-section" style="padding: 30px;">
         <h3 style="font-family: 'Montserrat', sans-serif; margin-bottom: 20px; color: var(--navy);">Sayt va Ma'lumotlar Sozlamalari</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
@@ -653,10 +1176,81 @@
              <button onclick="clearAllInquiries()" style="background: rgba(239, 68, 68, 0.1); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer;">Barchasini O'chirish</button>
           </div>
           <div style="padding: 20px; border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; gap: 15px;">
+             <h4 style="color: var(--text);">Admin Login va Parolni O'zgartirish</h4>
+             <p style="color: var(--text-muted); font-size: 0.85rem; flex: 1;">Yangi login va parol Firebase'ga saqlanadi. Default: login = <strong>tripro</strong>, parol = <strong>2025</strong></p>
+             <input type="text" id="setting-admin-login" placeholder="Yangi login (kamida 3 belgi)" style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:6px; outline:none; font-family:inherit; margin-bottom:10px;">
+             <input type="password" id="setting-admin-password" placeholder="Yangi parol (kamida 4 belgi)" style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:6px; outline:none; font-family:inherit;">
+             <button onclick="saveAdminPassword()" style="padding:10px; background:var(--navy); color:white; border:none; border-radius:6px; font-weight:600; cursor:pointer; margin-top:10px;">Login/Parolni Saqlash</button>
+          </div>
+          <div style="padding: 20px; border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; gap: 15px;">
              <h4 style="color: var(--text);">Tizim haqida</h4>
              <p style="color: var(--text-muted); font-size: 0.85rem; flex: 1;">TriPro jamoasi uchun ishlab chiqilgan maxsus Admin Panel. Versiya 1.0. 
-             Mijozlar bazasi to'g'ridan-to'g'ri Firebase Realtime Database bilan sinxronizatsiya qilinadi.</p>
+             Mijozlar bazasi to'g'ridan-to'g'iri Firebase Realtime Database bilan sinxronizatsiya qilinadi.</p>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contacts Tab -->
+    <div class="dashboard-content" id="tab-contacts" style="display: none;">
+      <h1 class="page-title">Bog'lanish Sozlamalari</h1>
+      <div class="table-section" style="padding: 30px;">
+        <h3 style="font-family: 'Montserrat', sans-serif; margin-bottom: 20px; color: var(--navy);">Telefon Raqamlar va WhatsApp</h3>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Asosiy sahifadagi barcha telefon raqamlar va WhatsApp havolalarni o'zgartirish.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+          <div style="padding: 20px; border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; gap: 12px;">
+            <label style="font-weight: 600; font-size: 0.85rem; color: var(--text);">Telefon raqam 1 (Asosiy)</label>
+            <input type="text" id="contact-phone1" placeholder="+998906335787" style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:6px; outline:none; font-family:inherit;">
+          </div>
+          <div style="padding: 20px; border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; gap: 12px;">
+            <label style="font-weight: 600; font-size: 0.85rem; color: var(--text);">Telefon raqam 2</label>
+            <input type="text" id="contact-phone2" placeholder="+998958936787" style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:6px; outline:none; font-family:inherit;">
+          </div>
+          <div style="padding: 20px; border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; gap: 12px;">
+            <label style="font-weight: 600; font-size: 0.85rem; color: var(--text);">Telefon raqam 3</label>
+            <input type="text" id="contact-phone3" placeholder="+998996156006" style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:6px; outline:none; font-family:inherit;">
+          </div>
+          <div style="padding: 20px; border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; gap: 12px;">
+            <label style="font-weight: 600; font-size: 0.85rem; color: var(--text);">WhatsApp raqam</label>
+            <input type="text" id="contact-whatsapp" placeholder="+998906335787" style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:6px; outline:none; font-family:inherit;">
+          </div>
+        </div>
+        <div style="margin-top: 25px; display: flex; gap: 12px; flex-wrap: wrap;">
+          <button onclick="saveContactSettings()" style="padding:12px 28px; background:var(--navy); color:white; border:none; border-radius:6px; font-weight:600; cursor:pointer;">Saqlash</button>
+          <span id="contact-save-msg" style="display:none; padding:12px 20px; background:#DCFCE7; color:#166534; border-radius:6px; font-weight:500;">Saqlandi!</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Orders Tab (Telegram Bot) -->
+    <div class="dashboard-content" id="tab-orders" style="display: none;">
+      <h1 class="page-title">Buyurtmalar (Telegram Bot)</h1>
+      <div class="table-section" style="padding: 20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+          <h3 style="font-family:'Montserrat',sans-serif; color:var(--navy);">Barcha buyurtmalar</h3>
+          <div style="display:flex; gap:8px;">
+            <button onclick="loadBotOrders()" style="padding:8px 16px; background:var(--navy); color:white; border:none; border-radius:6px; cursor:pointer; font-weight:500;">🔄 Yangilash</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Mijoz</th>
+                <th>Material</th>
+                <th>Oyna</th>
+                <th>Rang</th>
+                <th>O'lcham</th>
+                <th>Telefon</th>
+                <th>Holat</th>
+                <th>Amal</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody">
+              <tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">API ga ulanilmoqda...</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -697,6 +1291,11 @@
           <input type="text" id="sv-price" required placeholder="Masalan: $35 / m² yoki Kelishilgan narx" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; outline: none; font-family: inherit;">
         </div>
 
+        <div style="margin-bottom: 15px;">
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 5px;">Aksiya / Skitka (Ixtiyoriy)</label>
+          <input type="text" id="sv-promo" placeholder="Masalan: Aksiya yoki -20%" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; outline: none; font-family: inherit; color: #DC2626; font-weight: 600;">
+        </div>
+
         <div style="margin-bottom: 20px;">
           <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 5px;">Rasm yuklash (Ixtiyoriy)</label>
           <input type="file" id="sv-image" accept="image/png, image/jpeg, image/webp" style="width: 100%; padding: 8px; border: 1px dashed var(--border); border-radius: 6px; font-family: inherit;">
@@ -721,14 +1320,155 @@
       appId: "1:581495600669:web:da0d2727be542bec0178f4"
     };
 
-    // Make global functions available to HTML onclick handlers
-    window.saveManagerSettings = function() {
-      const name = document.getElementById('setting-manager-name').value;
-      if (name && name.trim().length > 0) {
-        localStorage.setItem('tripro_manager', name.trim());
-        window.loadManager();
-        alert("Menejer ma'lumotlari saqlandi!");
+    // ─── LOGIN ───
+    let _loginPasswordRef = null;
+
+    window.handleLogin = async function() {
+      const username = document.getElementById('login-username');
+      const password = document.getElementById('login-password');
+      const btn = document.getElementById('login-btn');
+      const err = document.getElementById('login-error');
+      const user = username.value.trim();
+      const pw = password.value.trim();
+
+      if (!user) { err.textContent = 'Loginni kiriting'; err.classList.add('show'); return; }
+      if (!pw) { err.textContent = 'Parolni kiriting'; err.classList.add('show'); return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Tekshirilmoqda...';
+      err.classList.remove('show');
+
+      let validUser = 'tripro';
+      let validPassword = '2025';
+
+      // Try Firebase (non-blocking, gracefully fallback to default)
+      if (window._firebaseDB && window._firebaseRef) {
+        try {
+          const { get, child } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js');
+          const snap = await get(child(window._firebaseRef(window._firebaseDB), 'adminSettings'));
+          if (snap.exists()) {
+            const settings = snap.val();
+            if (settings && typeof settings.login === 'string' && settings.login.length >= 3) validUser = settings.login;
+            if (settings && typeof settings.password === 'string' && settings.password.length >= 4) validPassword = settings.password;
+          }
+        } catch(e) {
+          console.warn('Firebase login fetch failed, using defaults:', e.message);
+        }
       }
+
+      if (user === validUser && pw === validPassword) {
+        sessionStorage.setItem('tripro_logged_in', 'true');
+        document.getElementById('login-screen').classList.add('hidden');
+        document.body.style.overflow = '';
+      } else {
+        err.textContent = 'Noto\'g\'ri login yoki parol';
+        err.classList.add('show');
+        password.value = '';
+        password.focus();
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Kirish';
+    };
+
+    // Enter key support
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !document.getElementById('login-screen').classList.contains('hidden')) {
+        window.handleLogin();
+      }
+    });
+
+    window.saveAdminPassword = async function() {
+      if (!window._firebaseDB) { alert('Firebase ulanmagan'); return; }
+      const newLogin = document.getElementById('setting-admin-login').value.trim();
+      const newPw = document.getElementById('setting-admin-password').value.trim();
+      if (newLogin && newLogin.length < 3) { alert('Login kamida 3 belgidan iborat bo\'lishi kerak'); return; }
+      if (newPw && newPw.length < 4) { alert('Parol kamida 4 belgidan iborat bo\'lishi kerak'); return; }
+
+      const data = {};
+      if (newLogin) data.login = newLogin;
+      if (newPw) data.password = newPw;
+
+      try {
+        if (newLogin && newPw) {
+          await window._firebaseSet(window._firebaseRef(window._firebaseDB, 'adminSettings'), data);
+        } else {
+          const updates = {};
+          if (newLogin) updates.login = newLogin;
+          if (newPw) updates.password = newPw;
+          await window._firebaseUpdate(window._firebaseRef(window._firebaseDB, 'adminSettings'), updates);
+        }
+        alert('Login/parol muvaffaqiyatli o\'zgartirildi!');
+        document.getElementById('setting-admin-login').value = '';
+        document.getElementById('setting-admin-password').value = '';
+      } catch(e) {
+        alert('Xatolik: ' + e.message);
+      }
+    };
+
+    window.saveContactSettings = async function() {
+      if (!window._firebaseDB) { alert('Firebase ulanmagan'); return; }
+      const phone1 = document.getElementById('contact-phone1').value.trim();
+      const phone2 = document.getElementById('contact-phone2').value.trim();
+      const phone3 = document.getElementById('contact-phone3').value.trim();
+      const wa = document.getElementById('contact-whatsapp').value.trim();
+      if (!phone1) { alert('Asosiy telefon raqamni kiriting'); return; }
+      if (!wa) { alert('WhatsApp raqamni kiriting'); return; }
+      const data = { phone1, phone2, phone3, whatsapp: wa };
+      try {
+        await window._firebaseSet(window._firebaseRef(window._firebaseDB, 'contactSettings'), data);
+        localStorage.setItem('tripro_contact_settings', JSON.stringify(data));
+        const msg = document.getElementById('contact-save-msg');
+        msg.style.display = 'inline-block';
+        setTimeout(() => msg.style.display = 'none', 3000);
+      } catch(e) {
+        alert('Xatolik: ' + e.message);
+      }
+    };
+
+    window.loadContactSettings = function() {
+      // Load from localStorage cache first
+      try {
+        const cached = JSON.parse(localStorage.getItem('tripro_contact_settings'));
+        if (cached) {
+          if (cached.phone1) document.getElementById('contact-phone1').value = cached.phone1;
+          if (cached.phone2) document.getElementById('contact-phone2').value = cached.phone2;
+          if (cached.phone3) document.getElementById('contact-phone3').value = cached.phone3;
+          if (cached.whatsapp) document.getElementById('contact-whatsapp').value = cached.whatsapp;
+        }
+      } catch(e) {}
+      // Try Firebase for latest
+      if (window._firebaseDB && window._firebaseRef && window._firebaseGet && window._firebaseChild) {
+        window._firebaseGet(window._firebaseChild(window._firebaseRef(window._firebaseDB), 'contactSettings')).then(snap => {
+          if (snap.exists()) {
+            const d = snap.val();
+            if (d.phone1) document.getElementById('contact-phone1').value = d.phone1;
+            if (d.phone2) document.getElementById('contact-phone2').value = d.phone2;
+            if (d.phone3) document.getElementById('contact-phone3').value = d.phone3;
+            if (d.whatsapp) document.getElementById('contact-whatsapp').value = d.whatsapp;
+            localStorage.setItem('tripro_contact_settings', JSON.stringify(d));
+          }
+        }).catch(() => {});
+      }
+    };
+
+    window.loginWithDefault = function() {
+      sessionStorage.setItem('tripro_logged_in', 'true');
+      document.getElementById('login-screen').classList.add('hidden');
+      document.body.style.overflow = '';
+    };
+
+    // Attach login event listeners (no onclick attributes)
+    document.getElementById('login-btn').addEventListener('click', window.handleLogin);
+    document.getElementById('login-default-link').addEventListener('click', window.loginWithDefault);
+
+    window.logoutAdmin = function() {
+      sessionStorage.removeItem('tripro_logged_in');
+      document.getElementById('login-screen').classList.remove('hidden');
+      document.getElementById('login-username').value = '';
+      document.getElementById('login-password').value = '';
+      document.getElementById('login-error').classList.remove('show');
+      if (window.switchTab) window.switchTab('dashboard', document.querySelector('.nav-item'));
     };
 
     window.clearAllInquiries = async function() {
@@ -746,22 +1486,6 @@
            alert("Xatolik yuz berdi");
         }
       }
-    };
-
-    window.registerManager = function() {
-      const name = prompt("Menejer ism-familiyasi (Masalan: Alisher Vohidov):");
-      if (name && name.trim().length > 0) {
-        localStorage.setItem('tripro_manager', name.trim());
-        window.loadManager();
-      }
-    };
-
-    window.loadManager = function() {
-      const name = localStorage.getItem('tripro_manager') || 'Admin User';
-      const nameEl = document.getElementById('current-manager-name');
-      const avatarEl = document.getElementById('current-manager-avatar');
-      if(nameEl) nameEl.textContent = name;
-      if(avatarEl) avatarEl.textContent = name.charAt(0).toUpperCase();
     };
 
     window.toggleSidebar = function() {
@@ -795,8 +1519,11 @@
           try {
             const d = new Date(inq.timestamp || Date.now());
             if (!isNaN(d.getTime())) {
-              dateStr = d.toLocaleDateString('uz-UZ', { day: '2-digit', month: 'short', year: 'numeric' }) 
-                        + ', ' + d.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute:'2-digit' });
+              const y = d.getFullYear();
+              const m = String(d.getMonth() + 1).padStart(2, '0');
+              const day = String(d.getDate()).padStart(2, '0');
+              const tt = d.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute:'2-digit' });
+              dateStr = day + '.' + m + '.' + y + ' <span class="date-time">' + tt + '</span>';
             }
           } catch(e) {}
           
@@ -919,22 +1646,31 @@
       document.body.removeChild(link);
     };
 
-    async function initFirebase() {
+    let _firebaseInitialized = false;
+
+    async function initFirebase(lightweight = false) {
+      if (_firebaseInitialized) return;
       try {
         const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-        const { getDatabase, ref, onValue, update, remove, push, set } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js');
+        const { getDatabase, ref, onValue, update, remove, push, set, get, child } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js');
         
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        
-        // Export globals
+
+        // Export globals (needed for login check too)
         window._firebaseDB = db;
         window._firebaseRef = ref;
         window._firebaseUpdate = update;
         window._firebaseRemove = remove;
         window._firebasePush = push;
         window._firebaseSet = set;
-        
+        window._firebaseOnValue = onValue;
+        window._firebaseGet = get;
+        window._firebaseChild = child;
+
+        // If lightweight (just for login check), stop here
+        if (lightweight) return;
+
         // Setup real-time listener for INQUIRIES
         const inquiriesRef = ref(db, 'inquiries');
         onValue(inquiriesRef, (snapshot) => {
@@ -1010,7 +1746,42 @@
              });
           }
         });
-        
+
+        // Seed homeContent if missing
+        const homeContentRef = ref(db, 'homeContent');
+        onValue(homeContentRef, (snap) => {
+          if (!snap.exists()) {
+            const initialHomeData = {
+              hero: {
+                badge: "Ishonchli Ishlab Chiqarish цexi",
+                title: "Sifatli",
+                accent: "AKFA Romlar",
+                title2: "Oynak va Yog'och Mahsulotlar",
+                desc: "TriPro — AKFA romlar, oynak xizmatlari va asalari yashiklari ishlab chiqarish bilan shug'ullanuvchi ishonchli цex."
+              },
+              stats: {
+                s1: { num: "500+", label: "Bajarilgan loyihalar" },
+                s2: { num: "15+", label: "Yillik tajriba" },
+                s3: { num: "3", label: "Asosiy xizmat yo'nalishi" },
+                s4: { num: "100%", label: "Mijoz mamnuniyati" }
+              }
+            };
+            set(homeContentRef, initialHomeData).catch(console.error);
+
+            // Seed initial bento blocks to services node
+            const bentoSeeds = [
+              { category: "home", label: "AKFA Romlar", title: "AKFA Romlar", desc: "Alyumin, plastik va balkon AKFA romlarini professional o'rnatish. Yuqori sifat va kafolat.", price: "$35 / m²" },
+              { category: "home", label: "Oynak Xizmatlari", title: "Oynak Xizmatlari", desc: "Oynak kesish, stiklopaket qilish va germetika xizmatlari. Tez va sifatli.", price: "$5 dan boshlab" },
+              { category: "home", label: "Taxta цex", title: "Taxta цex (Asalari Yashiklari)", desc: "Asalari yashiklari, randetal, karmushka va boshqa yog'och mahsulotlar buyurtmaga.", price: "$5 dan boshlab" }
+            ];
+            bentoSeeds.forEach(sv => {
+              const newRef = push(ref(db, 'services'));
+              set(newRef, sv).catch(console.error);
+            });
+          }
+        }, { onlyOnce: true });
+
+        _firebaseInitialized = true;
       } catch (e) {
         console.warn('Firebase init failed:', e.message);
         window.loadInquiries();
@@ -1040,10 +1811,8 @@
       document.getElementById('tab-dashboard').style.display = tabName === 'dashboard' ? 'block' : 'none';
       document.getElementById('tab-services').style.display = tabName === 'services' ? 'block' : 'none';
       document.getElementById('tab-settings').style.display = tabName === 'settings' ? 'block' : 'none';
-      
-      if(tabName === 'settings') {
-         document.getElementById('setting-manager-name').value = localStorage.getItem('tripro_manager') || 'Admin User';
-      }
+      document.getElementById('tab-contacts').style.display = tabName === 'contacts' ? 'block' : 'none';
+      document.getElementById('tab-orders').style.display = tabName === 'orders' ? 'block' : 'none';
       
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       linkEl.classList.add('active');
@@ -1052,11 +1821,92 @@
       if (window.innerWidth <= 1024) {
         window.toggleSidebar();
       }
+      if (tabName === 'orders') window.loadBotOrders();
     };
 
     window.filterServices = function(cat) {
+      // Hide homepage editor, show services grid
+      document.getElementById('homepage-editor').style.display = 'none';
+      document.getElementById('services-grid').style.display = 'grid';
+      document.querySelectorAll('#svc-filter-bar button').forEach(b => b.style.background = '');
+      document.getElementById(`filter-btn-${cat}`).style.background = 'var(--navy)';
+      document.getElementById(`filter-btn-${cat}`).style.color = 'white';
       window.currentServiceFilter = cat;
       window.renderServices();
+    };
+
+    window.showHomepageEditor = function() {
+      // Load current Firebase data into fields
+      document.getElementById('homepage-editor').style.display = 'block';
+      document.getElementById('services-grid').style.display = 'grid';
+      // Highlight active button
+      document.querySelectorAll('#svc-filter-bar button').forEach(b => b.style.background = '');
+      document.getElementById('filter-btn-home').style.background = 'var(--navy)';
+      document.getElementById('filter-btn-home').style.color = 'white';
+
+      window.currentServiceFilter = 'home';
+      window.renderServices();
+
+      if (window._firebaseDB && window._firebaseRef && window._firebaseOnValue) {
+        window._firebaseOnValue(window._firebaseRef(window._firebaseDB, 'homeContent'), (snap) => {
+          if (snap.exists()) {
+            const d = snap.val();
+            // Hero
+            if (d.hero) {
+              if (d.hero.badge)  document.getElementById('hc-badge').value  = d.hero.badge;
+              if (d.hero.title)  document.getElementById('hc-title').value  = d.hero.title;
+              if (d.hero.accent) document.getElementById('hc-accent').value = d.hero.accent;
+              if (d.hero.title2) document.getElementById('hc-title2').value = d.hero.title2;
+              if (d.hero.desc)   document.getElementById('hc-desc').value   = d.hero.desc;
+            }
+            // Stats
+            if (d.stats) {
+              if (d.stats.s1) { document.getElementById('hc-s1-num').value = d.stats.s1.num || ''; document.getElementById('hc-s1-lbl').value = d.stats.s1.label || ''; }
+              if (d.stats.s2) { document.getElementById('hc-s2-num').value = d.stats.s2.num || ''; document.getElementById('hc-s2-lbl').value = d.stats.s2.label || ''; }
+              if (d.stats.s3) { document.getElementById('hc-s3-num').value = d.stats.s3.num || ''; document.getElementById('hc-s3-lbl').value = d.stats.s3.label || ''; }
+              if (d.stats.s4) { document.getElementById('hc-s4-num').value = d.stats.s4.num || ''; document.getElementById('hc-s4-lbl').value = d.stats.s4.label || ''; }
+            }
+          }
+        }, { onlyOnce: true });
+      }
+    };
+
+    window.saveHomeContent = async function(event) {
+      if (!window._firebaseDB) { alert('Firebase ulanmadi'); return; }
+      
+      const btn = event.currentTarget;
+      const originalText = btn.innerText;
+      btn.innerText = 'Saqlanmoqda...';
+      btn.disabled = true;
+
+      const data = {
+        hero: {
+          badge:  document.getElementById('hc-badge').value,
+          title:  document.getElementById('hc-title').value,
+          accent: document.getElementById('hc-accent').value,
+          title2: document.getElementById('hc-title2').value,
+          desc:   document.getElementById('hc-desc').value
+        },
+        stats: {
+          s1: { num: document.getElementById('hc-s1-num').value, label: document.getElementById('hc-s1-lbl').value },
+          s2: { num: document.getElementById('hc-s2-num').value, label: document.getElementById('hc-s2-lbl').value },
+          s3: { num: document.getElementById('hc-s3-num').value, label: document.getElementById('hc-s3-lbl').value },
+          s4: { num: document.getElementById('hc-s4-num').value, label: document.getElementById('hc-s4-lbl').value }
+        }
+      };
+      
+      try {
+        await window._firebaseSet(window._firebaseRef(window._firebaseDB, 'homeContent'), data);
+        const msg = document.getElementById('hc-save-msg');
+        msg.style.display = 'block';
+        setTimeout(() => msg.style.display = 'none', 3000);
+      } catch(e) {
+        console.error(e);
+        alert('Xatolik: ' + e.message);
+      } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
+      }
     };
 
     window.openServiceModal = function(id = null) {
@@ -1078,6 +1928,7 @@
           document.getElementById('sv-title').value = sv.title || '';
           document.getElementById('sv-desc').value = sv.description || '';
           document.getElementById('sv-price').value = sv.price || '';
+          document.getElementById('sv-promo').value = sv.promo || '';
           if (sv.imageB64) {
              document.getElementById('sv-image-b64').value = sv.imageB64;
              preview.innerHTML = `<img src="${sv.imageB64}" style="width:100%; height:100%; display:block; object-fit:cover;">`;
@@ -1097,33 +1948,81 @@
 
     window.saveService = async function(e) {
       e.preventDefault();
+      const btn = document.getElementById('sv-submit-btn');
+      const originalText = btn.innerText;
+      btn.innerText = 'Saqlanmoqda...';
+      btn.disabled = true;
+
       const id = document.getElementById('sv-id').value;
       const data = {
         category: document.getElementById('sv-category').value,
         title: document.getElementById('sv-title').value,
         description: document.getElementById('sv-desc').value,
         price: document.getElementById('sv-price').value,
+        promo: document.getElementById('sv-promo').value,
         imageB64: document.getElementById('sv-image-b64').value
       };
 
       if (!window._firebaseDB) {
         alert("Firebasega ulanib bo'lmadi.");
+        btn.innerText = originalText;
+        btn.disabled = false;
         return;
       }
 
-      if (id) {
-        // Edit existing
-        try {
+      try {
+        if (id) {
+          // Edit existing
           await window._firebaseUpdate(window._firebaseRef(window._firebaseDB, `services/${id}`), data);
-        } catch(err) { console.error(err); alert('Xatolik'); }
-      } else {
-        // Add new
-        try {
+        } else {
+          // Add new
           const newRef = window._firebasePush(window._firebaseRef(window._firebaseDB, 'services'));
           await window._firebaseSet(newRef, data);
-        } catch(err) { console.error(err); alert('Xatolik'); }
+        }
+        closeServiceModal();
+      } catch(err) {
+        console.error(err);
+        alert('Saqlashda xatolik yuz berdi: ' + err.message);
+      } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
       }
-      closeServiceModal();
+    };
+
+    window.restoreDefaultBento = async function() {
+      if (!confirm("Bosh sahifadagi barcha mavjud bloklarni o'chirib, 3 ta standart blokni tiklamoqchimisiz?")) return;
+      if (!window._firebaseDB) { alert("Firebase ulanmagan!"); return; }
+
+      try {
+        const db = window._firebaseDB;
+        const ref = window._firebaseRef;
+        const remove = window._firebaseRemove;
+        const push = window._firebasePush;
+        const set = window._firebaseSet;
+
+        // 1. Delete existing category: 'home' services
+        const homeServices = window.cmsServices.filter(s => s.category === 'home');
+        for (const s of homeServices) {
+           await remove(ref(db, `services/${s.id}`));
+        }
+
+        // 2. Add standard seeds
+        const seeds = [
+          { category: "home", label: "AKFA Romlar", title: "AKFA Romlar", description: "Alyumin, plastik va balkon AKFA romlarini professional o'rnatish. Yuqori sifat va kafolat.", price: "$35 / m²" },
+          { category: "home", label: "Oynak Xizmatlari", title: "Oynak Xizmatlari", description: "Oynak kesish, stiklopaket qilish va germetika xizmatlari. Tez va sifatli.", price: "$5 dan boshlab" },
+          { category: "home", label: "Taxta цex", title: "Taxta цex (Asalari Yashiklari)", description: "Asalari yashiklari, randetal, karmushka va boshqa yog'och mahsulotlar buyurtmaga.", price: "$5 dan boshlab" }
+        ];
+
+        for (const sv of seeds) {
+          const newRef = push(ref(db, 'services'));
+          await set(newRef, sv);
+        }
+
+        alert("Standart bloklar muvaffaqiyatli tiklandi!");
+      } catch (e) {
+         console.error(e);
+         alert("Xatolik: " + e.message);
+      }
     };
 
     window.deleteService = async function(id) {
@@ -1161,8 +2060,11 @@
           thumbContent = `<img src="${sv.imageB64}">`;
         }
 
+        let promoBadge = sv.promo ? `<div style="position:absolute; top:10px; right:10px; background:#DC2626; color:white; font-size:0.7rem; font-weight:700; padding:4px 8px; border-radius:4px; text-transform:uppercase; z-index:2;">${sv.promo}</div>` : '';
+
         return `
-          <div class="service-card">
+          <div class="service-card" style="position:relative;">
+            ${promoBadge}
             <span class="service-cat">${catText}</span>
             <div class="service-thumb">
               ${thumbContent}
@@ -1185,8 +2087,11 @@
 
     // Initialize on file load
     window.onload = function() {
-      window.loadManager();
-      
+      // Check if already logged in (from same browser session)
+      if (sessionStorage.getItem('tripro_logged_in') === 'true') {
+        document.getElementById('login-screen').classList.add('hidden');
+      }
+
       // Clear legacy dummy data if length is 3 (was hardcoded)
       try {
          const existing = JSON.parse(localStorage.getItem('tripro_inquiries') || '[]');
@@ -1200,7 +2105,91 @@
         tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 30px; color: var(--text-muted);">Firebase bilan bog\'lanilmoqda...</td></tr>';
       }
       
+      // Start Firebase init in background (for login check + data loading)
       initFirebase();
+      
+      // Load contact settings from cache (Firebase will update when ready)
+      window.loadContactSettings();
+    };
+
+    // ─── BOT ORDERS (API) ───
+    const API_BASE = window.location.origin + '/api';
+
+    window.loadBotOrders = async function() {
+      const tbody = document.getElementById('orders-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">Yuklanmoqda...</td></tr>';
+      try {
+        const res = await fetch(API_BASE + '/orders');
+        if (!res.ok) throw new Error('API error');
+        const orders = await res.json();
+        if (!orders.length) {
+          tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">Hali buyurtmalar mavjud emas.</td></tr>';
+          return;
+        }
+        const statusMap = {
+          pending: '<span style="background:rgba(245,158,11,0.1); color:#F59E0B; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">⏳ Kutilmoqda</span>',
+          confirmed: '<span style="background:rgba(34,197,94,0.1); color:#22C55E; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">✅ Tasdiqlangan</span>',
+          material_delivered: '<span style="background:rgba(59,130,246,0.1); color:#3B82F6; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">🚚 Material keltirilmoqda</span>',
+          in_progress: '<span style="background:rgba(139,92,246,0.1); color:#8B5CF6; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">🔧 Jarayonda</span>',
+          ready: '<span style="background:rgba(14,165,233,0.1); color:#0EA5E9; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">✨ Tayyorlanmoqda</span>',
+          delivered: '<span style="background:rgba(34,197,94,0.1); color:#22C55E; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">📦 Yetkazilmoqda</span>',
+        };
+        tbody.innerHTML = orders.map(o => {
+          let confirmBtn = o.status === 'pending' 
+            ? `<button onclick="confirmOrder('${o.order_id || o.id}')" style="padding:4px 8px; background:#22C55E; color:white; border:none; border-radius:4px; cursor:pointer; font-size:0.7rem;">✅ Tasdiqlash</button>`
+            : '';
+          let statusChanger = o.status !== 'pending' && o.order_id
+            ? `<select onchange="changeOrderStatus('${o.order_id}', this.value)" style="padding:4px; border:1px solid var(--border); border-radius:4px; font-size:0.7rem;">
+                <option value="">O\'zgartirish</option>
+                <option value="confirmed">✅ Tasdiqlangan</option>
+                <option value="material_delivered">🚚 Material keltirilmoqda</option>
+                <option value="in_progress">🔧 Jarayonda</option>
+                <option value="ready">✨ Tayyorlanmoqda</option>
+                <option value="delivered">📦 Yetkazilmoqda</option>
+              </select>`
+            : '';
+          return `<tr>
+            <td style="font-weight:600;">${o.order_id || '—'}</td>
+            <td>${o.telegram_id ? '👤 User #' + o.telegram_id : '—'}</td>
+            <td>${o.material_type || '—'}</td>
+            <td>${o.glass_type || '—'}</td>
+            <td>${o.profile_color || '—'}</td>
+            <td>${o.dimensions || '—'}</td>
+            <td><a href="tel:${o.phone}" style="color:var(--navy); text-decoration:none;">${o.phone || '—'}</a></td>
+            <td>${statusMap[o.status] || o.status}</td>
+            <td style="display:flex; flex-direction:column; gap:4px;">${confirmBtn}${statusChanger}</td>
+          </tr>`;
+        }).join('');
+      } catch(e) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:30px; color:#DC2626;">API ga ulanib bo\'lmadi. Backend server ishlayotganiga ishonch hosil qiling.</td></tr>';
+      }
+    };
+
+    window.confirmOrder = async function(id) {
+      if (!confirm('Ushbu buyurtmani tasdiqlashni xohlaysizmi?')) return;
+      try {
+        const res = await fetch(API_BASE + '/orders/' + id + '/confirm', { method: 'POST' });
+        if (!res.ok) throw new Error('Confirm failed');
+        loadBotOrders();
+      } catch(e) {
+        alert('Xatolik: ' + e.message);
+      }
+    };
+
+    window.changeOrderStatus = async function(orderId, newStatus) {
+      if (!newStatus) return;
+      try {
+        const res = await fetch(API_BASE + '/orders/' + orderId + '/status', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ status: newStatus })
+        });
+        if (!res.ok) throw new Error('Status update failed');
+        loadBotOrders();
+      } catch(e) {
+        alert('Xatolik: ' + e.message);
+      }
     };
   </script>
 </body>
