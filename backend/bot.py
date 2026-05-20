@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 BOT_TOKEN = '8745687733:AAFf87qQlNCJdAiQcErItQ3mKsMYl6sByBM'
-SITE_URL = 'https://tripro.uz'  # Replace with your actual domain
+SITE_URL = 'https://tripro-uz.netlify.app'
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
