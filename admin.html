@@ -1239,16 +1239,19 @@
                 <th>ID</th>
                 <th>Mijoz</th>
                 <th>Material</th>
-                <th>Oyna</th>
-                <th>Rang</th>
+                <th>Profil rangi</th>
+                <th>Oyna qavati</th>
+                <th>Oyna naqshi</th>
+                <th>Oyna rangi</th>
                 <th>O'lcham</th>
+                <th>Soni</th>
                 <th>Telefon</th>
                 <th>Holat</th>
                 <th>Amal</th>
               </tr>
             </thead>
             <tbody id="orders-tbody">
-              <tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">API ga ulanilmoqda...</td></tr>
+              <tr><td colspan="12" style="text-align:center; padding:30px; color:var(--text-muted);">API ga ulanilmoqda...</td></tr>
             </tbody>
           </table>
         </div>
@@ -2118,22 +2121,22 @@
     window.loadBotOrders = async function() {
       const tbody = document.getElementById('orders-tbody');
       if (!tbody) return;
-      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">Yuklanmoqda...</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="12" style="text-align:center; padding:30px; color:var(--text-muted);">Yuklanmoqda...</td></tr>';
       try {
         const res = await fetch(API_BASE + '/orders');
         if (!res.ok) throw new Error('API error');
         const orders = await res.json();
         if (!orders.length) {
-          tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">Hali buyurtmalar mavjud emas.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="12" style="text-align:center; padding:30px; color:var(--text-muted);">Hali buyurtmalar mavjud emas.</td></tr>';
           return;
         }
         const statusMap = {
           pending: '<span style="background:rgba(245,158,11,0.1); color:#F59E0B; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">⏳ Kutilmoqda</span>',
           confirmed: '<span style="background:rgba(34,197,94,0.1); color:#22C55E; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">✅ Tasdiqlangan</span>',
-          material_delivered: '<span style="background:rgba(59,130,246,0.1); color:#3B82F6; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">🚚 Material keltirilmoqda</span>',
-          in_progress: '<span style="background:rgba(139,92,246,0.1); color:#8B5CF6; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">🔧 Jarayonda</span>',
-          ready: '<span style="background:rgba(14,165,233,0.1); color:#0EA5E9; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">✨ Tayyorlanmoqda</span>',
-          delivered: '<span style="background:rgba(34,197,94,0.1); color:#22C55E; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">📦 Yetkazilmoqda</span>',
+          material_delivered: '<span style="background:rgba(59,130,246,0.1); color:#3B82F6; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">🚚 Material olib kelinmoqda</span>',
+          in_progress: '<span style="background:rgba(139,92,246,0.1); color:#8B5CF6; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">🔧 Ishlab chiqarish jarayonida</span>',
+          ready: '<span style="background:rgba(14,165,233,0.1); color:#0EA5E9; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">✨ Oyna qismi tayyorlanmoqda</span>',
+          delivered: '<span style="background:rgba(34,197,94,0.1); color:#22C55E; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">📦 To\'liq tayyor</span>',
         };
         tbody.innerHTML = orders.map(o => {
           let confirmBtn = o.status === 'pending' 
@@ -2142,27 +2145,30 @@
           let statusChanger = o.status !== 'pending' && o.order_id
             ? `<select onchange="changeOrderStatus('${o.order_id}', this.value)" style="padding:4px; border:1px solid var(--border); border-radius:4px; font-size:0.7rem;">
                 <option value="">O\'zgartirish</option>
-                <option value="confirmed">✅ Tasdiqlangan</option>
-                <option value="material_delivered">🚚 Material keltirilmoqda</option>
-                <option value="in_progress">🔧 Jarayonda</option>
-                <option value="ready">✨ Tayyorlanmoqda</option>
-                <option value="delivered">📦 Yetkazilmoqda</option>
+                <option value="material_delivered">🚚 Material olib kelinmoqda</option>
+                <option value="in_progress">🔧 Ishlab chiqarish jarayonida</option>
+                <option value="ready">✨ Oyna qismi tayyorlanmoqda</option>
+                <option value="delivered">📦 To\'liq tayyor</option>
               </select>`
             : '';
+          let dims = (o.dimensions || '—').replace(/\n/g, '<br>');
           return `<tr>
             <td style="font-weight:600;">${o.order_id || '—'}</td>
             <td>${o.telegram_id ? '👤 User #' + o.telegram_id : '—'}</td>
             <td>${o.material_type || '—'}</td>
-            <td>${o.glass_type || '—'}</td>
             <td>${o.profile_color || '—'}</td>
-            <td>${o.dimensions || '—'}</td>
+            <td>${o.glass_type || '—'}</td>
+            <td>${o.glass_pattern || '—'}</td>
+            <td>${o.glass_color || '—'}</td>
+            <td>${dims}</td>
+            <td>${o.quantity || 1}</td>
             <td><a href="tel:${o.phone}" style="color:var(--navy); text-decoration:none;">${o.phone || '—'}</a></td>
             <td>${statusMap[o.status] || o.status}</td>
             <td style="display:flex; flex-direction:column; gap:4px;">${confirmBtn}${statusChanger}</td>
           </tr>`;
         }).join('');
       } catch(e) {
-        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:30px; color:#DC2626;">API ga ulanib bo\'lmadi. Backend server ishlayotganiga ishonch hosil qiling.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="12" style="text-align:center; padding:30px; color:#DC2626;">API ga ulanib bo\'lmadi. Backend server ishlayotganiga ishonch hosil qiling.</td></tr>';
       }
     };
 
