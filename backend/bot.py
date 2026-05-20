@@ -53,7 +53,7 @@ def phone_kb():
 
 def main_menu():
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='🌐 TriPro galereyasini ko\'rish', web_app=WebAppInfo(url=SITE_URL))],
+        [InlineKeyboardButton(text='🌐 TriPro saytini ochish', web_app=WebAppInfo(url=SITE_URL))],
         [InlineKeyboardButton(text='📝 Buyurtma berish', callback_data='new_order')],
         [InlineKeyboardButton(text='🔍 Buyurtmani tekshirish', callback_data='check_order')],
     ])
@@ -65,7 +65,7 @@ async def cmd_start(message: types.Message):
         f'Assalomu alaykum, {message.from_user.first_name}! 👋\n\n'
         f'TriPro — AKFA romlar, oynak xizmatlari va yog\'och mahsulotlari ishlab chiqaruvchi '
         f'professional ustaxona.\n\n'
-        f'Galereyani ko\'rib, buyurtma berishingiz yoki mavjud buyurtmangiz holatini '
+        f'Saytni ko\'rib, buyurtma berishingiz yoki mavjud buyurtmangiz holatini '
         f'tekshirishingiz mumkin.',
         reply_markup=main_menu()
     )
