@@ -2116,7 +2116,12 @@
     };
 
     // ─── BOT ORDERS (API) ───
-    const API_BASE = window.location.origin + '/api';
+    const API_BASE = 'https://tripro.onrender.com/api';
+
+    // ─── KEEP-ALIVE PING (har 10 daqiqada Render'ni uxlatmaslik uchun) ───
+    setInterval(() => {
+      fetch('https://tripro.onrender.com/api/orders/pending', { mode: 'cors' }).catch(() => {});
+    }, 10 * 60 * 1000); // 10 daqiqa
 
     window.loadBotOrders = async function() {
       const tbody = document.getElementById('orders-tbody');
