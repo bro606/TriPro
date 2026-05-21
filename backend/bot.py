@@ -405,10 +405,23 @@ async def notify_checker():
             logger.error(f'Notify checker error: {e}')
         await asyncio.sleep(10)
 
+# ─── KEEP-ALIVE (Render free tier uxlamasligi uchun) ───
+async def keep_alive():
+    import httpx
+    while True:
+        await asyncio.sleep(300)  # 5 daqiqa
+        try:
+            async with httpx.AsyncClient() as client:
+                await client.get('http://0.0.0.0:8000/api/orders/pending', timeout=10)
+            logger.info('Keep-alive ping sent')
+        except Exception:
+            pass
+
 # ─── MAIN ───
 async def main():
     init_db()
     asyncio.create_task(notify_checker())
+    asyncio.create_task(keep_alive())
     logger.info('Bot started polling...')
     await dp.start_polling(bot)
 
