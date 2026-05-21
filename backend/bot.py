@@ -11,7 +11,7 @@ from database import init_db, create_order, get_orders_for_chat, get_order, get_
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-BOT_TOKEN = '8745687733:AAFf87qQlNCJdAiQcErItQ3mKsMYl6sByBM'
+BOT_TOKEN = '8745687733:AAGU89lzWfq7GcGFIoldJtinxxd6qHb58J4'
 SITE_URL = 'https://tripro-uz.netlify.app'
 
 bot = Bot(token=BOT_TOKEN)
