@@ -426,6 +426,7 @@ async def main():
     init_db()
     asyncio.create_task(notify_checker())
     asyncio.create_task(keep_alive())
+    await bot.delete_webhook(drop_pending_updates=True)
     logger.info('Bot started polling...')
     await dp.start_polling(bot)
 
