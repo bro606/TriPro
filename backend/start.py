@@ -24,7 +24,8 @@ async def keep_alive():
                 logger.warning(f'Keep-alive ping failed: {e}')
 
 def run_api():
-    uvicorn.run('app:app', host='0.0.0.0', port=8000, log_level='info')
+    port = int(os.environ.get('PORT', 8000))
+    uvicorn.run('app:app', host='0.0.0.0', port=port, log_level='info')
 
 async def main():
     asyncio.create_task(keep_alive())

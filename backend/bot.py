@@ -408,14 +408,18 @@ async def notify_checker():
 # ─── KEEP-ALIVE (Render free tier uxlamasligi uchun) ───
 async def keep_alive():
     import httpx
+    import os
+    # Render'da siz yozgan PUBLIC_URL yoki default manzil
+    url = os.getenv('PUBLIC_URL', 'http://0.0.0.0:8000') + '/api/orders/pending'
+    
     while True:
         await asyncio.sleep(300)  # 5 daqiqa
         try:
             async with httpx.AsyncClient() as client:
-                await client.get('http://0.0.0.0:8000/api/orders/pending', timeout=10)
-            logger.info('Keep-alive ping sent')
-        except Exception:
-            pass
+                await client.get(url, timeout=10)
+            logger.info(f'Keep-alive ping sent to {url}')
+        except Exception as e:
+            logger.error(f'Keep-alive error: {e}')
 
 # ─── MAIN ───
 async def main():
