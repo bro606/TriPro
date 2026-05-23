@@ -1,5 +1,6 @@
 import asyncio
 import os
+import sys
 import logging
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command, StateFilter
@@ -13,6 +14,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 BOT_TOKEN = os.getenv('BOT_TOKEN')
+if not BOT_TOKEN:
+    print("XATO: BOT_TOKEN topilmadi! Render muhitini tekshir.")
+    sys.exit(1)
 SITE_URL = 'https://tripro-uz.netlify.app'
 
 bot = Bot(token=BOT_TOKEN)
