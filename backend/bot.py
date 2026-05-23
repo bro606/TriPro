@@ -13,10 +13,7 @@ from database import init_db, create_order, get_orders_for_chat, get_order, get_
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-BOT_TOKEN = os.getenv('BOT_TOKEN')
-if not BOT_TOKEN:
-    print("XATO: BOT_TOKEN topilmadi! Render muhitini tekshir.")
-    sys.exit(1)
+BOT_TOKEN = os.getenv('BOT_TOKEN', '8745687733:AAGcftZHiq3jZkyvWN6IZglvyxz26kJ5G-4')
 SITE_URL = 'https://tripro-uz.netlify.app'
 
 bot = Bot(token=BOT_TOKEN)
@@ -410,30 +407,13 @@ async def notify_checker():
             logger.error(f'Notify checker error: {e}')
         await asyncio.sleep(10)
 
-# ─── KEEP-ALIVE (Render free tier uxlamasligi uchun) ───
-async def keep_alive():
-    import httpx
-    import os
-    # Render'da siz yozgan PUBLIC_URL yoki default manzil
-    url = os.getenv('PUBLIC_URL', 'http://0.0.0.0:8000') + '/api/orders/pending'
-    
-    while True:
-        await asyncio.sleep(300)  # 5 daqiqa
-        try:
-            async with httpx.AsyncClient() as client:
-                await client.get(url, timeout=10)
-            logger.info(f'Keep-alive ping sent to {url}')
-        except Exception as e:
-            logger.error(f'Keep-alive error: {e}')
-
-# ─── MAIN ───
-async def main():
-    init_db()
-    asyncio.create_task(notify_checker())
-    asyncio.create_task(keep_alive())
+# ─── MAIN FOR EXPORT ───
+async def bot_main():
     await bot.delete_webhook(drop_pending_updates=True)
+    asyncio.create_task(notify_checker())
     logger.info('Bot started polling...')
     await dp.start_polling(bot)
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    init_db()
+    asyncio.run(bot_main())

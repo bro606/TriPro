@@ -1,9 +1,15 @@
+import asyncio
+import os
+import logging
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from database import init_db, get_all_orders, get_pending_orders, get_order, confirm_order, update_status
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title='TriPro API')
 
@@ -15,19 +21,15 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
-# Mount static files (serve admin.html and index.html from parent dir)
-import os
-PARENT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-app.mount('/admin', StaticFiles(directory=PARENT, html=True), name='admin')
-
 # ─── MODELS ───
 class StatusUpdate(BaseModel):
     status: str
 
 # ─── ENDPOINTS ───
-@app.on_event('startup')
-def startup():
-    init_db()
+@app.get('/health')
+@app.get('/')
+def health():
+    return {"status": "ok", "service": "TriPro API + Bot"}
 
 @app.get('/api/orders')
 def list_orders():
@@ -58,7 +60,17 @@ def change_status(order_id: str, body: StatusUpdate):
         raise HTTPException(404, 'Order not found or invalid status')
     return JSONResponse(order)
 
+# ─── BOT STARTUP ───
+@app.on_event('startup')
+async def startup_event():
+    init_db()
+    from bot import bot_main
+    # Start bot polling in the background
+    asyncio.create_task(bot_main())
+    logger.info("Bot started in background via FastAPI startup")
+
 # ─── MAIN ───
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host='0.0.0.0', port=8000)
+    PORT = int(os.environ.get('PORT', 8000))
+    uvicorn.run(app, host='0.0.0.0', port=PORT)
