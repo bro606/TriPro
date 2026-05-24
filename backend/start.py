@@ -98,6 +98,7 @@ async def run_api():
 
     runner = web.AppRunner(app)
     await runner.setup()
+    print(f"DEBUG: Port qiymati: {os.getenv('PORT')}")
     site = web.TCPSite(runner, '0.0.0.0', PORT)
     await site.start()
     logger.info(f'✅ API Server running on 0.0.0.0:{PORT}')
