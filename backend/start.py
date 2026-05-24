@@ -117,7 +117,7 @@ async def main():
     # 4. Start Telegram Bot
     from bot import bot_main
     logger.info("🚀 Starting Telegram Bot...")
-    await bot_main()
+    await bot_main(start_web_server=False)
 
 if __name__ == '__main__':
     try:

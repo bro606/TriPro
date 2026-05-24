@@ -2,6 +2,7 @@ import asyncio
 import os
 import sys
 import logging
+from aiohttp import web
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
@@ -411,8 +412,21 @@ async def notify_checker():
             logger.error(f'Notify checker error: {e}')
         await asyncio.sleep(10)
 
+# ─── WEB SERVER FOR RENDER PORT BINDING ───
+async def run_web_server():
+    app = web.Application()
+    app.router.add_get('/health', lambda r: web.json_response({'status': 'ok'}))
+    runner = web.AppRunner(app)
+    await runner.setup()
+    PORT = int(os.environ.get('PORT', 8000))
+    site = web.TCPSite(runner, '0.0.0.0', PORT)
+    await site.start()
+    logger.info(f'✅ Web server running on 0.0.0.0:{PORT}')
+
 # ─── MAIN FOR EXPORT ───
-async def bot_main():
+async def bot_main(start_web_server=True):
+    if start_web_server:
+        await run_web_server()
     await bot.delete_webhook(drop_pending_updates=True)
     asyncio.create_task(notify_checker())
     logger.info('Bot started polling...')
