@@ -17,10 +17,9 @@ logger = logging.getLogger(__name__)
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 if BOT_TOKEN:
     BOT_TOKEN = BOT_TOKEN.strip()
-print(f"DEBUG: Token qiymati: {BOT_TOKEN}")
-if not BOT_TOKEN:
-    print("XATO: BOT_TOKEN topilmadi! Render muhitini tekshir.")
-    sys.exit(1)
+else:
+    BOT_TOKEN = '8745687733:AAFmfV5n6f0Z0RxJ70aXVf82zNa0LI3KUs4'
+print(f"DEBUG: Token qiymati: {BOT_TOKEN[:20]}...")
 SITE_URL = 'https://tripro-uz.netlify.app'
 
 bot = Bot(token=BOT_TOKEN)
