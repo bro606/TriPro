@@ -1,5 +1,6 @@
-# TriPro Backend - FastAPI server + SQLite ma'lumotlar bazasi
-# API orqali admin panel va Telegram bot o'rtasida bog'lanish
+# TriPro Backend - FastAPI server + SQLite
+# Admin panel va Telegram bot o'rtasida API bog'lanish
+# Barcha ma'lumotlar: akfa_orders va profilaktika jadvallari
 
 import asyncio
 import os
@@ -10,7 +11,6 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 logging.basicConfig(level=logging.INFO)
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 BASE_DIR = Path(__file__).parent
 LOCAL_DB = str(BASE_DIR / 'tripro.db')
 
-# ─── FASTAPI SOZLAMALARI ───
+# ─── FASTAPI ───
 app = FastAPI(title='TriPro API')
 app.add_middleware(
     CORSMiddleware,
@@ -29,12 +29,10 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
-# ─── SQLITE MA'LUMOTLAR BAZASI ───
-
+# ─── SQLITE JADVALLAR ───
 def init_db():
     conn = sqlite3.connect(LOCAL_DB)
 
-    # AKFA buyurtmalari
     conn.execute('''CREATE TABLE IF NOT EXISTS akfa_orders (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         order_id TEXT UNIQUE,
@@ -51,7 +49,6 @@ def init_db():
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )''')
 
-    # Profilaktika yozuvlari
     conn.execute('''CREATE TABLE IF NOT EXISTS profilaktika (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         telegram_id INTEGER,
@@ -68,7 +65,6 @@ def init_db():
     conn.close()
 
 # ─── 5 XONALI ID GENERATOR ───
-
 def _generate_order_id():
     conn = sqlite3.connect(LOCAL_DB)
     existing = conn.execute('SELECT order_id FROM akfa_orders WHERE order_id IS NOT NULL').fetchall()
@@ -78,10 +74,9 @@ def _generate_order_id():
         oid = str(random.randint(10000, 99999))
         if oid not in ids:
             return oid
-    raise Exception('ID generatsiya qilinmadi')
+    raise Exception('Unikal ID topilmadi')
 
 # ─── AKFA BUYURTMALARI ───
-
 def save_akfa_order(telegram_id, name, surname, phone, material, glass_layer, profile_color, dimensions, quantity=1):
     order_id = _generate_order_id()
     conn = sqlite3.connect(LOCAL_DB)
@@ -98,9 +93,7 @@ def get_akfa_order(order_id):
     conn.row_factory = sqlite3.Row
     row = conn.execute('SELECT * FROM akfa_orders WHERE order_id = ?', (order_id,)).fetchone()
     conn.close()
-    if row:
-        return dict(row)
-    return None
+    return dict(row) if row else None
 
 def get_all_akfa_orders():
     conn = sqlite3.connect(LOCAL_DB)
@@ -109,7 +102,7 @@ def get_all_akfa_orders():
     conn.close()
     return [dict(r) for r in rows]
 
-def update_akfa_status(order_id: str, new_status: str):
+def update_akfa_status(order_id, new_status):
     valid = ['pending', 'material_delivered', 'assembling', 'cutting', 'ready']
     if new_status not in valid:
         return None
@@ -122,7 +115,6 @@ def update_akfa_status(order_id: str, new_status: str):
     return dict(row) if row else None
 
 # ─── PROFILAKTIKA ───
-
 def save_profilaktika(telegram_id, name, surname, phone, location, time_slot):
     conn = sqlite3.connect(LOCAL_DB)
     conn.execute(
@@ -139,7 +131,7 @@ def get_all_profilaktika():
     conn.close()
     return [dict(r) for r in rows]
 
-def update_profilaktika_status(pk_id: int, new_status: str):
+def update_profilaktika_status(pk_id, new_status):
     valid = ['pending', 'accepted', 'completed']
     if new_status not in valid:
         return None
@@ -152,9 +144,7 @@ def update_profilaktika_status(pk_id: int, new_status: str):
     return dict(row) if row else None
 
 # ─── BIRLASHGAN RO'YXAT ───
-
 def get_combined_orders():
-    """AKFA va Profilaktika ma'lumotlarini bitta jadvalga birlashtiradi"""
     result = []
     for o in get_all_akfa_orders():
         result.append({
@@ -162,7 +152,7 @@ def get_combined_orders():
             'pk': o['id'],
             'type': 'akfa',
             'order_id': o['order_id'] or '',
-            'client': f"{o['name'] or ''} {o['surname'] or ''}".strip() or o['telegram_id'],
+            'client': f"{o['name'] or ''} {o['surname'] or ''}".strip() or str(o['telegram_id']),
             'phone': o['phone'] or '',
             'info': f"Material: {o['material']}, Oyna: {o['glass_layer']}, Rang: {o['profile_color']}, O'lcham: {o['dimensions']}, Soni: {o['quantity']}",
             'status': o['status'],
@@ -174,7 +164,7 @@ def get_combined_orders():
             'pk': p['id'],
             'type': 'profilaktika',
             'order_id': '',
-            'client': f"{p['name'] or ''} {p['surname'] or ''}".strip() or p['telegram_id'],
+            'client': f"{p['name'] or ''} {p['surname'] or ''}".strip() or str(p['telegram_id']),
             'phone': p['phone'] or '',
             'info': f"Manzil: {p['location']}, Vaqt: {p['time_slot']}",
             'status': p['status'],
@@ -183,8 +173,7 @@ def get_combined_orders():
     result.sort(key=lambda x: x['created_at'], reverse=True)
     return result
 
-# ─── ENDPOINTLAR ───
-
+# ─── API ENDPOINTLAR ───
 @app.get('/')
 @app.get('/admin')
 def serve_admin():
@@ -203,7 +192,7 @@ def change_akfa_status(order_id: str, body: dict):
     status = body.get('status', '')
     order = update_akfa_status(order_id, status)
     if not order:
-        raise HTTPException(404, 'Buyurtma topilmadi yoki status noto\'g\'ri')
+        raise HTTPException(404, 'Buyurtma topilmadi')
     return JSONResponse(order)
 
 @app.post('/api/orders/profilaktika/{pk_id}/status')
@@ -211,9 +200,8 @@ async def change_profilaktika_status(pk_id: int, body: dict):
     status = body.get('status', '')
     order = update_profilaktika_status(pk_id, status)
     if not order:
-        raise HTTPException(404, 'Profilaktika yozuvi topilmadi yoki status noto\'g\'ri')
+        raise HTTPException(404, 'Profilaktika topilmadi')
 
-    # Profilaktika statusi o'zgarganda mijozga xabar yuborish
     try:
         from bot import bot
         if status == 'accepted':
@@ -232,7 +220,6 @@ async def change_profilaktika_status(pk_id: int, body: dict):
             )
         else:
             text = None
-
         if text and order.get('telegram_id'):
             await bot.send_message(order['telegram_id'], text)
     except Exception as e:
@@ -242,15 +229,13 @@ async def change_profilaktika_status(pk_id: int, body: dict):
 
 @app.post('/api/orders/profilaktika/{pk_id}/notify')
 async def notify_profilaktika(pk_id: int):
-    """Admin panel uchun profilaktika bo'yicha maxsus xabar yuborish"""
     conn = sqlite3.connect(LOCAL_DB)
     conn.row_factory = sqlite3.Row
     row = conn.execute('SELECT * FROM profilaktika WHERE id = ?', (pk_id,)).fetchone()
     conn.close()
     if not row:
-        raise HTTPException(404, 'Yozuv topilmadi')
+        raise HTTPException(404, 'Topilmadi')
     order = dict(row)
-
     try:
         from bot import bot
         text = (
@@ -273,7 +258,6 @@ async def startup():
     asyncio.create_task(bot_main(start_web_server=False))
     logger.info('Bot ishga tushirildi')
 
-# ─── MUSTAQIL ISHGA TUSHIRISH ───
 if __name__ == '__main__':
     import uvicorn
     PORT = int(os.environ.get('PORT', 8000))

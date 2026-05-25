@@ -1,5 +1,6 @@
 # TriPro Telegram Bot - Aiogram 3.x
-# FSM yordamida AKFA buyurtmasi va Profilaktika xizmati jarayonlari
+# FSM: AKFA buyurtmasi (9 bosqich) + Profilaktika (2 bosqich)
+# Ma'lumotlar bazasi: backend.py orqali SQLite
 
 import asyncio
 import os
@@ -10,14 +11,11 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.storage.memory import MemoryStorage
-
-# backend.py dan ma'lumotlar bazasi funksiyalarini import qilish
 from backend import save_akfa_order, get_akfa_order, save_profilaktika
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# ─── MUHIT O'ZGARUVCHILARI ───
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 if not BOT_TOKEN:
     BOT_TOKEN = '8745687733:AAFmfV5n6f0Z0RxJ70aXVf82zNa0LI3KUs4'
@@ -29,9 +27,7 @@ SITE_URL = 'https://tripro-uz.netlify.app'
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
 
-# ─── FSM (FINITE STATE MACHINE) ───
-
-# AKFA buyurtmasi uchun 9 bosqich
+# ─── FSM STATES ───
 class AkfaForm(StatesGroup):
     name = State()
     surname = State()
@@ -43,15 +39,13 @@ class AkfaForm(StatesGroup):
     quantity = State()
     confirm = State()
 
-# Profilaktika xizmati uchun 2 bosqich
 class ProfilaktikaForm(StatesGroup):
     location = State()
     time = State()
 
 BACK_BTN = '🔙 Bosh menyuga'
 
-# ─── KLAVIATURALAR (KEYBOARDS) ───
-
+# ─── KEYBOARDS ───
 def main_menu_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text='🌐 Saytni ko\'rish', url=SITE_URL)],
@@ -130,13 +124,19 @@ def time_slots_ikb():
         [InlineKeyboardButton(text=BACK_BTN, callback_data='back_to_menu')],
     ])
 
-# ─── BUYRUGLAR ───
+def profilaktika_offer_kb():
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text='🛡 Profilaktikaga yozilish', callback_data='new_profilaktika')],
+        [InlineKeyboardButton(text='🏠 Bosh menyu', callback_data='back_to_menu')],
+    ])
 
+# ─── START / CANCEL ───
 @dp.message(Command('start'))
 async def cmd_start(message: types.Message):
     name = message.from_user.first_name or 'Foydalanuvchi'
     await message.answer(
-        f'Assalomu alaykum, {name}! TriPro ustaxonasiga xush kelibsiz.',
+        f'Assalomu alaykum, {name}! TriPro ustaxonasiga xush kelibsiz. '
+        f'Biz sizga sifatli AKFA romlar, yog\'och va shisha mahsulotlarini yetkazib beramiz.',
         reply_markup=main_menu_kb()
     )
 
@@ -146,8 +146,7 @@ async def cmd_cancel(message: types.Message, state: FSMContext):
     await state.clear()
     await message.answer('Asosiy menyu:', reply_markup=main_menu_kb())
 
-# ─── CALLBACK: MENYU ───
-
+# ─── MENU CALLBACKS ───
 @dp.callback_query(lambda c: c.data == 'back_to_menu')
 async def cb_back_to_menu(call: types.CallbackQuery, state: FSMContext):
     await call.answer()
@@ -175,7 +174,7 @@ async def cb_other_services(call: types.CallbackQuery, state: FSMContext):
         reply_markup=other_services_kb()
     )
 
-# ─── AKFA FSM: 1/9 ISM ───
+# ─── AKFA: 1/9 ISM ───
 @dp.message(AkfaForm.name, lambda msg: msg.text and len(msg.text.strip()) > 0)
 async def process_name(message: types.Message, state: FSMContext):
     await state.update_data(name=message.text.strip())
@@ -186,7 +185,7 @@ async def process_name(message: types.Message, state: FSMContext):
 async def process_name_invalid(message: types.Message):
     await message.answer('Iltimos, ismingizni yozing:', reply_markup=back_inline_kb())
 
-# ─── AKFA FSM: 2/9 FAMILIYA ───
+# ─── AKFA: 2/9 FAMILIYA ───
 @dp.message(AkfaForm.surname, lambda msg: msg.text and len(msg.text.strip()) > 0)
 async def process_surname(message: types.Message, state: FSMContext):
     await state.update_data(surname=message.text.strip())
@@ -202,11 +201,10 @@ async def process_surname(message: types.Message, state: FSMContext):
 async def process_surname_invalid(message: types.Message):
     await message.answer('Iltimos, familiyangizni yozing:', reply_markup=back_inline_kb())
 
-# ─── AKFA FSM: 3/9 TELEFON ───
+# ─── AKFA: 3/9 TELEFON ───
 @dp.message(AkfaForm.phone, F.contact)
 async def process_phone_contact(message: types.Message, state: FSMContext):
-    phone = message.contact.phone_number
-    await state.update_data(phone=phone)
+    await state.update_data(phone=message.contact.phone_number)
     await state.set_state(AkfaForm.material)
     await message.answer('4/9: Buyurtmangiz uchun material turini tanlang:', reply_markup=material_ikb())
 
@@ -219,8 +217,7 @@ async def process_phone_manual_choice(message: types.Message, state: FSMContext)
 
 @dp.message(AkfaForm.phone, lambda msg: msg.text and len(msg.text.strip()) > 5 and msg.text.strip() != BACK_BTN)
 async def process_phone_text(message: types.Message, state: FSMContext):
-    phone = message.text.strip()
-    await state.update_data(phone=phone)
+    await state.update_data(phone=message.text.strip())
     await state.set_state(AkfaForm.material)
     await message.answer('4/9: Buyurtmangiz uchun material turini tanlang:', reply_markup=material_ikb())
 
@@ -236,7 +233,7 @@ async def process_phone_invalid(message: types.Message):
         reply_markup=phone_choice_kb()
     )
 
-# ─── AKFA FSM: 4/9 MATERIAL ───
+# ─── AKFA: 4/9 MATERIAL ───
 @dp.callback_query(AkfaForm.material, lambda c: c.data.startswith('mat_'))
 async def cb_material(call: types.CallbackQuery, state: FSMContext):
     await call.answer()
@@ -245,7 +242,7 @@ async def cb_material(call: types.CallbackQuery, state: FSMContext):
     await state.set_state(AkfaForm.glass_layer)
     await call.message.edit_text('5/9: Oyna qavatini tanlang:', reply_markup=glass_layer_ikb())
 
-# ─── AKFA FSM: 5/9 OYNA QAVATI ───
+# ─── AKFA: 5/9 OYNA QAVATI ───
 @dp.callback_query(AkfaForm.glass_layer, lambda c: c.data.startswith('glass_'))
 async def cb_glass_layer(call: types.CallbackQuery, state: FSMContext):
     await call.answer()
@@ -254,7 +251,7 @@ async def cb_glass_layer(call: types.CallbackQuery, state: FSMContext):
     await state.set_state(AkfaForm.profile_color)
     await call.message.edit_text('6/9: Profil rangini tanlang:', reply_markup=profile_color_ikb())
 
-# ─── AKFA FSM: 6/9 PROFIL RANGI ───
+# ─── AKFA: 6/9 PROFIL RANGI ───
 @dp.callback_query(AkfaForm.profile_color, lambda c: c.data.startswith('color_'))
 async def cb_profile_color(call: types.CallbackQuery, state: FSMContext):
     await call.answer()
@@ -267,7 +264,7 @@ async def cb_profile_color(call: types.CallbackQuery, state: FSMContext):
         reply_markup=back_inline_kb()
     )
 
-# ─── AKFA FSM: 7/9 O'LCHAM ───
+# ─── AKFA: 7/9 O'LCHAM ───
 @dp.message(AkfaForm.dimensions, lambda msg: msg.text and len(msg.text.strip()) > 0)
 async def process_dimensions(message: types.Message, state: FSMContext):
     await state.update_data(dimensions=message.text.strip())
@@ -278,7 +275,7 @@ async def process_dimensions(message: types.Message, state: FSMContext):
 async def process_dimensions_invalid(message: types.Message):
     await message.answer('Iltimos, o\'lchamlarni yozing (masalan: 80x90):', reply_markup=back_inline_kb())
 
-# ─── AKFA FSM: 8/9 SONI ───
+# ─── AKFA: 8/9 SONI ───
 @dp.message(AkfaForm.quantity, lambda msg: msg.text and msg.text.strip().isdigit() and int(msg.text.strip()) > 0)
 async def process_quantity(message: types.Message, state: FSMContext):
     qty = int(message.text.strip())
@@ -302,7 +299,7 @@ async def process_quantity(message: types.Message, state: FSMContext):
 async def process_quantity_invalid(message: types.Message):
     await message.answer('Iltimos, musbat son kiriting (masalan: 2):', reply_markup=back_inline_kb())
 
-# ─── AKFA FSM: 9/9 TASDIQLASH ───
+# ─── AKFA: 9/9 TASDIQLASH ───
 @dp.callback_query(AkfaForm.confirm, lambda c: c.data == 'confirm_yes')
 async def cb_confirm_yes(call: types.CallbackQuery, state: FSMContext):
     await call.answer()
@@ -332,14 +329,10 @@ async def cb_confirm_yes(call: types.CallbackQuery, state: FSMContext):
         'Mutaxassisimiz tez orada siz bilan bog\'lanadi.',
         reply_markup=main_menu_kb()
     )
-    # Profilaktika taklifi
     await call.message.answer(
         '🛡 Yilda bir marta profilaktika xizmatimizdan foydalaning!\n'
         'Deraza va romlaringizni tekshirib, xizmat ko\'rsatamiz.',
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text='🛡 Profilaktikaga yozilish', callback_data='new_profilaktika')],
-            [InlineKeyboardButton(text='🏠 Bosh menyu', callback_data='back_to_menu')],
-        ])
+        reply_markup=profilaktika_offer_kb()
     )
 
 @dp.callback_query(AkfaForm.confirm, lambda c: c.data == 'confirm_retry')
@@ -409,12 +402,11 @@ async def cb_new_profilaktika(call: types.CallbackQuery, state: FSMContext):
         reply_markup=profilaktika_location_kb()
     )
 
-# ─── PROFILAKTIKA FSM: MANZIL ───
+# ─── PROFILAKTIKA: MANZIL ───
 @dp.message(ProfilaktikaForm.location, F.location)
 async def process_profilaktika_location_shared(message: types.Message, state: FSMContext):
     loc = message.location
-    location_str = f'{loc.latitude}, {loc.longitude}'
-    await state.update_data(location=location_str)
+    await state.update_data(location=f'{loc.latitude}, {loc.longitude}')
     await state.set_state(ProfilaktikaForm.time)
     await message.answer('Qulay vaqtni tanlang:', reply_markup=time_slots_ikb())
 
@@ -443,7 +435,7 @@ async def process_profilaktika_location_invalid(message: types.Message):
         reply_markup=profilaktika_location_kb()
     )
 
-# ─── PROFILAKTIKA FSM: VAQT ───
+# ─── PROFILAKTIKA: VAQT ───
 @dp.callback_query(ProfilaktikaForm.time, lambda c: c.data.startswith('time_'))
 async def cb_profilaktika_time(call: types.CallbackQuery, state: FSMContext):
     await call.answer()
@@ -482,7 +474,6 @@ async def cb_profilaktika_time_back(call: types.CallbackQuery, state: FSMContext
 # ─── BOTNI ISHGA TUSHIRISH ───
 async def bot_main(start_web_server=False):
     if start_web_server:
-        # backend.py o'z serveriga ega, bu ishlatilmaydi
         pass
     await bot.delete_webhook(drop_pending_updates=True)
     logger.info('Bot started polling...')
