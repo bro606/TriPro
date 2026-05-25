@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriPro Admin Panel</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f2f5;
+      color: #1a1a2e;
+      padding: 30px;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+
+    /* Header */
+    .header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+    }
+    .header h1 {
+      font-size: 26px; font-weight: 700;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .header .badge {
+      background: #1a1a2e; color: #fff; padding: 8px 18px;
+      border-radius: 20px; font-size: 14px; font-weight: 600;
+    }
+
+    /* Filters */
+    .filters {
+      display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .filters select, .filters input {
+      padding: 10px 16px; border: 1px solid #d1d5db; border-radius: 8px;
+      font-size: 14px; background: #fff; outline: none;
+    }
+    .filters select:focus, .filters input:focus {
+      border-color: #1a1a2e; box-shadow: 0 0 0 3px rgba(26,26,46,0.1);
+    }
+    .filters .count {
+      padding: 10px 0; font-size: 14px; color: #6b7280;
+    }
+
+    /* Stats row */
+    .stats {
+      display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .stat-card {
+      background: #fff; padding: 16px 24px; border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08); flex: 1; min-width: 140px;
+    }
+    .stat-card .label { font-size: 12px; color: #6b7280; margin-bottom: 4px; }
+    .stat-card .value { font-size: 24px; font-weight: 700; }
+    .stat-card .value.pending { color: #f59e0b; }
+    .stat-card .value.completed { color: #10b981; }
+
+    /* Table */
+    .table-wrap {
+      background: #fff; border-radius: 12px; overflow-x: auto;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th {
+      background: #f8fafc; padding: 14px 16px; text-align: left;
+      font-weight: 600; font-size: 12px; text-transform: uppercase;
+      color: #6b7280; border-bottom: 2px solid #e5e7eb; white-space: nowrap;
+    }
+    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+    tr:hover { background: #f8fafc; }
+    tr.pending-row { border-left: 3px solid #f59e0b; }
+    tr.completed-row { border-left: 3px solid #10b981; }
+
+    /* Badges */
+    .type-akfa {
+      background: #dbeafe; color: #1d4ed8; padding: 4px 10px;
+      border-radius: 6px; font-size: 12px; font-weight: 600;
+    }
+    .type-prof {
+      background: #d1fae5; color: #047857; padding: 4px 10px;
+      border-radius: 6px; font-size: 12px; font-weight: 600;
+    }
+    .status-badge {
+      padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;
+    }
+    .status-pending { background: #fef3c7; color: #92400e; }
+    .status-accepted,
+    .status-material_delivered { background: #dbeafe; color: #1e40af; }
+    .status-assembling { background: #e0e7ff; color: #3730a3; }
+    .status-cutting { background: #fce7f3; color: #9d174d; }
+    .status-ready,
+    .status-completed { background: #d1fae5; color: #065f46; }
+
+    /* Actions */
+    .actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .actions select {
+      padding: 6px 8px; border: 1px solid #d1d5db; border-radius: 6px;
+      font-size: 12px; background: #fff; cursor: pointer;
+    }
+    .actions button, .actions .btn {
+      padding: 6px 12px; border: none; border-radius: 6px;
+      font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s;
+    }
+    .btn-accept { background: #10b981; color: #fff; }
+    .btn-accept:hover { background: #059669; }
+    .btn-complete { background: #6366f1; color: #fff; }
+    .btn-complete:hover { background: #4f46e5; }
+    .btn-notify { background: #f59e0b; color: #fff; }
+    .btn-notify:hover { background: #d97706; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Toast */
+    .toast {
+      position: fixed; top: 20px; right: 20px; padding: 12px 24px;
+      border-radius: 8px; color: #fff; font-weight: 500; z-index: 999;
+      opacity: 0; transform: translateX(100px); transition: 0.3s; display: none;
+    }
+    .toast.show { opacity: 1; transform: translateX(0); display: block; }
+    .toast.success { background: #10b981; }
+    .toast.error { background: #ef4444; }
+
+    /* Loading */
+    .loading {
+      text-align: center; padding: 60px; color: #6b7280;
+    }
+    .loading .spinner {
+      width: 40px; height: 40px; border: 4px solid #e5e7eb;
+      border-top-color: #1a1a2e; border-radius: 50%;
+      animation: spin 0.8s linear infinite; margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .refresh-btn {
+      padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 8px;
+      background: #fff; cursor: pointer; font-size: 14px; transition: 0.2s;
+    }
+    .refresh-btn:hover { background: #f3f4f6; }
+
+    @media (max-width: 768px) {
+      body { padding: 16px; }
+      .header h1 { font-size: 20px; }
+      td, th { padding: 8px 10px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🛠 TriPro Admin Panel</h1>
+      <div>
+        <button class="refresh-btn" onclick="loadOrders()">🔄 Yangilash</button>
+        <span class="badge" id="orderCount">0</span>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="label">Jami buyurtmalar</div>
+        <div class="value" id="statTotal">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">AKFA</div>
+        <div class="value" id="statAkfa">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Profilaktika</div>
+        <div class="value" id="statProf">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Kutilmoqda</div>
+        <div class="value pending" id="statPending">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Tayyor / Yakunlangan</div>
+        <div class="value completed" id="statCompleted">0</div>
+      </div>
+    </div>
+
+    <div class="filters">
+      <select id="filterType" onchange="loadOrders()">
+        <option value="all">Barcha turlar</option>
+        <option value="akfa">AKFA buyurtmalari</option>
+        <option value="profilaktika">Profilaktika</option>
+      </select>
+      <select id="filterStatus" onchange="loadOrders()">
+        <option value="all">Barcha holatlar</option>
+        <option value="pending">⏳ Kutilmoqda</option>
+        <option value="accepted">✅ Qabul qilingan</option>
+        <option value="material_delivered">🚚 Material olib kelindi</option>
+        <option value="assembling">🔧 Yig'ilmoqda</option>
+        <option value="cutting">🪟 Oyna kesilmoqda</option>
+        <option value="ready">📦 Tayyor</option>
+        <option value="completed">🏁 Yakunlangan</option>
+      </select>
+      <input type="text" id="filterSearch" placeholder="🔍 Qidirish (ID, ism, telefon...)" oninput="loadOrders()">
+      <span class="count" id="filteredCount"></span>
+    </div>
+
+    <div class="table-wrap" id="tableWrap">
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div>Ma'lumotlar yuklanmoqda...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const API = '';
+
+    function showToast(msg, type) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.className = 'toast ' + type + ' show';
+      setTimeout(() => { t.className = 'toast'; }, 3000);
+    }
+
+    function getStatusLabel(status) {
+      const map = {
+        'pending': '⏳ Kutilmoqda',
+        'accepted': '✅ Qabul qilingan',
+        'material_delivered': '🚚 Material olib kelindi',
+        'assembling': '🔧 Yig\'ilmoqda',
+        'cutting': '🪟 Oyna kesilmoqda',
+        'ready': '📦 Tayyor',
+        'completed': '🏁 Yakunlangan',
+      };
+      return map[status] || status;
+    }
+
+    function getStatusClass(status) {
+      const map = {
+        'pending': 'status-pending',
+        'accepted': 'status-accepted',
+        'material_delivered': 'status-accepted',
+        'assembling': 'status-assembling',
+        'cutting': 'status-cutting',
+        'ready': 'status-ready',
+        'completed': 'status-completed',
+      };
+      return map[status] || 'status-pending';
+    }
+
+    function getRowClass(status) {
+      if (status === 'ready' || status === 'completed') return 'completed-row';
+      if (status === 'pending' || status === 'accepted') return 'pending-row';
+      return '';
+    }
+
+    async function loadOrders() {
+      const wrap = document.getElementById('tableWrap');
+      const loading = document.getElementById('loading');
+      loading.style.display = 'block';
+
+      try {
+        const res = await fetch(API + '/api/orders');
+        let orders = await res.json();
+
+        const filterType = document.getElementById('filterType').value;
+        const filterStatus = document.getElementById('filterStatus').value;
+        const filterSearch = document.getElementById('filterSearch').value.toLowerCase();
+
+        if (filterType !== 'all') {
+          orders = orders.filter(o => o.type === filterType);
+        }
+        if (filterStatus !== 'all') {
+          orders = orders.filter(o => o.status === filterStatus);
+        }
+        if (filterSearch) {
+          orders = orders.filter(o =>
+            (o.order_id && o.order_id.includes(filterSearch)) ||
+            (o.client && o.client.toLowerCase().includes(filterSearch)) ||
+            (o.phone && o.phone.includes(filterSearch)) ||
+            (o.info && o.info.toLowerCase().includes(filterSearch))
+          );
+        }
+
+        renderOrders(orders);
+        updateStats(orders);
+        document.getElementById('filteredCount').textContent =
+          `Ko'rsatilmoqda: ${orders.length} / ${document.getElementById('orderCount').textContent}`;
+
+      } catch (e) {
+        wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#ef4444;">❌ Serverga ulanishda xatolik: ' + e.message + '</div>';
+      }
+      loading.style.display = 'none';
+    }
+
+    function renderOrders(orders) {
+      const wrap = document.getElementById('tableWrap');
+      if (!orders.length) {
+        wrap.innerHTML = `
+          <div style="text-align:center;padding:40px;color:#6b7280;">
+            📭 Hech qanday buyurtma topilmadi
+          </div>`;
+        return;
+      }
+
+      let html = `<table>
+        <thead><tr>
+          <th>ID</th>
+          <th>Mijoz</th>
+          <th>Telefon</th>
+          <th>Turi</th>
+          <th>Ma'lumot</th>
+          <th>Status</th>
+          <th>Amallar</th>
+        </tr></thead><tbody>`;
+
+      for (const o of orders) {
+        const isAkfa = o.type === 'akfa';
+        const isProf = o.type === 'profilaktika';
+        const displayId = isAkfa ? o.order_id : '#' + o.pk;
+
+        html += `<tr class="${getRowClass(o.status)}">
+          <td style="font-weight:600;">${displayId}</td>
+          <td>${o.client}</td>
+          <td>${o.phone || '—'}</td>
+          <td><span class="${isAkfa ? 'type-akfa' : 'type-prof'}">${isAkfa ? '🪟 AKFA' : '🛡 Profilaktika'}</span></td>
+          <td style="max-width:300px;word-break:break-word;font-size:12px;color:#4b5563;">${o.info}</td>
+          <td><span class="status-badge ${getStatusClass(o.status)}">${getStatusLabel(o.status)}</span></td>
+          <td class="actions">`;
+
+        if (isAkfa) {
+          html += `
+            <select onchange="changeAkfaStatus('${o.order_id}', this.value)">
+              <option value="">Statusni o'zgartirish</option>
+              <option value="pending">⏳ Kutilmoqda</option>
+              <option value="material_delivered">🚚 Material olib kelindi</option>
+              <option value="assembling">🔧 Yig'ilmoqda</option>
+              <option value="cutting">🪟 Oyna kesilmoqda</option>
+              <option value="ready">📦 Tayyor</option>
+            </select>`;
+        } else {
+          const accepted = o.status === 'accepted';
+          const completed = o.status === 'completed';
+          html += `
+            <button class="btn btn-accept" ${accepted || completed ? 'disabled' : ''}
+              onclick="changeProfStatus(${o.pk}, 'accepted', this)">
+              ✅ Qabul qilish
+            </button>
+            <button class="btn btn-complete" ${completed ? 'disabled' : ''}
+              onclick="changeProfStatus(${o.pk}, 'completed', this)">
+              🏁 Ish yakunlandi
+            </button>
+            <button class="btn btn-notify"
+              onclick="notifyProf(${o.pk})">
+              📬 Xabar yuborish
+            </button>`;
+        }
+
+        html += `</td></tr>`;
+      }
+
+      html += '</tbody></table>';
+      wrap.innerHTML = html;
+    }
+
+    function updateStats(orders) {
+      document.getElementById('orderCount').textContent = orders.length;
+      document.getElementById('statTotal').textContent = orders.length;
+      document.getElementById('statAkfa').textContent = orders.filter(o => o.type === 'akfa').length;
+      document.getElementById('statProf').textContent = orders.filter(o => o.type === 'profilaktika').length;
+      document.getElementById('statPending').textContent =
+        orders.filter(o => o.status === 'pending' || o.status === 'accepted').length;
+      document.getElementById('statCompleted').textContent =
+        orders.filter(o => o.status === 'ready' || o.status === 'completed').length;
+    }
+
+    async function changeAkfaStatus(orderId, status) {
+      if (!status) return;
+      try {
+        const res = await fetch(API + '/api/orders/akfa/' + orderId + '/status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status }),
+        });
+        if (!res.ok) throw new Error('Xatolik');
+        showToast('✅ Status yangilandi: ' + getStatusLabel(status), 'success');
+        loadOrders();
+      } catch (e) {
+        showToast('❌ Xatolik: ' + e.message, 'error');
+      }
+    }
+
+    async function changeProfStatus(pk, status, btn) {
+      btn.disabled = true;
+      try {
+        const res = await fetch(API + '/api/orders/profilaktika/' + pk + '/status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status }),
+        });
+        if (!res.ok) throw new Error('Xatolik');
+        showToast('✅ Profilaktika yangilandi: ' + getStatusLabel(status), 'success');
+        loadOrders();
+      } catch (e) {
+        showToast('❌ Xatolik: ' + e.message, 'error');
+        btn.disabled = false;
+      }
+    }
+
+    async function notifyProf(pk) {
+      try {
+        const res = await fetch(API + '/api/orders/profilaktika/' + pk + '/notify', {
+          method: 'POST',
+        });
+        if (!res.ok) throw new Error('Xatolik');
+        showToast('📬 Xabar yuborildi', 'success');
+      } catch (e) {
+        showToast('❌ Xatolik: ' + e.message, 'error');
+      }
+    }
+
+    // Har 30 soniyada avtomatik yangilash
+    setInterval(loadOrders, 30000);
+    document.addEventListener('DOMContentLoaded', loadOrders);
+  </script>
+</body>
+</html>
