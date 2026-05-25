@@ -1,177 +1,164 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TriPro Admin Panel</title>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f2f5;color:#1a1a2e;padding:30px}
-    .container{max-width:1450px;margin:0 auto}
-    .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px}
-    .header h1{font-size:26px;font-weight:700;background:linear-gradient(135deg,#1a1a2e,#16213e);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .header .badge{background:#1a1a2e;color:#fff;padding:8px 18px;border-radius:20px;font-size:14px;font-weight:600}
-    .stats{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap}
-    .stat-card{background:#fff;padding:16px 24px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);flex:1;min-width:140px}
-    .stat-card .label{font-size:12px;color:#6b7280;margin-bottom:4px}
-    .stat-card .value{font-size:24px;font-weight:700}
-    .stat-card .value.orange{color:#f59e0b}
-    .stat-card .value.green{color:#10b981}
-    .filters{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
-    .filters select,.filters input{padding:10px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;background:#fff;outline:none}
-    .filters select:focus,.filters input:focus{border-color:#1a1a2e;box-shadow:0 0 0 3px rgba(26,26,46,0.1)}
-    .filters .count{font-size:13px;color:#6b7280;margin-left:auto}
-    .table-wrap{background:#fff;border-radius:12px;overflow-x:auto;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
-    table{width:100%;border-collapse:collapse;font-size:14px}
-    th{background:#f8fafc;padding:14px 16px;text-align:left;font-weight:600;font-size:12px;text-transform:uppercase;color:#6b7280;border-bottom:2px solid #e5e7eb;white-space:nowrap}
-    td{padding:12px 16px;border-bottom:1px solid #f0f0f0;vertical-align:middle}
-    tr:hover{background:#f8fafc}
-    tr.pending-row{border-left:3px solid #f59e0b}
-    tr.done-row{border-left:3px solid #10b981}
-    .type-btn{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;display:inline-block;white-space:nowrap}
-    .type-akfa{background:#dbeafe;color:#1d4ed8}
-    .type-prof{background:#d1fae5;color:#047857}
-    .s-badge{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;display:inline-block;white-space:nowrap}
-    .s-pending{background:#fef3c7;color:#92400e}
-    .s-accepted,.s-material_delivered{background:#dbeafe;color:#1e40af}
-    .s-assembling{background:#e0e7ff;color:#3730a3}
-    .s-cutting{background:#fce7f3;color:#9d174d}
-    .s-ready,.s-completed{background:#d1fae5;color:#065f46}
-    .actions{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
-    .actions select{padding:6px 8px;border:1px solid #d1d5db;border-radius:6px;font-size:12px;background:#fff;cursor:pointer}
-    .btn{padding:6px 12px;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:.2s;white-space:nowrap}
-    .btn-accept{background:#10b981;color:#fff}
-    .btn-accept:hover{background:#059669}
-    .btn-finish{background:#6366f1;color:#fff}
-    .btn-finish:hover{background:#4f46e5}
-    .btn-notify{background:#f59e0b;color:#fff}
-    .btn-notify:hover{background:#d97706}
-    .btn:disabled{opacity:.45;cursor:not-allowed}
-    .refresh-btn{padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;background:#fff;cursor:pointer;font-size:14px}
-    .refresh-btn:hover{background:#f3f4f6}
-    .loading{text-align:center;padding:60px;color:#6b7280}
-    .spinner{width:40px;height:40px;border:4px solid #e5e7eb;border-top-color:#1a1a2e;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .toast{position:fixed;top:20px;right:20px;padding:14px 24px;border-radius:8px;color:#fff;font-weight:500;z-index:999;opacity:0;transform:translateX(100px);transition:.3s}
-    .toast.show{opacity:1;transform:translateX(0)}
-    .toast.ok{background:#10b981}
-    .toast.err{background:#ef4444}
-    @media(max-width:768px){body{padding:16px}.header h1{font-size:20px}td,th{padding:8px 10px;font-size:12px}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TriPro Admin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+body{background:#f0f2f5;padding:20px;color:#333}
+.container{max-width:1400px;margin:0 auto}
+h1{font-size:24px;margin-bottom:20px}
+.filters{margin-bottom:15px;display:flex;gap:10px;flex-wrap:wrap}
+.filters select,.filters input{padding:8px 12px;border:1px solid #ccc;border-radius:6px;font-size:14px}
+.filters button{padding:8px 18px;background:#1877f2;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px}
+.filters button:hover{background:#166fe5}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+th{background:#1877f2;color:#fff;padding:12px 8px;text-align:left;font-size:13px;white-space:nowrap}
+td{padding:10px 8px;border-bottom:1px solid #f0f0f0;font-size:13px;vertical-align:top}
+tr:hover{background:#f8faff}
+.type-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.type-akfa{background:#e3f2fd;color:#1565c0}
+.type-prof{background:#fce4ec;color:#c62828}
+.status{padding:3px 10px;border-radius:12px;font-size:12px;font-weight:500}
+.pending{background:#fff3e0;color:#e65100}
+.material_delivered{background:#e8f5e9;color:#2e7d32}
+.assembling{background:#f3e5f5;color:#6a1b9a}
+.cutting{background:#e1f5fe;color:#0277bd}
+.ready{background:#e8f5e9;color:#1b5e20}
+.accepted{background:#e8f5e9;color:#2e7d32}
+.completed{background:#e8eaf6;color:#283593}
+td.actions{white-space:nowrap}
+.actions select{padding:4px 6px;border:1px solid #ccc;border-radius:4px;font-size:12px}
+.actions button{padding:4px 10px;background:#1877f2;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px;margin:2px}
+.actions button:hover{opacity:.9}
+.actions .btn-accept{background:#43a047}
+.actions .btn-complete{background:#1565c0}
+.empty{text-align:center;padding:40px;color:#999}
+pre{white-space:pre-wrap;word-break:break-word;margin:0;font-size:12px;line-height:1.4}
+@media(max-width:768px){table{font-size:12px}th,td{padding:6px 4px}}
+</style>
 </head>
 <body>
 <div class="container">
-  <div class="header">
-    <h1>🛠 TriPro Admin Panel</h1>
-    <div><button class="refresh-btn" onclick="load()">🔄 Yangilash</button> <span class="badge" id="cnt">0</span></div>
-  </div>
-
-  <div class="stats" id="statsRow"></div>
-
-  <div class="filters">
-    <select id="ftype" onchange="load()"><option value="all">Barcha turlar</option><option value="akfa">🪟 AKFA</option><option value="profilaktika">🛡 Profilaktika</option></select>
-    <select id="fstatus" onchange="load()"><option value="all">Barcha statuslar</option><option value="pending">⏳ Kutilmoqda</option><option value="accepted">✅ Qabul qilingan</option><option value="material_delivered">🚚 Material keldi</option><option value="assembling">🔧 Yig'ilmoqda</option><option value="cutting">🪟 Oyna kesilmoqda</option><option value="ready">📦 Tayyor</option><option value="completed">🏁 Yakunlangan</option></select>
-    <input type="text" id="fsearch" placeholder="🔍 Qidirish..." oninput="load()">
-    <span class="count" id="fcount"></span>
-  </div>
-
-  <div class="table-wrap" id="wrap">
-    <div class="loading" id="loading"><div class="spinner"></div><div>Yuklanmoqda...</div></div>
-  </div>
+<h1>🔧 TriPro Admin Paneli</h1>
+<div class="filters">
+<select id="typeFilter" onchange="applyFilters()">
+<option value="">Barcha turlar</option>
+<option value="akfa">AKFA buyurtmalari</option>
+<option value="profilaktika">Profilaktika</option>
+</select>
+<select id="statusFilter" onchange="applyFilters()">
+<option value="">Barcha statuslar</option>
+<option value="pending">⏳ Kutilmoqda</option>
+<option value="material_delivered">🚚 Material olib kelindi</option>
+<option value="assembling">🔧 Yig'ilmoqda</option>
+<option value="cutting">🪟 Oyna kesilmoqda</option>
+<option value="ready">📦 Tayyor</option>
+<option value="accepted">✅ Qabul qilingan</option>
+<option value="completed">🏁 Yakunlangan</option>
+</select>
+<input type="text" id="searchInput" placeholder="Ism, telefon yoki ID bo'yicha qidirish..." oninput="applyFilters()">
+<button onclick="applyFilters()">🔄 Yangilash</button>
 </div>
-<div class="toast" id="toast"></div>
-
+<div style="overflow-x:auto">
+<table id="ordersTable">
+<thead>
+<tr>
+<th>T/r</th><th>Tur</th><th>ID</th><th>Mijoz</th><th>Telefon</th><th>Ma'lumot</th><th>Status</th><th>Yaratilgan</th><th>Amallar</th>
+</tr>
+</thead>
+<tbody id="ordersBody">
+<tr><td colspan="9" class="empty">Yuklanmoqda...</td></tr>
+</tbody>
+</table>
+</div>
+</div>
 <script>
-const API='';const E=e=>document.getElementById(e);
+let orders = [];
 
-function toast(m,t){const o=E('toast');o.textContent=m;o.className='toast show '+(t||'ok');setTimeout(()=>o.className='toast',3000)}
-function sl(s){const m={'pending':'⏳ Kutilmoqda','accepted':'✅ Qabul qilingan','material_delivered':'🚚 Material olib kelindi','assembling':'🔧 Yig\'ilmoqda','cutting':'🪟 Oyna kesilmoqda','ready':'📦 Tayyor','completed':'🏁 Yakunlangan'};return m[s]||s}
-function sc(s){const m={'pending':'s-pending','accepted':'s-accepted','material_delivered':'s-accepted','assembling':'s-assembling','cutting':'s-cutting','ready':'s-ready','completed':'s-completed'};return m[s]||'s-pending'}
-function rc(s){return s==='ready'||s==='completed'?'done-row':s==='pending'||s==='accepted'?'pending-row':''}
-
-async function load(){
-  const l=E('loading');l.style.display='block';
-  try{
-    let o=await(await fetch(API+'/api/orders')).json();
-    const t=E('ftype').value,s=E('fstatus').value,q=E('fsearch').value.toLowerCase();
-    if(t!=='all')o=o.filter(x=>x.type===t);
-    if(s!=='all')o=o.filter(x=>x.status===s);
-    if(q)o=o.filter(x=>(x.order_id||'').includes(q)||(x.client||'').toLowerCase().includes(q)||(x.phone||'').includes(q));
-    render(o);stats(o);
-    E('fcount').textContent=`${o.length} / ${E('cnt').textContent}`;
-  }catch(e){E('wrap').innerHTML=`<div style="text-align:center;padding:40px;color:#ef4444;">❌ Xatolik: ${e.message}</div>`}
-  l.style.display='none';
+async function loadOrders() {
+try {
+const res = await fetch('/api/orders');
+orders = await res.json();
+applyFilters();
+} catch(e) {
+document.getElementById('ordersBody').innerHTML = '<tr><td colspan="9" class="empty">Xatolik yuz berdi. Server ishlayotganligiga ishonch hosil qiling.</td></tr>';
+}
 }
 
-function render(o){
-  if(!o.length){E('wrap').innerHTML='<div style="text-align:center;padding:40px;color:#6b7280;">📭 Hech narsa topilmadi</div>';return}
-  let h='<table><thead><tr><th>ID</th><th>Mijoz</th><th>Telefon</th><th>Turi</th><th>Ma\'lumot</th><th>Status</th><th>Amallar</th></tr></thead><tbody>';
-  for(const x of o){
-    const ak=x.type==='akfa',pr=x.type==='profilaktika';
-    h+=`<tr class="${rc(x.status)}"><td style="font-weight:600">${ak?x.order_id:'#'+x.pk}</td>
-    <td>${x.client}</td><td>${x.phone||'—'}</td>
-    <td><span class="type-btn ${ak?'type-akfa':'type-prof'}">${ak?'🪟 AKFA':'🛡 Profilaktika'}</span></td>
-    <td style="max-width:280px;word-break:break-word;font-size:12px;color:#4b5563">${x.info}</td>
-    <td><span class="s-badge ${sc(x.status)}">${sl(x.status)}</span></td><td class="actions">`;
-    if(ak){
-      h+=`<select onchange="akStatus('${x.order_id}',this.value)"><option value="">Status</option>
-      <option value="pending">⏳ Kutilmoqda</option>
-      <option value="material_delivered">🚚 Material olib kelindi</option>
-      <option value="assembling">🔧 Yig\'ilmoqda</option>
-      <option value="cutting">🪟 Oyna kesilmoqda</option>
-      <option value="ready">📦 Tayyor</option></select>`;
-    }else{
-      const a=x.status==='accepted',c=x.status==='completed';
-      h+=`<button class="btn btn-accept" ${a||c?'disabled':''} onclick="prStatus(${x.pk},'accepted',this)">✅ Qabul qilish</button>
-      <button class="btn btn-finish" ${c?'disabled':''} onclick="prStatus(${x.pk},'completed',this)">🏁 Ish yakunlandi</button>
-      <button class="btn btn-notify" onclick="notify(${x.pk})">📬 Xabar</button>`;
-    }
-    h+='</td></tr>';
-  }
-  h+='</tbody></table>';
-  E('wrap').innerHTML=h;
+function statusLabel(s) {
+const m = {
+'pending':'⏳ Kutilmoqda','material_delivered':'🚚 Material olib kelindi',
+'assembling':'🔧 Yig\'ilmoqda','cutting':'🪟 Oyna kesilmoqda',
+'ready':'📦 Tayyor','accepted':'✅ Qabul qilingan','completed':'🏁 Yakunlangan'
+};
+return m[s] || s;
 }
 
-function stats(o){
-  E('cnt').textContent=o.length;
-  const t=o.length,a=o.filter(x=>x.type==='akfa').length,p=o.filter(x=>x.type==='profilaktika').length;
-  const w=o.filter(x=>x.status==='pending'||x.status==='accepted').length,d=o.filter(x=>x.status==='ready'||x.status==='completed').length;
-  E('statsRow').innerHTML=`
-    <div class="stat-card"><div class="label">Jami</div><div class="value">${t}</div></div>
-    <div class="stat-card"><div class="label">🪟 AKFA</div><div class="value">${a}</div></div>
-    <div class="stat-card"><div class="label">🛡 Profilaktika</div><div class="value">${p}</div></div>
-    <div class="stat-card"><div class="label">⏳ Kutilmoqda</div><div class="value orange">${w}</div></div>
-    <div class="stat-card"><div class="label">✅ Tayyor/Yakun</div><div class="value green">${d}</div></div>`;
+function applyFilters() {
+const typeFilter = document.getElementById('typeFilter').value;
+const statusFilter = document.getElementById('statusFilter').value;
+const search = document.getElementById('searchInput').value.toLowerCase();
+
+let filtered = orders.filter(o => {
+if (typeFilter && o.type !== typeFilter) return false;
+if (statusFilter && o.status !== statusFilter) return false;
+if (search) {
+const haystack = (o.client + ' ' + o.phone + ' ' + o.order_id).toLowerCase();
+if (!haystack.includes(search)) return false;
+}
+return true;
+});
+
+let html = '';
+filtered.forEach((o, i) => {
+const isProf = o.type === 'profilaktika';
+const typeBadge = isProf ? 'type-prof' : 'type-akfa';
+const typeLabel = isProf ? 'Profilaktika' : 'AKFA';
+let actionsHtml = '';
+if (isProf) {
+actionsHtml = `
+<button class="btn-accept" onclick="updateStatus(${o.pk},'profilaktika','accepted')">✅ Qabul qilish</button>
+<button class="btn-complete" onclick="updateStatus(${o.pk},'profilaktika','completed')">🏁 Ish yakunlandi</button>
+`;
+} else {
+actionsHtml = `<select onchange="updateStatus('${o.order_id}','akfa',this.value)"><option value="">--</option>`;
+const statuses = [['pending','⏳ Kutilmoqda'],['material_delivered','🚚 Material olib kelindi'],['assembling','🔧 Yig\'ilmoqda'],['cutting','🪟 Oyna kesilmoqda'],['ready','📦 Tayyor']];
+statuses.forEach(([v,l]) => { actionsHtml += `<option value="${v}"${o.status===v?' selected':''}>${l}</option>`; });
+actionsHtml += `</select>`;
+}
+html += `<tr>
+<td>${i+1}</td>
+<td><span class="type-badge ${typeBadge}">${typeLabel}</span></td>
+<td>${o.order_id || o.id}</td>
+<td>${o.client}</td>
+<td>${o.phone}</td>
+<td><pre>${o.info}</pre></td>
+<td><span class="status ${o.status}">${statusLabel(o.status)}</span></td>
+<td>${o.created_at}</td>
+<td class="actions">${actionsHtml}</td>
+</tr>`;
+});
+if (!html) html = '<tr><td colspan="9" class="empty">Hech qanday buyurtma topilmadi</td></tr>';
+document.getElementById('ordersBody').innerHTML = html;
 }
 
-async function akStatus(id,s){
-  if(!s)return;
-  try{
-    const r=await fetch(API+'/api/orders/akfa/'+id+'/status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:s})});
-    if(!r.ok)throw Error('Xatolik');
-    toast('✅ Status yangilandi: '+sl(s));load();
-  }catch(e){toast('❌ '+e.message,'err')}
+async function updateStatus(id, type, status) {
+if (!status) return;
+const endpoint = type === 'akfa' ? `/api/akfa/${id}/status` : `/api/profilaktika/${id}/status`;
+try {
+const res = await fetch(endpoint, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({status})});
+const data = await res.json();
+if (data.ok) { await loadOrders(); }
+else { alert('Xatolik: '+JSON.stringify(data)); }
+} catch(e) {
+alert('Server bilan bog\'lanishda xatolik: '+e.message);
+}
 }
 
-async function prStatus(pk,s,b){
-  if(b)b.disabled=true;
-  try{
-    const r=await fetch(API+'/api/orders/profilaktika/'+pk+'/status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:s})});
-    if(!r.ok)throw Error('Xatolik');
-    toast('✅ Profilaktika yangilandi: '+sl(s));load();
-  }catch(e){toast('❌ '+e.message,'err');if(b)b.disabled=false}
-}
-
-async function notify(pk){
-  try{
-    const r=await fetch(API+'/api/orders/profilaktika/'+pk+'/notify',{method:'POST'});
-    if(!r.ok)throw Error('Xatolik');
-    toast('📬 Xabar yuborildi');
-  }catch(e){toast('❌ '+e.message,'err')}
-}
-
-setInterval(load,30000);
-document.addEventListener('DOMContentLoaded',load);
+loadOrders();
+setInterval(loadOrders, 10000);
 </script>
 </body>
 </html>

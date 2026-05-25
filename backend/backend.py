@@ -1,264 +1,97 @@
-# TriPro Backend - FastAPI server + SQLite
-# Admin panel va Telegram bot o'rtasida API bog'lanish
-# Barcha ma'lumotlar: akfa_orders va profilaktika jadvallari
-
-import asyncio
-import os
-import random
-import sqlite3
-import logging
+# TriPro FastAPI Backend - admin panel uchun
+import asyncio, os, json, threading
 from pathlib import Path
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from typing import Optional
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, Query, HTTPException
+from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
 from pydantic import BaseModel
+import uvicorn
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from bot import bot, dp, bot_main, get_akfa_order, get_all_akfa, update_akfa, get_all_prof, update_prof, get_combined_orders, init_db, logger
 
-BASE_DIR = Path(__file__).parent
-LOCAL_DB = str(BASE_DIR / 'tripro.db')
+PORT = int(os.getenv('PORT', '10000'))
 
-# ─── FASTAPI ───
-app = FastAPI(title='TriPro API')
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=['*'],
-    allow_credentials=True,
-    allow_methods=['*'],
-    allow_headers=['*'],
-)
+init_db()
 
-# ─── SQLITE JADVALLAR ───
-def init_db():
-    conn = sqlite3.connect(LOCAL_DB)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Botni alohida taskda ishga tushiramiz
+    bot_task = asyncio.create_task(bot_main())
+    logger.info("Telegram Bot backgroundda ishga tushdi.")
+    yield
+    # To'xtatishda botni yopamiz
+    bot_task.cancel()
+    try:
+        await bot_task
+    except asyncio.CancelledError:
+        logger.info("Telegram Bot to'xtatildi.")
 
-    conn.execute('''CREATE TABLE IF NOT EXISTS akfa_orders (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        order_id TEXT UNIQUE,
-        telegram_id INTEGER,
-        name TEXT,
-        surname TEXT,
-        phone TEXT,
-        material TEXT,
-        glass_layer TEXT,
-        profile_color TEXT,
-        dimensions TEXT,
-        quantity INTEGER DEFAULT 1,
-        status TEXT DEFAULT 'pending',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )''')
+app = FastAPI(title='TriPro Admin API', lifespan=lifespan)
 
-    conn.execute('''CREATE TABLE IF NOT EXISTS profilaktika (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        telegram_id INTEGER,
-        name TEXT,
-        surname TEXT,
-        phone TEXT,
-        location TEXT,
-        time_slot TEXT,
-        status TEXT DEFAULT 'pending',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )''')
+class StatusUpdate(BaseModel):
+    status: str
 
-    conn.commit()
-    conn.close()
+# ──────────────────────────────────────────────
+# Admin HTML
+# ──────────────────────────────────────────────
 
-# ─── 5 XONALI ID GENERATOR ───
-def _generate_order_id():
-    conn = sqlite3.connect(LOCAL_DB)
-    existing = conn.execute('SELECT order_id FROM akfa_orders WHERE order_id IS NOT NULL').fetchall()
-    ids = {r[0] for r in existing}
-    conn.close()
-    for _ in range(100):
-        oid = str(random.randint(10000, 99999))
-        if oid not in ids:
-            return oid
-    raise Exception('Unikal ID topilmadi')
+ADMIN_HTML = str(Path(__file__).parent / 'admin.html')
 
-# ─── AKFA BUYURTMALARI ───
-def save_akfa_order(telegram_id, name, surname, phone, material, glass_layer, profile_color, dimensions, quantity=1):
-    order_id = _generate_order_id()
-    conn = sqlite3.connect(LOCAL_DB)
-    conn.execute(
-        'INSERT INTO akfa_orders (order_id, telegram_id, name, surname, phone, material, glass_layer, profile_color, dimensions, quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        (order_id, telegram_id, name, surname, phone, material, glass_layer, profile_color, dimensions, quantity)
-    )
-    conn.commit()
-    conn.close()
-    return order_id
+@app.get('/admin', response_class=HTMLResponse)
+async def admin_panel():
+    return FileResponse(ADMIN_HTML)
 
-def get_akfa_order(order_id):
-    conn = sqlite3.connect(LOCAL_DB)
-    conn.row_factory = sqlite3.Row
-    row = conn.execute('SELECT * FROM akfa_orders WHERE order_id = ?', (order_id,)).fetchone()
-    conn.close()
-    return dict(row) if row else None
-
-def get_all_akfa_orders():
-    conn = sqlite3.connect(LOCAL_DB)
-    conn.row_factory = sqlite3.Row
-    rows = conn.execute('SELECT * FROM akfa_orders ORDER BY created_at DESC').fetchall()
-    conn.close()
-    return [dict(r) for r in rows]
-
-def update_akfa_status(order_id, new_status):
-    valid = ['pending', 'material_delivered', 'assembling', 'cutting', 'ready']
-    if new_status not in valid:
-        return None
-    conn = sqlite3.connect(LOCAL_DB)
-    conn.row_factory = sqlite3.Row
-    conn.execute('UPDATE akfa_orders SET status = ? WHERE order_id = ?', (new_status, order_id))
-    conn.commit()
-    row = conn.execute('SELECT * FROM akfa_orders WHERE order_id = ?', (order_id,)).fetchone()
-    conn.close()
-    return dict(row) if row else None
-
-# ─── PROFILAKTIKA ───
-def save_profilaktika(telegram_id, name, surname, phone, location, time_slot):
-    conn = sqlite3.connect(LOCAL_DB)
-    conn.execute(
-        'INSERT INTO profilaktika (telegram_id, name, surname, phone, location, time_slot) VALUES (?, ?, ?, ?, ?, ?)',
-        (telegram_id, name, surname, phone, location, time_slot)
-    )
-    conn.commit()
-    conn.close()
-
-def get_all_profilaktika():
-    conn = sqlite3.connect(LOCAL_DB)
-    conn.row_factory = sqlite3.Row
-    rows = conn.execute('SELECT * FROM profilaktika ORDER BY created_at DESC').fetchall()
-    conn.close()
-    return [dict(r) for r in rows]
-
-def update_profilaktika_status(pk_id, new_status):
-    valid = ['pending', 'accepted', 'completed']
-    if new_status not in valid:
-        return None
-    conn = sqlite3.connect(LOCAL_DB)
-    conn.row_factory = sqlite3.Row
-    conn.execute('UPDATE profilaktika SET status = ? WHERE id = ?', (new_status, pk_id))
-    conn.commit()
-    row = conn.execute('SELECT * FROM profilaktika WHERE id = ?', (pk_id,)).fetchone()
-    conn.close()
-    return dict(row) if row else None
-
-# ─── BIRLASHGAN RO'YXAT ───
-def get_combined_orders():
-    result = []
-    for o in get_all_akfa_orders():
-        result.append({
-            'id': f'akfa_{o["id"]}',
-            'pk': o['id'],
-            'type': 'akfa',
-            'order_id': o['order_id'] or '',
-            'client': f"{o['name'] or ''} {o['surname'] or ''}".strip() or str(o['telegram_id']),
-            'phone': o['phone'] or '',
-            'info': f"Material: {o['material']}, Oyna: {o['glass_layer']}, Rang: {o['profile_color']}, O'lcham: {o['dimensions']}, Soni: {o['quantity']}",
-            'status': o['status'],
-            'created_at': o['created_at'],
-        })
-    for p in get_all_profilaktika():
-        result.append({
-            'id': f'prof_{p["id"]}',
-            'pk': p['id'],
-            'type': 'profilaktika',
-            'order_id': '',
-            'client': f"{p['name'] or ''} {p['surname'] or ''}".strip() or str(p['telegram_id']),
-            'phone': p['phone'] or '',
-            'info': f"Manzil: {p['location']}, Vaqt: {p['time_slot']}",
-            'status': p['status'],
-            'created_at': p['created_at'],
-        })
-    result.sort(key=lambda x: x['created_at'], reverse=True)
-    return result
-
-# ─── API ENDPOINTLAR ───
-@app.get('/')
-@app.get('/admin')
-def serve_admin():
-    return FileResponse(str(BASE_DIR / 'admin.html'))
-
-@app.get('/health')
-def health():
-    return {'status': 'ok', 'service': 'TriPro API'}
+# ──────────────────────────────────────────────
+# API endpoints
+# ──────────────────────────────────────────────
 
 @app.get('/api/orders')
-def list_orders():
-    return JSONResponse(get_combined_orders())
+async def list_orders(type: Optional[str] = Query(None)):
+    if type == 'akfa':
+        return get_all_akfa()
+    elif type == 'profilaktika':
+        return get_all_prof()
+    return get_combined_orders()
 
-@app.post('/api/orders/akfa/{order_id}/status')
-def change_akfa_status(order_id: str, body: dict):
-    status = body.get('status', '')
-    order = update_akfa_status(order_id, status)
-    if not order:
-        raise HTTPException(404, 'Buyurtma topilmadi')
-    return JSONResponse(order)
+@app.get('/api/orders/{order_id}')
+async def get_order(order_id: str):
+    o = get_akfa_order(order_id)
+    if not o:
+        raise HTTPException(404, 'Order not found')
+    return o
 
-@app.post('/api/orders/profilaktika/{pk_id}/status')
-async def change_profilaktika_status(pk_id: int, body: dict):
-    status = body.get('status', '')
-    order = update_profilaktika_status(pk_id, status)
-    if not order:
-        raise HTTPException(404, 'Profilaktika topilmadi')
+class AkfaStatus(BaseModel):
+    status: str
 
-    try:
-        from bot import bot
-        if status == 'accepted':
-            text = (
-                '✅ Profilaktika arizangiz qabul qilindi!\n\n'
-                f'📍 Manzil: {order["location"]}\n'
-                f'⏰ Vaqt: {order["time_slot"]}\n\n'
-                'Mutaxassisimiz belgilangan vaqtda sizga yetib boradi.'
-            )
-        elif status == 'completed':
-            text = (
-                '🏁 Profilaktika xizmati yakunlandi!\n\n'
-                'Sizning deraza va romlaringizga profilaktika xizmati ko\'rsatildi. '
-                'Keyingi profilaktika bir yildan so\'ng amalga oshiriladi.\n\n'
-                'TriPro-ni tanlaganingiz uchun rahmat!'
-            )
-        else:
-            text = None
-        if text and order.get('telegram_id'):
-            await bot.send_message(order['telegram_id'], text)
-    except Exception as e:
-        logger.warning(f"Profilaktika xabari yuborilmadi: {e}")
+@app.post('/api/akfa/{order_id}/status')
+async def set_akfa_status(order_id: str, body: AkfaStatus):
+    o = update_akfa(order_id, body.status)
+    if not o:
+        raise HTTPException(404, 'Order not found')
+    return {'ok': True, 'order': o}
 
-    return JSONResponse(order)
+class ProfStatus(BaseModel):
+    status: str
 
-@app.post('/api/orders/profilaktika/{pk_id}/notify')
-async def notify_profilaktika(pk_id: int):
-    conn = sqlite3.connect(LOCAL_DB)
-    conn.row_factory = sqlite3.Row
-    row = conn.execute('SELECT * FROM profilaktika WHERE id = ?', (pk_id,)).fetchone()
-    conn.close()
-    if not row:
-        raise HTTPException(404, 'Topilmadi')
-    order = dict(row)
-    try:
-        from bot import bot
-        text = (
-            '📬 Profilaktika xizmati bo\'yicha yangi habar:\n\n'
-            f'📍 Manzil: {order["location"]}\n'
-            f'⏰ Vaqt: {order["time_slot"]}\n'
-            f'📊 Holat: {order["status"]}'
-        )
-        if order.get('telegram_id'):
-            await bot.send_message(order['telegram_id'], text)
-        return {'status': 'sent'}
-    except Exception as e:
-        raise HTTPException(500, f'Xabar yuborilmadi: {e}')
+@app.post('/api/profilaktika/{pk}/status')
+async def set_prof_status(pk: int, body: ProfStatus):
+    o = update_prof(pk, body.status)
+    if not o:
+        raise HTTPException(404, 'Profilaktika record not found')
+    uid = o.get('telegram_id')
+    if uid and body.status in ('accepted', 'completed'):
+        sm = {'accepted': '✅ Profilaktika xizmatingiz qabul qilindi. Tez orada mutaxassisimiz siz bilan bog\'lanadi.',
+              'completed': '🏁 Profilaktika xizmatingiz yakunlandi. Xizmatimizdan foydalanganingiz uchun rahmat!'}
+        try:
+            await bot.send_message(uid, sm[body.status])
+        except Exception as e:
+            logger.warning(f'Failed to notify user {uid}: {e}')
+    return {'ok': True, 'order': o}
 
-# ─── BOTNI ISHGA TUSHIRISH ───
-@app.on_event('startup')
-async def startup():
-    init_db()
-    from bot import bot_main
-    asyncio.create_task(bot_main(start_web_server=False))
-    logger.info('Bot ishga tushirildi')
+# ──────────────────────────────────────────────
+# MAIN
+# ──────────────────────────────────────────────
 
 if __name__ == '__main__':
-    import uvicorn
-    PORT = int(os.environ.get('PORT', 8000))
-    uvicorn.run(app, host='0.0.0.0', port=PORT)
+    uvicorn.run('backend:app', host='0.0.0.0', port=PORT, reload=True)
