@@ -1,6 +1,9 @@
 import os
 import random
+import sqlite3
 import httpx
+
+LOCAL_DB = 'tripro.db'
 
 SUPABASE_URL = os.environ.get('SUPABASE_URL', 'https://ulsphhncfwjlchmbbwvm.supabase.co')
 SUPABASE_KEY = os.environ.get('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsc3BoaG5jZndqbGNobWJid3ZtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTI3MjQwOSwiZXhwIjoyMDk0ODQ4NDA5fQ.IT1vWElu5kgyxs4AtWqT1rPq3jbRZ_0v5SbrmjjMWFc')
@@ -32,7 +35,22 @@ def _patch(path, data, params=None):
         return r.json()
 
 def init_db():
-    pass  # Table created manually via SQL Editor
+    conn = sqlite3.connect(LOCAL_DB)
+    conn.execute('''CREATE TABLE IF NOT EXISTS akfa_orders (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        telegram_id INTEGER,
+        name TEXT,
+        surname TEXT,
+        phone TEXT,
+        material TEXT,
+        glass_layer TEXT,
+        profile_color TEXT,
+        dimensions TEXT,
+        quantity INTEGER DEFAULT 1,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )''')
+    conn.commit()
+    conn.close()
 
 def _generate_order_id():
     existing = _get('orders', params={'select': 'order_id'})
@@ -58,6 +76,15 @@ def create_order(telegram_id, material_type, glass_type, profile_color, dimensio
     }
     rows = _post('orders', data)
     return rows[0]['id'] if rows else None
+
+def save_akfa_order(telegram_id, name, surname, phone, material, glass_layer, profile_color, dimensions, quantity=1):
+    conn = sqlite3.connect(LOCAL_DB)
+    conn.execute(
+        'INSERT INTO akfa_orders (telegram_id, name, surname, phone, material, glass_layer, profile_color, dimensions, quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        (telegram_id, name, surname, phone, material, glass_layer, profile_color, dimensions, quantity)
+    )
+    conn.commit()
+    conn.close()
 
 def get_order(order_id_or_pk):
     if order_id_or_pk is None:

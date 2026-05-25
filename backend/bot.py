@@ -7,9 +7,9 @@ from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.storage.memory import MemoryStorage
-from database import init_db, create_order, get_orders_for_chat, get_order, get_unnotified_confirmations, mark_notified, get_unnotified_deliveries, mark_delivery_notified
+from database import init_db, save_akfa_order, get_order, get_unnotified_confirmations, mark_notified, get_unnotified_deliveries, mark_delivery_notified
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -19,111 +19,300 @@ if BOT_TOKEN:
     BOT_TOKEN = BOT_TOKEN.strip()
 else:
     BOT_TOKEN = '8745687733:AAFmfV5n6f0Z0RxJ70aXVf82zNa0LI3KUs4'
-print(f"DEBUG: Token qiymati: {BOT_TOKEN[:20]}...")
-SITE_URL = 'https://tripro-uz.netlify.app'
+
+ADMIN_USERNAME = os.getenv('ADMIN_USERNAME', 'SizningUsername')
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
 
-# ─── FSM STATES ───
-class OrderForm(StatesGroup):
-    material = State()
-    profile_color = State()
-    glass_type = State()
-    glass_pattern = State()
-    glass_color = State()
-    dimensions = State()
-    quantity_choice = State()
-    quantity_number = State()
-    add_more = State()
+class AkfaForm(StatesGroup):
+    name = State()
+    surname = State()
     phone = State()
+    material = State()
+    glass_layer = State()
+    profile_color = State()
+    dimensions = State()
+    quantity = State()
+    confirm = State()
 
-# ─── INLINE KEYBOARDS ───
-def material_kb():
-    return ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text='Plastik (PVA)'), KeyboardButton(text='Alyumin')]],
-        resize_keyboard=True, one_time_keyboard=True
-    )
+BACK_BTN = '🔙 Bosh sahifaga'
 
-def profile_color_kb():
-    return ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text='Oq'), KeyboardButton(text='Jigarrang')],
-                  [KeyboardButton(text='Antratsit'), KeyboardButton(text='Boshqa')]],
-        resize_keyboard=True, one_time_keyboard=True
-    )
-
-def glass_type_kb():
-    return ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text='1 qavatli (oddiy)'), KeyboardButton(text='2 qavatli (vakuumli)')]],
-        resize_keyboard=True, one_time_keyboard=True
-    )
-
-def glass_pattern_kb():
-    return ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text='Gulli'), KeyboardButton(text='Oddiy')]],
-        resize_keyboard=True, one_time_keyboard=True
-    )
-
-def glass_color_kb():
-    return ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text='Oq'), KeyboardButton(text='Jigarrang')],
-                  [KeyboardButton(text='Boshqa rang')]],
-        resize_keyboard=True, one_time_keyboard=True
-    )
-
-def quantity_choice_kb():
-    return ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text='Bitta'), KeyboardButton(text='Ko\'p')]],
-        resize_keyboard=True, one_time_keyboard=True
-    )
-
-def yes_no_kb():
-    return ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text='Ha'), KeyboardButton(text='Yo\'q')]],
-        resize_keyboard=True, one_time_keyboard=True
-    )
-
-def phone_kb():
-    return ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text='📞 Kontaktni yuborish', request_contact=True)]],
-        resize_keyboard=True, one_time_keyboard=True
-    )
-
-def main_menu():
+def back_inline_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='🌐 TriPro saytini ochish', web_app=WebAppInfo(url=SITE_URL))],
-        [InlineKeyboardButton(text='📝 Buyurtma berish', callback_data='new_order')],
-        [InlineKeyboardButton(text='🔍 Buyurtmani tekshirish', callback_data='check_order')],
+        [InlineKeyboardButton(text=BACK_BTN, callback_data='back_to_menu')],
     ])
 
-# ─── COMMANDS ───
+def workshops_kb():
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text='🪟 AKFA rom va eshiklar', callback_data='ws_akfa')],
+        [InlineKeyboardButton(text='🪵 Yog\'och mahsulotlari', callback_data='ws_yogoch')],
+        [InlineKeyboardButton(text='💎 Shisha xizmatlari', callback_data='ws_shisha')],
+    ])
+
+def phone_choice_kb():
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text='📱 Kontaktni ulash', request_contact=True)],
+            [KeyboardButton(text='⌨️ Raqamni yozish')],
+            [KeyboardButton(text=BACK_BTN)],
+        ],
+        resize_keyboard=True,
+        one_time_keyboard=True
+    )
+
+def material_ikb():
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text='Plastik', callback_data='mat_plastik')],
+        [InlineKeyboardButton(text='Alyumin', callback_data='mat_alyumin')],
+        [InlineKeyboardButton(text=BACK_BTN, callback_data='back_to_menu')],
+    ])
+
+def glass_layer_ikb():
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text='1 qavatli', callback_data='glass_1')],
+        [InlineKeyboardButton(text='2 qavatli', callback_data='glass_2')],
+        [InlineKeyboardButton(text=BACK_BTN, callback_data='back_to_menu')],
+    ])
+
+def profile_color_ikb():
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text='Oq', callback_data='color_oq')],
+        [InlineKeyboardButton(text='Jigarrang', callback_data='color_jigarrang')],
+        [InlineKeyboardButton(text='Antratsit', callback_data='color_antratsit')],
+        [InlineKeyboardButton(text='Boshqa', callback_data='color_boshqa')],
+        [InlineKeyboardButton(text=BACK_BTN, callback_data='back_to_menu')],
+    ])
+
+def confirm_ikb():
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text='✅ Tasdiqlash', callback_data='confirm_yes')],
+        [InlineKeyboardButton(text='❌ Qaytadan to\'ldirish', callback_data='confirm_retry')],
+    ])
+
+def admin_contact_kb():
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text='👨‍💻 Admin bilan bog\'lanish', url=f'https://t.me/{ADMIN_USERNAME}')],
+    ])
+
+def back_menu_kb():
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text='🔍 Buyurtmani tekshirish', callback_data='check_order')],
+        [InlineKeyboardButton(text='🏠 Bosh menyu', callback_data='back_to_menu')],
+    ])
+
 @dp.message(Command('start'))
 async def cmd_start(message: types.Message):
     await message.answer(
         f'Assalomu alaykum, {message.from_user.first_name}! 👋\n\n'
-        f'TriPro — AKFA romlar, oynak xizmatlari va yog\'och mahsulotlari ishlab chiqaruvchi '
+        f'TriPro — AKFA romlar, yog\'och va shisha mahsulotlari ishlab chiqaruvchi '
         f'professional ustaxona.\n\n'
-        f'Saytni ko\'rib, buyurtma berishingiz yoki mavjud buyurtmangiz holatini '
-        f'tekshirishingiz mumkin.',
-        reply_markup=main_menu()
+        f'Quyidagi yo\'nalishlardan birini tanlang:',
+        reply_markup=workshops_kb()
     )
 
 @dp.message(Command('cancel'))
 @dp.message(Command('bosh_menu'))
 async def cmd_cancel(message: types.Message, state: FSMContext):
     await state.clear()
-    await message.answer('Bosh menyu:', reply_markup=main_menu())
+    await message.answer('Bosh menyu:', reply_markup=workshops_kb())
 
-# ─── CALLBACKS ───
-@dp.callback_query(lambda c: c.data == 'new_order')
-async def cb_new_order(call: types.CallbackQuery, state: FSMContext):
+@dp.callback_query(lambda c: c.data == 'back_to_menu')
+async def cb_back_to_menu(call: types.CallbackQuery, state: FSMContext):
     await call.answer()
-    await call.message.answer(
-        'Buyurtma berish uchun bir necha savolga javob bering.\n\n'
-        '1/8: Material turini tanlang:',
-        reply_markup=material_kb()
+    await state.clear()
+    await call.message.edit_text(
+        'Quyidagi yo\'nalishlardan birini tanlang:',
+        reply_markup=workshops_kb()
     )
-    await state.set_state(OrderForm.material)
+
+@dp.callback_query(lambda c: c.data == 'ws_akfa')
+async def cb_ws_akfa(call: types.CallbackQuery, state: FSMContext):
+    await call.answer()
+    await state.set_state(AkfaForm.name)
+    await call.message.edit_text(
+        '🪟 AKFA rom va eshiklar bo\'limi\n\n1/9: Ismingizni kiriting:',
+        reply_markup=back_inline_kb()
+    )
+
+@dp.callback_query(lambda c: c.data == 'ws_yogoch')
+async def cb_ws_yogoch(call: types.CallbackQuery, state: FSMContext):
+    await call.answer()
+    await call.message.edit_text(
+        '🪵 Yog\'och mahsulotlari\n\n'
+        'Siz tanlagan yo\'nalish bo\'yicha buyurtmalar individual tartibda qabul qilinadi. '
+        'Aniq narxlar va dizayn masalalari bo\'yicha bizning bosh mutaxassisimiz bilan '
+        'bevosita bog\'laning.',
+        reply_markup=admin_contact_kb()
+    )
+
+@dp.callback_query(lambda c: c.data == 'ws_shisha')
+async def cb_ws_shisha(call: types.CallbackQuery, state: FSMContext):
+    await call.answer()
+    await call.message.edit_text(
+        '💎 Shisha xizmatlari\n\n'
+        'Siz tanlagan yo\'nalish bo\'yicha buyurtmalar individual tartibda qabul qilinadi. '
+        'Aniq narxlar va dizayn masalalari bo\'yicha bizning bosh mutaxassisimiz bilan '
+        'bevosita bog\'laning.',
+        reply_markup=admin_contact_kb()
+    )
+
+@dp.message(AkfaForm.name, lambda msg: msg.text and len(msg.text.strip()) > 0)
+async def process_name(message: types.Message, state: FSMContext):
+    await state.update_data(name=message.text.strip())
+    await state.set_state(AkfaForm.surname)
+    await message.answer('2/9: Familiyangizni kiriting:', reply_markup=back_inline_kb())
+
+@dp.message(AkfaForm.name)
+async def process_name_invalid(message: types.Message):
+    await message.answer('Iltimos, ismingizni yozing:', reply_markup=back_inline_kb())
+
+@dp.message(AkfaForm.surname, lambda msg: msg.text and len(msg.text.strip()) > 0)
+async def process_surname(message: types.Message, state: FSMContext):
+    await state.update_data(surname=message.text.strip())
+    await state.set_state(AkfaForm.phone)
+    await message.answer(
+        '3/9: Telefon raqamingizni yuboring.\n\n'
+        '"📱 Kontaktni ulash" tugmasini bosing yoki '
+        '"⌨️ Raqamni yozish" ni tanlang:',
+        reply_markup=phone_choice_kb()
+    )
+
+@dp.message(AkfaForm.surname)
+async def process_surname_invalid(message: types.Message):
+    await message.answer('Iltimos, familiyangizni yozing:', reply_markup=back_inline_kb())
+
+@dp.message(AkfaForm.phone, F.contact)
+async def process_phone_contact(message: types.Message, state: FSMContext):
+    phone = message.contact.phone_number
+    await state.update_data(phone=phone)
+    await state.set_state(AkfaForm.material)
+    await message.answer('4/9: Material turini tanlang:', reply_markup=material_ikb())
+
+@dp.message(AkfaForm.phone, F.text == '⌨️ Raqamni yozish')
+async def process_phone_manual_choice(message: types.Message, state: FSMContext):
+    await message.answer(
+        'Iltimos, telefon raqamingizni kiriting (masalan: +998901234567):',
+        reply_markup=back_inline_kb()
+    )
+
+@dp.message(AkfaForm.phone, lambda msg: msg.text and len(msg.text.strip()) > 5 and msg.text.strip() != BACK_BTN)
+async def process_phone_text(message: types.Message, state: FSMContext):
+    phone = message.text.strip()
+    await state.update_data(phone=phone)
+    await state.set_state(AkfaForm.material)
+    await message.answer('4/9: Material turini tanlang:', reply_markup=material_ikb())
+
+@dp.message(AkfaForm.phone, F.text == BACK_BTN)
+async def process_phone_back(message: types.Message, state: FSMContext):
+    await state.clear()
+    await message.answer('Bosh menyu:', reply_markup=workshops_kb())
+
+@dp.message(AkfaForm.phone)
+async def process_phone_invalid(message: types.Message):
+    await message.answer(
+        'Iltimos, kontakt tugmasini bosing yoki raqamingizni yozing:',
+        reply_markup=phone_choice_kb()
+    )
+
+@dp.callback_query(AkfaForm.material, lambda c: c.data.startswith('mat_'))
+async def cb_material(call: types.CallbackQuery, state: FSMContext):
+    await call.answer()
+    vals = {'mat_plastik': 'Plastik', 'mat_alyumin': 'Alyumin'}
+    await state.update_data(material=vals[call.data])
+    await state.set_state(AkfaForm.glass_layer)
+    await call.message.edit_text('5/9: Oyna qavatini tanlang:', reply_markup=glass_layer_ikb())
+
+@dp.callback_query(AkfaForm.glass_layer, lambda c: c.data.startswith('glass_'))
+async def cb_glass_layer(call: types.CallbackQuery, state: FSMContext):
+    await call.answer()
+    vals = {'glass_1': '1 qavatli', 'glass_2': '2 qavatli'}
+    await state.update_data(glass_layer=vals[call.data])
+    await state.set_state(AkfaForm.profile_color)
+    await call.message.edit_text('6/9: Profil rangini tanlang:', reply_markup=profile_color_ikb())
+
+@dp.callback_query(AkfaForm.profile_color, lambda c: c.data.startswith('color_'))
+async def cb_profile_color(call: types.CallbackQuery, state: FSMContext):
+    await call.answer()
+    vals = {'color_oq': 'Oq', 'color_jigarrang': 'Jigarrang', 'color_antratsit': 'Antratsit', 'color_boshqa': 'Boshqa'}
+    await state.update_data(profile_color=vals[call.data])
+    await state.set_state(AkfaForm.dimensions)
+    await call.message.delete()
+    await call.message.answer(
+        '7/9: Taxminiy o\'lchamlarni yozing (masalan: 80x90):',
+        reply_markup=back_inline_kb()
+    )
+
+@dp.message(AkfaForm.dimensions, lambda msg: msg.text and len(msg.text.strip()) > 0)
+async def process_dimensions(message: types.Message, state: FSMContext):
+    await state.update_data(dimensions=message.text.strip())
+    await state.set_state(AkfaForm.quantity)
+    await message.answer('8/9: Mahsulot sonini yozing (masalan: 2):', reply_markup=back_inline_kb())
+
+@dp.message(AkfaForm.dimensions)
+async def process_dimensions_invalid(message: types.Message):
+    await message.answer('Iltimos, o\'lchamlarni yozing (masalan: 80x90):', reply_markup=back_inline_kb())
+
+@dp.message(AkfaForm.quantity, lambda msg: msg.text and msg.text.strip().isdigit() and int(msg.text.strip()) > 0)
+async def process_quantity(message: types.Message, state: FSMContext):
+    qty = int(message.text.strip())
+    await state.update_data(quantity=qty)
+    data = await state.get_data()
+    text = (
+        '📋 Buyurtmangiz tasdiqlash uchun tayyor:\n\n'
+        f'👤 Ism: {data["name"]} {data["surname"]}\n'
+        f'📞 Telefon: {data["phone"]}\n'
+        f'🛠 Material: {data["material"]}\n'
+        f'🪟 Oyna qavati: {data["glass_layer"]}\n'
+        f'🎨 Rang: {data["profile_color"]}\n'
+        f'📐 O\'lcham: {data["dimensions"]}\n'
+        f'📦 Soni: {data["quantity"]} ta\n\n'
+        'Hammasi to\'g\'rimi?'
+    )
+    await state.set_state(AkfaForm.confirm)
+    await message.answer(text, reply_markup=confirm_ikb())
+
+@dp.message(AkfaForm.quantity)
+async def process_quantity_invalid(message: types.Message):
+    await message.answer('Iltimos, musbat son kiriting (masalan: 2):', reply_markup=back_inline_kb())
+
+@dp.callback_query(AkfaForm.confirm, lambda c: c.data == 'confirm_yes')
+async def cb_confirm_yes(call: types.CallbackQuery, state: FSMContext):
+    await call.answer()
+    data = await state.get_data()
+    save_akfa_order(
+        telegram_id=call.from_user.id,
+        name=data.get('name', ''),
+        surname=data.get('surname', ''),
+        phone=data.get('phone', ''),
+        material=data.get('material', 'Noma\'lum'),
+        glass_layer=data.get('glass_layer', 'Noma\'lum'),
+        profile_color=data.get('profile_color', 'Noma\'lum'),
+        dimensions=data.get('dimensions', 'Noma\'lum'),
+        quantity=data.get('quantity', 1),
+    )
+    await state.clear()
+    await call.message.edit_text(
+        '✅ Arizangiz qabul qilindi, mutaxassisimiz tez orada siz bilan bog\'lanadi.\n\n'
+        f'👤 Ism: {data["name"]} {data["surname"]}\n'
+        f'📞 Telefon: {data["phone"]}\n'
+        f'🛠 Material: {data["material"]}\n'
+        f'🪟 Oyna qavati: {data["glass_layer"]}\n'
+        f'🎨 Rang: {data["profile_color"]}\n'
+        f'📐 O\'lcham: {data["dimensions"]}\n'
+        f'📦 Soni: {data["quantity"]} ta',
+        reply_markup=back_menu_kb()
+    )
+
+@dp.callback_query(AkfaForm.confirm, lambda c: c.data == 'confirm_retry')
+async def cb_confirm_retry(call: types.CallbackQuery, state: FSMContext):
+    await call.answer()
+    await state.clear()
+    await state.set_state(AkfaForm.name)
+    await call.message.edit_text(
+        '🪟 AKFA rom va eshiklar bo\'limi\n\n1/9: Ismingizni kiriting:',
+        reply_markup=back_inline_kb()
+    )
 
 @dp.callback_query(lambda c: c.data == 'check_order')
 async def cb_check_order(call: types.CallbackQuery, state: FSMContext):
@@ -131,197 +320,6 @@ async def cb_check_order(call: types.CallbackQuery, state: FSMContext):
     await call.message.answer('Iltimos, 4 xonali buyurtma ID raqamingizni kiriting:')
     await state.set_state('check_order_input')
 
-# ─── FSM: MATERIAL (1) ───
-PROFILE_COLORS = ['Oq', 'Jigarrang', 'Antratsit', 'Boshqa']
-GLASS_TYPES = ['1 qavatli (oddiy)', '2 qavatli (vakuumli)']
-GLASS_PATTERNS = ['Gulli', 'Oddiy']
-GLASS_COLORS = ['Oq', 'Jigarrang', 'Boshqa rang']
-
-@dp.message(OrderForm.material, F.text.in_(['Plastik (PVA)', 'Alyumin']))
-async def process_material(message: types.Message, state: FSMContext):
-    await state.update_data(material=message.text)
-    await message.answer('2/8: Profil rangini tanlang:', reply_markup=profile_color_kb())
-    await state.set_state(OrderForm.profile_color)
-
-@dp.message(OrderForm.material)
-async def process_material_invalid(message: types.Message):
-    await message.answer('Iltimos, quyidagi tugmalardan birini tanlang:', reply_markup=material_kb())
-
-# ─── FSM: PROFILE COLOR (2) ───
-@dp.message(OrderForm.profile_color, F.text.in_(PROFILE_COLORS))
-async def process_profile_color(message: types.Message, state: FSMContext):
-    await state.update_data(profile_color=message.text)
-    await message.answer('3/8: Oyna qavatini tanlang:', reply_markup=glass_type_kb())
-    await state.set_state(OrderForm.glass_type)
-
-@dp.message(OrderForm.profile_color)
-async def process_profile_color_invalid(message: types.Message):
-    await message.answer('Iltimos, quyidagi tugmalardan birini tanlang:', reply_markup=profile_color_kb())
-
-# ─── FSM: GLASS TYPE (3) ───
-@dp.message(OrderForm.glass_type, F.text.in_(GLASS_TYPES))
-async def process_glass_type(message: types.Message, state: FSMContext):
-    await state.update_data(glass_type=message.text)
-    await message.answer('4/8: Oyna naqshini tanlang:', reply_markup=glass_pattern_kb())
-    await state.set_state(OrderForm.glass_pattern)
-
-@dp.message(OrderForm.glass_type)
-async def process_glass_type_invalid(message: types.Message):
-    await message.answer('Iltimos, quyidagi tugmalardan birini tanlang:', reply_markup=glass_type_kb())
-
-# ─── FSM: GLASS PATTERN (4) ───
-@dp.message(OrderForm.glass_pattern, F.text.in_(GLASS_PATTERNS))
-async def process_glass_pattern(message: types.Message, state: FSMContext):
-    await state.update_data(glass_pattern=message.text)
-    await message.answer('5/8: Oyna rangini tanlang:', reply_markup=glass_color_kb())
-    await state.set_state(OrderForm.glass_color)
-
-@dp.message(OrderForm.glass_pattern)
-async def process_glass_pattern_invalid(message: types.Message):
-    await message.answer('Iltimos, quyidagi tugmalardan birini tanlang:', reply_markup=glass_pattern_kb())
-
-# ─── FSM: GLASS COLOR (5) ───
-@dp.message(OrderForm.glass_color, F.text.in_(GLASS_COLORS))
-async def process_glass_color(message: types.Message, state: FSMContext):
-    await state.update_data(glass_color=message.text)
-    await message.answer(
-        '6/8: Taxminiy o\'lchamlarni yozing (masalan: 80x200):',
-        reply_markup=types.ReplyKeyboardRemove()
-    )
-    await state.set_state(OrderForm.dimensions)
-
-@dp.message(OrderForm.glass_color)
-async def process_glass_color_invalid(message: types.Message):
-    await message.answer('Iltimos, quyidagi tugmalardan birini tanlang:', reply_markup=glass_color_kb())
-
-# ─── FSM: DIMENSIONS (6) ───
-@dp.message(OrderForm.dimensions, lambda msg: msg.text and len(msg.text.strip()) > 0)
-async def process_dimensions(message: types.Message, state: FSMContext):
-    text = message.text.strip()
-    data = await state.get_data()
-    existing = data.get('dimensions', '')
-    if data.get('adding_more') and existing:
-        text = existing + '\n' + text
-    await state.update_data(dimensions=text, adding_more=False)
-    await message.answer(
-        '7/8: Buyurtma qiladigan mahsulotingizni soni?',
-        reply_markup=quantity_choice_kb()
-    )
-    await state.set_state(OrderForm.quantity_choice)
-
-@dp.message(OrderForm.dimensions)
-async def process_dimensions_invalid(message: types.Message):
-    await message.answer(        'Iltimos, o\'lchamlarni yozing (masalan: 80x200):')
-
-# ─── FSM: QUANTITY CHOICE (7) ───
-@dp.message(OrderForm.quantity_choice, F.text.in_(['Bitta', "Ko'p"]))
-async def process_quantity_choice(message: types.Message, state: FSMContext):
-    if message.text == 'Bitta':
-        await state.update_data(quantity=1)
-        await message.answer(
-            '8/8 (oxirgi): Telefon raqamingizni yuboring yoki kontakt tugmasini bosing:',
-            reply_markup=phone_kb()
-        )
-        await state.set_state(OrderForm.phone)
-    else:
-        await state.update_data(quantity=0)  # temporary, will be set after number input
-        await message.answer(
-            'Nechta dona buyurtma qilmoqchisiz? Raqamni kiriting:',
-            reply_markup=types.ReplyKeyboardRemove()
-        )
-        await state.set_state(OrderForm.quantity_number)
-
-@dp.message(OrderForm.quantity_choice)
-async def process_quantity_choice_invalid(message: types.Message):
-    await message.answer('Iltimos, quyidagi tugmalardan birini tanlang:', reply_markup=quantity_choice_kb())
-
-# ─── FSM: QUANTITY NUMBER (7b) ───
-@dp.message(OrderForm.quantity_number, lambda msg: msg.text and msg.text.strip().isdigit() and int(msg.text.strip()) > 0)
-async def process_quantity_number(message: types.Message, state: FSMContext):
-    qty = int(message.text.strip())
-    await state.update_data(quantity=qty)
-    await message.answer(
-        'Yana o\'lcham qo\'shasizmi? (masalan: boshqa o\'lchamdagi oyna)',
-        reply_markup=yes_no_kb()
-    )
-    await state.set_state(OrderForm.add_more)
-
-@dp.message(OrderForm.quantity_number)
-async def process_quantity_number_invalid(message: types.Message):
-    await message.answer('Iltimos, faqat musbat son kiriting (masalan: 5):')
-
-# ─── FSM: ADD MORE (7c) ───
-@dp.message(OrderForm.add_more, F.text.in_(['Ha', "Yo'q"]))
-async def process_add_more(message: types.Message, state: FSMContext):
-    if message.text == 'Ha':
-        await state.update_data(adding_more=True)
-        await message.answer(
-            'Qo\'shimcha o\'lchamni yozing:',
-            reply_markup=types.ReplyKeyboardRemove()
-        )
-        await state.set_state(OrderForm.dimensions)
-    else:
-        await message.answer(
-            '8/8 (oxirgi): Telefon raqamingizni yuboring yoki kontakt tugmasini bosing:',
-            reply_markup=phone_kb()
-        )
-        await state.set_state(OrderForm.phone)
-
-@dp.message(OrderForm.add_more)
-async def process_add_more_invalid(message: types.Message):
-    await message.answer('Iltimos, quyidagi tugmalardan birini tanlang:', reply_markup=yes_no_kb())
-
-# ─── FSM: PHONE (8) ───
-@dp.message(OrderForm.phone, F.contact)
-async def process_phone_contact(message: types.Message, state: FSMContext):
-    phone = message.contact.phone_number
-    data = await state.update_data(phone=phone)
-    await _finish_order(message, data)
-    await state.clear()
-
-@dp.message(OrderForm.phone, lambda msg: msg.text and len(msg.text.strip()) > 5)
-async def process_phone_text(message: types.Message, state: FSMContext):
-    phone = message.text.strip()
-    data = await state.update_data(phone=phone)
-    await _finish_order(message, data)
-    await state.clear()
-
-@dp.message(OrderForm.phone)
-async def process_phone_invalid(message: types.Message):
-    await message.answer(
-        'Iltimos, telefon raqamingizni yozing yoki "Kontaktni yuborish" tugmasini bosing:',
-        reply_markup=phone_kb()
-    )
-
-async def _finish_order(message: types.Message, data: dict):
-    order_id = create_order(
-        telegram_id=message.from_user.id,
-        material_type=data.get('material', 'Noma\'lum'),
-        glass_type=data.get('glass_type', 'Noma\'lum'),
-        profile_color=data.get('profile_color', 'Noma\'lum'),
-        dimensions=data.get('dimensions', 'Noma\'lum'),
-        phone=data.get('phone', 'Noma\'lum'),
-        glass_pattern=data.get('glass_pattern', 'Noma\'lum'),
-        glass_color=data.get('glass_color', 'Noma\'lum'),
-        quantity=data.get('quantity', 1)
-    )
-    dims = data['dimensions'].replace('\n', '\n     ')
-    text = (
-        '✅ Buyurtmangiz qabul qilindi!\n\n'
-        f'📦 Material: {data["material"]}\n'
-        f'🎨 Profil rangi: {data["profile_color"]}\n'
-        f'🪟 Oyna qavati: {data["glass_type"]}\n'
-        f'✨ Oyna naqshi: {data["glass_pattern"]}\n'
-        f'🎯 Oyna rangi: {data["glass_color"]}\n'
-        f'📐 O\'lchamlar: {dims}\n'
-        f'🔢 Soni: {data["quantity"]} dona\n'
-        f'📞 Telefon: {data["phone"]}\n\n'
-        'Tez orada mutaxassisimiz siz bilan bog\'lanadi. ID raqamingiz '
-        'buyurtma tasdiqlangandan so\'ng beriladi.'
-    )
-    await message.answer(text, reply_markup=main_menu())
-
-# ─── CHECK ORDER BY ID ───
 @dp.message(StateFilter('check_order_input'))
 async def process_check_order(message: types.Message, state: FSMContext):
     oid = message.text.strip()
@@ -330,7 +328,7 @@ async def process_check_order(message: types.Message, state: FSMContext):
         return
     order = get_order(oid)
     if not order:
-        await message.answer('❌ Bunday ID raqamli buyurtma topilmadi. Qaytadan tekshirib ko\'ring.')
+        await message.answer('❌ Bunday ID raqamli buyurtma topilmadi.', reply_markup=back_menu_kb())
         await state.clear()
         return
     status_map = {
@@ -338,7 +336,7 @@ async def process_check_order(message: types.Message, state: FSMContext):
         'confirmed': '✅ Tasdiqlangan',
         'material_delivered': '🚚 Material olib kelinmoqda',
         'in_progress': '🔧 Ishlab chiqarish jarayonida',
-        'ready': '✨ Oyna qismi tayyorlanmoqda',
+        'ready': '✨ Tayyorlanmoqda',
         'delivered': '📦 To\'liq tayyor',
     }
     dims = order["dimensions"].replace('\n', '\n     ') if order["dimensions"] else '—'
@@ -347,22 +345,17 @@ async def process_check_order(message: types.Message, state: FSMContext):
         f'📦 Material: {order["material_type"]}\n'
         f'🎨 Profil rangi: {order["profile_color"]}\n'
         f'🪟 Oyna qavati: {order["glass_type"]}\n'
-        f'✨ Oyna naqshi: {order["glass_pattern"] or "—"}\n'
-        f'🎯 Oyna rangi: {order["glass_color"] or "—"}\n'
         f'📐 O\'lchamlar: {dims}\n'
-        f'🔢 Soni: {order["quantity"] or 1} dona\n'
         f'📞 Telefon: {order["phone"]}\n'
         f'📊 Holati: {status_map.get(order["status"], order["status"])}\n'
         f'📅 Yaratilgan: {order["created_at"]}'
     )
-    await message.answer(text)
+    await message.answer(text, reply_markup=back_menu_kb())
     await state.clear()
 
-# ─── BACKGROUND: NOTIFY ORDERS ───
 async def notify_checker():
     while True:
         try:
-            # 1) Material delivered notification (first confirmation)
             confirmed = get_unnotified_confirmations()
             for order in confirmed:
                 dims = order["dimensions"].replace('\n', '\n     ') if order["dimensions"] else '—'
@@ -373,10 +366,7 @@ async def notify_checker():
                     f'📦 Material: {order["material_type"]}\n'
                     f'🎨 Profil rangi: {order["profile_color"]}\n'
                     f'🪟 Oyna qavati: {order["glass_type"]}\n'
-                    f'✨ Oyna naqshi: {order["glass_pattern"] or "—"}\n'
-                    f'🎯 Oyna rangi: {order["glass_color"] or "—"}\n'
                     f'📐 O\'lchamlar: {dims}\n'
-                    f'🔢 Soni: {order["quantity"] or 1} dona\n'
                     f'📊 Holat: 🚚 Material olib kelinmoqda\n\n'
                     f'Buyurtmangiz holatini bot orqali kuzatib borishingiz mumkin: '
                     f'🔍 Buyurtmani tekshirish'
@@ -388,7 +378,6 @@ async def notify_checker():
                 except Exception as e:
                     logger.error(f'Failed to notify user {order["telegram_id"]}: {e}')
 
-            # 2) Delivered notification (final "tayyor" message)
             deliveries = get_unnotified_deliveries()
             for order in deliveries:
                 text = (
@@ -413,7 +402,6 @@ async def notify_checker():
             logger.error(f'Notify checker error: {e}')
         await asyncio.sleep(10)
 
-# ─── WEB SERVER FOR RENDER PORT BINDING ───
 async def run_web_server():
     app = web.Application()
     app.router.add_get('/health', lambda r: web.json_response({'status': 'ok'}))
@@ -422,9 +410,8 @@ async def run_web_server():
     PORT = int(os.environ.get('PORT', 8000))
     site = web.TCPSite(runner, '0.0.0.0', PORT)
     await site.start()
-    logger.info(f'✅ Web server running on 0.0.0.0:{PORT}')
+    logger.info(f'Web server running on 0.0.0.0:{PORT}')
 
-# ─── MAIN FOR EXPORT ───
 async def bot_main(start_web_server=True):
     if start_web_server:
         await run_web_server()
