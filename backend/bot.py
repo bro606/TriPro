@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 BOT_TOKEN = (os.getenv('BOT_TOKEN') or '8745687733:AAFmfV5n6f0Z0RxJ70aXVf82zNa0LI3KUs4').strip()
 ADMIN_USERNAME = os.getenv('ADMIN_USERNAME', 'Username')
-SITE_URL = 'https://tripro-uz.netlify.app'
+SITE_URL = 'https://tri-pro-bro606s-projects.vercel.app'
 BASE_DIR = Path(__file__).parent
 LOCAL_DB = str(BASE_DIR / 'tripro.db')
 
