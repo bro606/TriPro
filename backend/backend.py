@@ -8,31 +8,49 @@ from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
 from pydantic import BaseModel
 import uvicorn
 
-from bot import bot, dp, bot_main, get_akfa_order, get_all_akfa, update_akfa, get_all_prof, update_prof, get_combined_orders, init_db, logger
+from aiogram import types
+from bot import bot, dp, get_akfa_order, get_all_akfa, update_akfa, get_all_prof, update_prof, get_combined_orders, init_db, logger
 
 PORT = int(os.getenv('PORT', '10000'))
 
 # init_db is now async, we'll call it in lifespan or manually
 
+PUBLIC_URL = os.getenv('PUBLIC_URL', 'https://tripro.onrender.com').strip()
+if PUBLIC_URL.endswith('/'): PUBLIC_URL = PUBLIC_URL[:-1]
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # DB ni ishga tushuramiz
     await init_db()
-    # Botni alohida taskda ishga tushiramiz
-    bot_task = asyncio.create_task(bot_main())
-    logger.info("Telegram Bot backgroundda ishga tushdi.")
+    # Webhookni o'rnatamiz
+    webhook_url = f"{PUBLIC_URL}/webhook/bot"
+    await bot.set_webhook(url=webhook_url, drop_pending_updates=True)
+    logger.info(f"Webhook o'rnatildi: {webhook_url}")
     yield
-    # To'xtatishda botni yopamiz
-    bot_task.cancel()
-    try:
-        await bot_task
-    except asyncio.CancelledError:
-        logger.info("Telegram Bot to'xtatildi.")
+    # To'xtatishda webhookni o'chiramiz
+    await bot.delete_webhook()
+    logger.info("Webhook o'chirildi.")
 
 app = FastAPI(title='TriPro Admin API', lifespan=lifespan)
 
-class StatusUpdate(BaseModel):
-    status: str
+# ──────────────────────────────────────────────
+# Webhook Endpoint
+# ──────────────────────────────────────────────
+
+@app.post('/webhook/bot')
+async def telegram_webhook(update: dict):
+    # Telegram xabarlarini qabul qilish
+    try:
+        telegram_update = types.Update(**update)
+        await dp.feed_update(bot=bot, update=telegram_update)
+        return {"status": "ok"}
+    except Exception as e:
+        logger.error(f"Webhook xatosi: {e}")
+        return {"status": "error", "message": str(e)}
+
+@app.get('/')
+async def health():
+    return {"status": "active", "service": "TriPro Bot"}
 
 # ──────────────────────────────────────────────
 # Admin HTML

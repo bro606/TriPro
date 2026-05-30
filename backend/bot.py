@@ -4,12 +4,14 @@
 
 import asyncio, os, random, aiosqlite, logging
 from pathlib import Path
-from aiogram import Bot, Dispatcher, types, F
+from aiogram import Bot, Dispatcher, types, F, BaseMiddleware
 from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, ErrorEvent
 from aiogram.fsm.storage.memory import MemoryStorage
+from typing import Any, Awaitable, Callable, Dict
+import time
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -22,6 +24,56 @@ LOCAL_DB = str(BASE_DIR / 'tripro.db')
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
+
+# ═══════════════════════════════════════════════
+# MIDDLEWARES (Throttling / Anti-Flood)
+# ═══════════════════════════════════════════════
+
+class ThrottlingMiddleware(BaseMiddleware):
+    def __init__(self, slow_mode_delay: float = 0.5):
+        self.users = {}
+        self.delay = slow_mode_delay
+        super().__init__()
+
+    async def __call__(
+        self,
+        handler: Callable[[types.TelegramObject, Dict[str, Any]], Awaitable[Any]],
+        event: types.TelegramObject,
+        data: Dict[str, Any],
+    ) -> Any:
+        user = data.get('event_from_user')
+        if not user:
+            return await handler(event, data)
+        
+        user_id = user.id
+        now = time.time()
+        
+        if user_id in self.users:
+            last_time = self.users[user_id]
+            if now - last_time < self.delay:
+                # Agar foydalanuvchi juda tez bosayotgan bo'lsa, javob bermaymiz
+                return
+        
+        self.users[user_id] = now
+        return await handler(event, data)
+
+dp.message.middleware(ThrottlingMiddleware())
+dp.callback_query.middleware(ThrottlingMiddleware())
+
+# ═══════════════════════════════════════════════
+# GLOBAL ERROR HANDLER
+# ═══════════════════════════════════════════════
+
+@dp.error()
+async def error_handler(event: ErrorEvent):
+    logger.error(f"Kutilmagan xato: {event.exception}", exc_info=True)
+    try:
+        if event.update.message:
+            await event.update.message.answer("⚠️ Kechirasiz, texnik xatolik yuz berdi. Iltimos, /start buyrug'ini tushirib ko'ring.")
+        elif event.update.callback_query:
+            await event.update.callback_query.answer("⚠️ Texnik xatolik! /start bosing.", show_alert=True)
+    except:
+        pass
 
 # ═══════════════════════════════════════════════
 # FSM STATES
@@ -493,17 +545,15 @@ async def np_time_back(c: types.CallbackQuery, s: FSMContext):
 # BOT START
 # ═══════════════════════════════════════════════
 
-async def bot_main():
-    await bot.delete_webhook(drop_pending_updates=True)
-    logger.info('Bot polling...')
-    await dp.start_polling(bot)
-
-async def run_bot():
+async def run_bot_polling():
+    # Bu funksiya faqat lokal test qilish uchun qoldi
     await init_db()
-    await bot_main()
+    await bot.delete_webhook(drop_pending_updates=True)
+    logger.info('Bot polling (LOCAL MODE)...')
+    await dp.start_polling(bot)
 
 if __name__ == '__main__':
     try:
-        asyncio.run(run_bot())
+        asyncio.run(run_bot_polling())
     except KeyboardInterrupt:
         pass
