@@ -2,7 +2,7 @@
 # FSM: AKFA (9 bosqich) + Profilaktika (2 bosqich)
 # SQLite ma'lumotlar bazasi: akfa_orders va profilaktika jadvallari
 
-import asyncio, os, random, sqlite3, logging
+import asyncio, os, random, aiosqlite, logging
 from pathlib import Path
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command, StateFilter
@@ -46,106 +46,107 @@ class ProfilaktikaForm(StatesGroup):
 # SQLITE DATABASE
 # ═══════════════════════════════════════════════
 
-def init_db():
-    conn = sqlite3.connect(LOCAL_DB)
-    conn.execute('''CREATE TABLE IF NOT EXISTS akfa_orders (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        order_id TEXT UNIQUE,
-        telegram_id INTEGER,
-        name TEXT, surname TEXT, phone TEXT,
-        material TEXT, glass_layer TEXT, profile_color TEXT,
-        dimensions TEXT, quantity INTEGER DEFAULT 1,
-        status TEXT DEFAULT 'pending',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )''')
-    conn.execute('''CREATE TABLE IF NOT EXISTS profilaktika (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        telegram_id INTEGER,
-        name TEXT, surname TEXT, phone TEXT,
-        location TEXT, time_slot TEXT,
-        status TEXT DEFAULT 'pending',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )''')
-    conn.commit()
-    conn.close()
+async def init_db():
+    async with aiosqlite.connect(LOCAL_DB) as conn:
+        await conn.execute('''CREATE TABLE IF NOT EXISTS akfa_orders (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            order_id TEXT UNIQUE,
+            telegram_id INTEGER,
+            name TEXT, surname TEXT, phone TEXT,
+            material TEXT, glass_layer TEXT, profile_color TEXT,
+            dimensions TEXT, quantity INTEGER DEFAULT 1,
+            status TEXT DEFAULT 'pending',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )''')
+        await conn.execute('''CREATE TABLE IF NOT EXISTS profilaktika (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            telegram_id INTEGER,
+            name TEXT, surname TEXT, phone TEXT,
+            location TEXT, time_slot TEXT,
+            status TEXT DEFAULT 'pending',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )''')
+        await conn.commit()
 
-def _gen_oid():
-    conn = sqlite3.connect(LOCAL_DB)
-    ids = {r[0] for r in conn.execute('SELECT order_id FROM akfa_orders WHERE order_id IS NOT NULL').fetchall()}
-    conn.close()
+async def _gen_oid():
+    async with aiosqlite.connect(LOCAL_DB) as conn:
+        async with conn.execute('SELECT order_id FROM akfa_orders WHERE order_id IS NOT NULL') as cursor:
+            rows = await cursor.fetchall()
+            ids = {r[0] for r in rows}
+    
     for _ in range(100):
         oid = str(random.randint(10000, 99999))
         if oid not in ids:
             return oid
     return str(random.randint(10000, 99999))
 
-def save_akfa_order(tg, name, surname, phone, material, glass, color, dims, qty=1):
-    oid = _gen_oid()
-    conn = sqlite3.connect(LOCAL_DB)
-    conn.execute('INSERT INTO akfa_orders (order_id,telegram_id,name,surname,phone,material,glass_layer,profile_color,dimensions,quantity) VALUES (?,?,?,?,?,?,?,?,?,?)',
-                 (oid, tg, name, surname, phone, material, glass, color, dims, qty))
-    conn.commit()
-    conn.close()
+async def save_akfa_order(tg, name, surname, phone, material, glass, color, dims, qty=1):
+    oid = await _gen_oid()
+    async with aiosqlite.connect(LOCAL_DB) as conn:
+        await conn.execute('INSERT INTO akfa_orders (order_id,telegram_id,name,surname,phone,material,glass_layer,profile_color,dimensions,quantity) VALUES (?,?,?,?,?,?,?,?,?,?)',
+                     (oid, tg, name, surname, phone, material, glass, color, dims, qty))
+        await conn.commit()
     return oid
 
-def get_akfa_order(oid):
-    conn = sqlite3.connect(LOCAL_DB)
-    conn.row_factory = sqlite3.Row
-    r = conn.execute('SELECT * FROM akfa_orders WHERE order_id = ?', (oid,)).fetchone()
-    conn.close()
-    return dict(r) if r else None
+async def get_akfa_order(oid):
+    async with aiosqlite.connect(LOCAL_DB) as conn:
+        conn.row_factory = aiosqlite.Row
+        async with conn.execute('SELECT * FROM akfa_orders WHERE order_id = ?', (oid,)) as cursor:
+            r = await cursor.fetchone()
+            return dict(r) if r else None
 
-def get_all_akfa():
-    conn = sqlite3.connect(LOCAL_DB)
-    conn.row_factory = sqlite3.Row
-    rows = conn.execute('SELECT * FROM akfa_orders ORDER BY created_at DESC').fetchall()
-    conn.close()
-    return [dict(r) for r in rows]
+async def get_all_akfa():
+    async with aiosqlite.connect(LOCAL_DB) as conn:
+        conn.row_factory = aiosqlite.Row
+        async with conn.execute('SELECT * FROM akfa_orders ORDER BY created_at DESC') as cursor:
+            rows = await cursor.fetchall()
+            return [dict(r) for r in rows]
 
-def update_akfa(oid, status):
+async def update_akfa(oid, status):
     if status not in ('pending','material_delivered','assembling','cutting','ready'):
         return None
-    conn = sqlite3.connect(LOCAL_DB)
-    conn.row_factory = sqlite3.Row
-    conn.execute('UPDATE akfa_orders SET status = ? WHERE order_id = ?', (status, oid))
-    conn.commit()
-    r = conn.execute('SELECT * FROM akfa_orders WHERE order_id = ?', (oid,)).fetchone()
-    conn.close()
-    return dict(r) if r else None
+    async with aiosqlite.connect(LOCAL_DB) as conn:
+        conn.row_factory = aiosqlite.Row
+        await conn.execute('UPDATE akfa_orders SET status = ? WHERE order_id = ?', (status, oid))
+        await conn.commit()
+        async with conn.execute('SELECT * FROM akfa_orders WHERE order_id = ?', (oid,)) as cursor:
+            r = await cursor.fetchone()
+            return dict(r) if r else None
 
-def save_profilaktika(tg, name, surname, phone, location, time_slot):
-    conn = sqlite3.connect(LOCAL_DB)
-    conn.execute('INSERT INTO profilaktika (telegram_id,name,surname,phone,location,time_slot) VALUES (?,?,?,?,?,?)',
-                 (tg, name, surname, phone, location, time_slot))
-    conn.commit()
-    conn.close()
+async def save_profilaktika(tg, name, surname, phone, location, time_slot):
+    async with aiosqlite.connect(LOCAL_DB) as conn:
+        await conn.execute('INSERT INTO profilaktika (telegram_id,name,surname,phone,location,time_slot) VALUES (?,?,?,?,?,?)',
+                     (tg, name, surname, phone, location, time_slot))
+        await conn.commit()
 
-def get_all_prof():
-    conn = sqlite3.connect(LOCAL_DB)
-    conn.row_factory = sqlite3.Row
-    rows = conn.execute('SELECT * FROM profilaktika ORDER BY created_at DESC').fetchall()
-    conn.close()
-    return [dict(r) for r in rows]
+async def get_all_prof():
+    async with aiosqlite.connect(LOCAL_DB) as conn:
+        conn.row_factory = aiosqlite.Row
+        async with conn.execute('SELECT * FROM profilaktika ORDER BY created_at DESC') as cursor:
+            rows = await cursor.fetchall()
+            return [dict(r) for r in rows]
 
-def update_prof(pk, status):
+async def update_prof(pk, status):
     if status not in ('pending','accepted','completed'):
         return None
-    conn = sqlite3.connect(LOCAL_DB)
-    conn.row_factory = sqlite3.Row
-    conn.execute('UPDATE profilaktika SET status = ? WHERE id = ?', (status, pk))
-    conn.commit()
-    r = conn.execute('SELECT * FROM profilaktika WHERE id = ?', (pk,)).fetchone()
-    conn.close()
-    return dict(r) if r else None
+    async with aiosqlite.connect(LOCAL_DB) as conn:
+        conn.row_factory = aiosqlite.Row
+        await conn.execute('UPDATE profilaktika SET status = ? WHERE id = ?', (status, pk))
+        await conn.commit()
+        async with conn.execute('SELECT * FROM profilaktika WHERE id = ?', (pk,)) as cursor:
+            r = await cursor.fetchone()
+            return dict(r) if r else None
 
-def get_combined_orders():
+async def get_combined_orders():
     res = []
-    for o in get_all_akfa():
+    akfa = await get_all_akfa()
+    for o in akfa:
         res.append({'id':f'akfa_{o["id"]}','pk':o['id'],'type':'akfa',
             'order_id':o['order_id'] or '','client':f"{o['name'] or ''} {o['surname'] or ''}".strip() or str(o['telegram_id']),
             'phone':o['phone'] or '','info':f"Material: {o['material']}, Oyna: {o['glass_layer']}, Rang: {o['profile_color']}, O'lcham: {o['dimensions']}, Soni: {o['quantity']}",
             'status':o['status'],'created_at':o['created_at']})
-    for p in get_all_prof():
+    prof = await get_all_prof()
+    for p in prof:
         res.append({'id':f'prof_{p["id"]}','pk':p['id'],'type':'profilaktika','order_id':'',
             'client':f"{p['name'] or ''} {p['surname'] or ''}".strip() or str(p['telegram_id']),
             'phone':p['phone'] or '','info':f"Manzil: {p['location']}, Vaqt: {p['time_slot']}",
@@ -371,7 +372,7 @@ async def p_qty_i(m: types.Message):
 async def p_yes(c: types.CallbackQuery, s: FSMContext):
     await c.answer()
     d = await s.get_data()
-    oid = save_akfa_order(c.from_user.id, d.get('name',''), d.get('surname',''), d.get('phone',''),
+    oid = await save_akfa_order(c.from_user.id, d.get('name',''), d.get('surname',''), d.get('phone',''),
                           d.get('material',''), d.get('glass_layer',''), d.get('profile_color',''),
                           d.get('dimensions',''), d.get('quantity',1))
     await s.clear()
@@ -407,7 +408,7 @@ async def chk_id(m: types.Message, s: FSMContext):
     oid = m.text.strip()
     if not oid.isdigit() or len(oid) != 5:
         await m.answer('Iltimos, to\'g\'ri 5 xonali ID kiriting (masalan: 54921):', reply_markup=back_kb()); return
-    o = get_akfa_order(oid)
+    o = await get_akfa_order(oid)
     if not o:
         await m.answer('❌ Bunday ID topilmadi.', reply_markup=main_kb()); await s.clear(); return
     sm = {'pending':'⏳ Kutilmoqda','material_delivered':'🚚 Material olib kelindi','assembling':'🔧 Yig\'ilmoqda','cutting':'🪟 Oyna kesilmoqda','ready':'📦 Tayyor va yetkazilmoqda'}
@@ -461,7 +462,7 @@ async def np_time(c: types.CallbackQuery, s: FSMContext):
     ts = tm[c.data]
     d = await s.get_data()
     u = c.from_user
-    save_profilaktika(u.id, u.first_name or '', u.last_name or '', '', d.get('location',''), ts)
+    await save_profilaktika(u.id, u.first_name or '', u.last_name or '', '', d.get('location',''), ts)
     await s.clear()
     await c.message.edit_text(
         f'✅ Profilaktika xizmatiga yozildingiz!\n\n📍 Manzil: {d["location"]}\n⏰ Vaqt: {ts}\n\nMutaxassisimiz belgilangan vaqtda siz bilan bog\'lanadi.',
@@ -481,9 +482,12 @@ async def bot_main():
     logger.info('Bot polling...')
     await dp.start_polling(bot)
 
+async def run_bot():
+    await init_db()
+    await bot_main()
+
 if __name__ == '__main__':
     try:
-        init_db()
-        asyncio.run(bot_main())
+        asyncio.run(run_bot())
     except KeyboardInterrupt:
         pass

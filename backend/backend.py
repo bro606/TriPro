@@ -12,10 +12,12 @@ from bot import bot, dp, bot_main, get_akfa_order, get_all_akfa, update_akfa, ge
 
 PORT = int(os.getenv('PORT', '10000'))
 
-init_db()
+# init_db is now async, we'll call it in lifespan or manually
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # DB ni ishga tushuramiz
+    await init_db()
     # Botni alohida taskda ishga tushiramiz
     bot_task = asyncio.create_task(bot_main())
     logger.info("Telegram Bot backgroundda ishga tushdi.")
@@ -49,14 +51,14 @@ async def admin_panel():
 @app.get('/api/orders')
 async def list_orders(type: Optional[str] = Query(None)):
     if type == 'akfa':
-        return get_all_akfa()
+        return await get_all_akfa()
     elif type == 'profilaktika':
-        return get_all_prof()
-    return get_combined_orders()
+        return await get_all_prof()
+    return await get_combined_orders()
 
 @app.get('/api/orders/{order_id}')
 async def get_order(order_id: str):
-    o = get_akfa_order(order_id)
+    o = await get_akfa_order(order_id)
     if not o:
         raise HTTPException(404, 'Order not found')
     return o
@@ -66,7 +68,7 @@ class AkfaStatus(BaseModel):
 
 @app.post('/api/akfa/{order_id}/status')
 async def set_akfa_status(order_id: str, body: AkfaStatus):
-    o = update_akfa(order_id, body.status)
+    o = await update_akfa(order_id, body.status)
     if not o:
         raise HTTPException(404, 'Order not found')
     return {'ok': True, 'order': o}
@@ -76,7 +78,7 @@ class ProfStatus(BaseModel):
 
 @app.post('/api/profilaktika/{pk}/status')
 async def set_prof_status(pk: int, body: ProfStatus):
-    o = update_prof(pk, body.status)
+    o = await update_prof(pk, body.status)
     if not o:
         raise HTTPException(404, 'Profilaktika record not found')
     uid = o.get('telegram_id')
