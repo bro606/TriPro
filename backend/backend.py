@@ -48,7 +48,7 @@ async def telegram_webhook(update: dict):
         logger.error(f"Webhook xatosi: {e}")
         return {"status": "error", "message": str(e)}
 
-@app.get('/')
+@app.api_route('/', methods=['GET', 'HEAD'])
 async def health():
     return {"status": "active", "service": "TriPro Bot"}
 
