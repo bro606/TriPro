@@ -251,26 +251,36 @@ async def cancel(m: types.Message, s: FSMContext):
 # MENU CALLBACKS
 # ═══════════════════════════════════════════════
 
-@dp.callback_query(lambda c: c.data == 'to_menu')
+@dp.callback_query(F.data == 'to_menu')
 async def to_menu(c: types.CallbackQuery, s: FSMContext):
-    await c.answer(); await s.clear()
-    await c.message.edit_text('Asosiy menyu:', reply_markup=main_kb())
+    try:
+        await c.answer()
+        await s.clear()
+        await c.message.edit_text('Asosiy menyu:', reply_markup=main_kb())
+    except Exception as e:
+        logger.error(f"Error in to_menu: {e}")
 
-@dp.callback_query(lambda c: c.data == 'new_order')
+@dp.callback_query(F.data == 'new_order')
 async def new_order(c: types.CallbackQuery, s: FSMContext):
-    await c.answer()
-    await s.set_state(AkfaForm.name)
-    await c.message.edit_text('Buyurtma berish uchun savollarga javob bering.\n\n1/9: Ismingizni kiriting:', reply_markup=back_kb())
+    try:
+        await c.answer()
+        await s.set_state(AkfaForm.name)
+        await c.message.edit_text('Buyurtma berish uchun savollarga javob bering.\n\n1/9: Ismingizni kiriting:', reply_markup=back_kb())
+    except Exception as e:
+        logger.error(f"Error in new_order: {e}")
 
-@dp.callback_query(lambda c: c.data == 'other_services')
+@dp.callback_query(F.data == 'other_services')
 async def other_svc(c: types.CallbackQuery, s: FSMContext):
-    await c.answer()
-    await c.message.edit_text(
-        '🛠 Yog\'och mahsulotlari va shisha xizmatlari\n\n'
-        'Siz tanlagan yo\'nalish bo\'yicha buyurtmalar individual tartibda qabul qilinadi. '
-        'Aniq narxlar va dizayn masalalari bo\'yicha bizning bosh mutaxassisimiz bilan bevosita bog\'laning.\n\n'
-        'Shuningdek, yilda bir marta profilaktika xizmatimizdan foydalanishingiz mumkin.',
-        reply_markup=other_kb())
+    try:
+        await c.answer()
+        await c.message.edit_text(
+            '🛠 Yog\'och mahsulotlari va shisha xizmatlari\n\n'
+            'Siz tanlagan yo\'nalish bo\'yicha buyurtmalar individual tartibda qabul qilinadi. '
+            'Aniq narxlar va dizayn masalalari bo\'yicha bizning bosh mutaxassisimiz bilan bevosita bog\'laning.\n\n'
+            'Shuningdek, yilda bir marta profilaktika xizmatimizdan foydalanishingiz mumkin.',
+            reply_markup=other_kb())
+    except Exception as e:
+        logger.error(f"Error in other_svc: {e}")
 
 # ═══════════════════════════════════════════════
 # AKFA FSM
@@ -397,11 +407,14 @@ async def p_no(c: types.CallbackQuery, s: FSMContext):
 # ID CHECK
 # ═══════════════════════════════════════════════
 
-@dp.callback_query(lambda c: c.data == 'check_order')
+@dp.callback_query(F.data == 'check_order')
 async def chk(c: types.CallbackQuery, s: FSMContext):
-    await c.answer()
-    await c.message.edit_text('Buyurtmangizni tekshirish uchun 5 xonali ID raqamingizni kiriting:', reply_markup=back_kb())
-    await s.set_state('chk')
+    try:
+        await c.answer()
+        await c.message.edit_text('Buyurtmangizni tekshirish uchun 5 xonali ID raqamingizni kiriting:', reply_markup=back_kb())
+        await s.set_state('chk')
+    except Exception as e:
+        logger.error(f"Error in check_order: {e}")
 
 @dp.message(StateFilter('chk'))
 async def chk_id(m: types.Message, s: FSMContext):
@@ -425,11 +438,14 @@ async def chk_id(m: types.Message, s: FSMContext):
 # PROFILAKTIKA
 # ═══════════════════════════════════════════════
 
-@dp.callback_query(lambda c: c.data == 'np')
+@dp.callback_query(F.data == 'np')
 async def np_start(c: types.CallbackQuery, s: FSMContext):
-    await c.answer()
-    await s.set_state(ProfilaktikaForm.location)
-    await c.message.edit_text('🛡 Profilaktika xizmati\n\nManzilingizni yuboring yoki yozing (masalan: Farg\'ona sh., Navoiy ko\'ch. 15):', reply_markup=loc_kb())
+    try:
+        await c.answer()
+        await s.set_state(ProfilaktikaForm.location)
+        await c.message.edit_text('🛡 Profilaktika xizmati\n\nManzilingizni yuboring yoki yozing (masalan: Farg\'ona sh., Navoiy ko\'ch. 15):', reply_markup=loc_kb())
+    except Exception as e:
+        logger.error(f"Error in np_start: {e}")
 
 @dp.message(ProfilaktikaForm.location, F.location)
 async def np_loc_share(m: types.Message, s: FSMContext):
