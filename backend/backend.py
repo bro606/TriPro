@@ -22,46 +22,34 @@ import asyncio
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # DB ni ishga tushuramiz
+    # MA'LUMOTLAR BAZASINI ISHGA TUSHIRAMIZ
     await init_db()
     
-    # Tokenni tekshirish
+    # BOT TOKENINI TEKSHIRAMIZ
     token_preview = f"{BOT_TOKEN[:10]}...{BOT_TOKEN[-5:]}"
-    logger.info(f"Bot POLLING rejimida ishga tushmoqda... Token: {token_preview}")
+    logger.info(f"===> Bot professional rejimda ishga tushirildi. Token: {token_preview}")
     
-    # Webhookni butunlay o'chirib tashlaymiz
+    # WEBHOOKLARNI TOZALAYMIZ (muammolarni oldini olish uchun)
     await bot.delete_webhook(drop_pending_updates=True)
     
-    # Pollingni alohida vazifa sifatida fonda ishga tushiramiz
+    # POLLINGNI FONDA ISHGA TUSHIRAMIZ (Xizmatingiz darajasi: Super)
+    # Bu usul Uptime Robot bilan birgalikda eng barqaror ishlaydi.
     polling_task = asyncio.create_task(dp.start_polling(bot))
-    logger.info("Bot polling (fon) boshlandi.")
+    logger.info("===> Bot polling (background task) boshlandi.")
     
     yield
-    # To'xtatishda pollingni yopamiz
+    # TO'XTATISHDA TOZALASH
     polling_task.cancel()
-    logger.info("Server to'xtatilmoqda.")
+    logger.info("===> Server to'xtatilmoqda.")
 
 app = FastAPI(title='TriPro Admin API', lifespan=lifespan)
 
-# ──────────────────────────────────────────────
-# Webhook Endpoint
-# ──────────────────────────────────────────────
-
-@app.post('/webhook/bot')
-async def telegram_webhook(update: dict):
-    # Telegram xabarlarini qabul qilish
-    try:
-        # logger.info(f"Yangi so'rov keldi: {list(update.keys())}")
-        telegram_update = types.Update.model_validate(update, context={"bot": bot})
-        await dp.feed_update(bot=bot, update=telegram_update)
-        return {"status": "ok"}
-    except Exception as e:
-        logger.error(f"Webhook xatosi: {e}", exc_info=True)
-        return {"status": "error", "message": str(e)}
+# Webhook endpoitlari endi kerak emas, lekin xato bermasligi uchun qoldiramiz 
+# yoki o'chirib tashlagan ma'qul. Biz toza kod uchun o'chirib tashlaymiz.
 
 @app.api_route('/', methods=['GET', 'HEAD'])
 async def health():
-    return {"status": "active", "service": "TriPro Bot"}
+    return {"status": "active", "service": "TriPro Professional Bot", "mode": "polling"}
 
 # ──────────────────────────────────────────────
 # Admin HTML
