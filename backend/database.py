@@ -2,7 +2,9 @@ import aiosqlite
 import datetime
 import os
 
-DB_PATH = 'tripro.db'
+from pathlib import Path
+BASE_DIR = Path(__file__).parent.parent
+DB_PATH = str(BASE_DIR / 'tripro.db')
 
 async def init_db():
     async with aiosqlite.connect(DB_PATH) as db:

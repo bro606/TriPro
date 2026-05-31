@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 BOT_TOKEN = os.getenv('BOT_TOKEN', '').strip()
 ADMIN_USERNAME = os.getenv('ADMIN_USERNAME', 'TriPro_Admin')
 SITE_URL = 'https://tripro.vercel.app'
-BASE_DIR = Path(__file__).parent
+BASE_DIR = Path(__file__).parent.parent
 LOCAL_DB = str(BASE_DIR / 'tripro.db')
 
 bot = Bot(token=BOT_TOKEN)
