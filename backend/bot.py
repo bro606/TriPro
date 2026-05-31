@@ -115,6 +115,11 @@ class ProfilaktikaForm(StatesGroup):
 
 BACK = '🔙 Bosh menyuga'
 
+def main_reply_kb():
+    return ReplyKeyboardMarkup(keyboard=[
+        [KeyboardButton(text='🏠 Bosh menyuga')]
+    ], resize_keyboard=True)
+
 def main_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text='🌐 Saytni ko\'rish', url=SITE_URL)],
@@ -132,8 +137,8 @@ def back_kb():
 def phone_kb():
     return ReplyKeyboardMarkup(keyboard=[
         [KeyboardButton(text='📱 Kontaktni ulash', request_contact=True)],
-        [KeyboardButton(text='⌨️ Raqamni yozish')],
-        [KeyboardButton(text=BACK)]], resize_keyboard=True, one_time_keyboard=True)
+        [KeyboardButton(text='🏠 Bosh menyuga')]
+    ], resize_keyboard=True, one_time_keyboard=True)
 
 def mat_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
@@ -193,13 +198,14 @@ def offer_kb():
 # GLOBAL HANDLERS (BASH MENU MUAMMOSI YECHIMI)
 # ═══════════════════════════════════════════════
 
+@dp.message(F.text == '🏠 Bosh menyuga')
 @dp.message(F.text == BACK)
 @dp.message(Command('cancel'))
 @dp.message(Command('bosh_menu'))
 async def cancel_any(m: types.Message, state: FSMContext):
     """Barcha holatlarda (FSM ichida bo'lsa ham) ishlaydi va menyuga qaytaradi"""
     await state.clear()
-    await m.answer('🤖 **Asosiy menyu:**', reply_markup=ReplyKeyboardRemove())
+    await m.answer('🤖 **Asosiy menyu:**', reply_markup=main_reply_kb())
     await m.answer('Quyidagi xizmatlardan birini tanlang:', reply_markup=main_kb(), parse_mode='Markdown')
 
 @dp.message(Command('start'))
@@ -215,7 +221,8 @@ async def start(m: types.Message):
         "✅ **Kafolat:** Biz bajargan barcha ishlarimizga 1 oylik rasmiy kafolat taqdim etamiz!\n\n"
         "TriPro Mini App'imizga kiring, barcha xizmatlarimiz va namunalarimiz bilan yaqindan tanishing! 👇"
     )
-    await m.answer(welcome_txt, reply_markup=main_kb(), parse_mode='Markdown')
+    await m.answer(welcome_txt, reply_markup=main_reply_kb(), parse_mode='Markdown')
+    await m.answer('Xizmatni tanlang:', reply_markup=main_kb())
 
 @dp.callback_query(F.data == 'to_menu')
 async def to_menu(c: types.CallbackQuery, state: FSMContext):
@@ -229,7 +236,7 @@ async def new_order(c: types.CallbackQuery, state: FSMContext):
     try:
         await c.answer()
         await state.set_state(AkfaForm.name)
-        await c.message.edit_text('🏗 **Yangi buyurtma yaratish**\n\n👤 **Ismingizni kiriting:**', reply_markup=back_kb(), parse_mode='Markdown')
+        await c.message.answer('🏗 **Yangi buyurtma yaratish**\n\n👤 **Ismingizni kiriting:**', parse_mode='Markdown')
     except Exception as e:
         logger.error(f"Error in new_order: {e}")
 
@@ -277,48 +284,51 @@ async def p_ph_text(m: types.Message, state: FSMContext):
 @dp.callback_query(AkfaForm.material, lambda c: c.data in ('mp','ma'))
 async def p_mat(c: types.CallbackQuery, state: FSMContext):
     await c.answer()
-    await state.update_data(material={'mp':'Plastik','ma':'Alyumin'}[c.data])
+    mat_type = {'mp':'Plastik','ma':'Alyumin'}[c.data]
+    await state.update_data(material=mat_type)
     await state.set_state(AkfaForm.glass_layer)
-    await c.message.edit_text('🪟 **Oyna qavatini tanlang:**', reply_markup=glass_kb(), parse_mode='Markdown')
+    await c.message.answer(f'🏗️ **Material:** {mat_type}\n\n🪟 **Oyna qavatini tanlang:**', reply_markup=glass_kb(), parse_mode='Markdown')
 
 @dp.callback_query(AkfaForm.glass_layer, lambda c: c.data in ('g1','g2'))
 async def p_glass(c: types.CallbackQuery, state: FSMContext):
     await c.answer()
-    await state.update_data(glass_layer={'g1':'1 qavatli','g2':'2 qavatli'}[c.data])
+    layer_type = {'g1':'1 qavatli','g2':'2 qavatli'}[c.data]
+    await state.update_data(glass_layer=layer_type)
     await state.set_state(AkfaForm.glass_color)
     kb = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="⚪ Oq", callback_data="co_oq"), InlineKeyboardButton(text="⚫ Qora", callback_data="co_qora")],
-        [InlineKeyboardButton(text="🟤 Jigarrang", callback_data="co_jig"), InlineKeyboardButton(text=BACK, callback_data="to_menu")]
+        [InlineKeyboardButton(text="🟤 Jigarrang", callback_data="co_jig")]
     ])
-    await c.message.edit_text('🎨 **Oyna rangini tanlang:**', reply_markup=kb, parse_mode='Markdown')
+    await c.message.answer(f'🪟 **Oyna qavati:** {layer_type}\n\n🎨 **Oyna rangini tanlang:**', reply_markup=kb, parse_mode='Markdown')
 
 @dp.callback_query(AkfaForm.glass_color, lambda c: c.data.startswith('co_'))
 async def p_glass_color(c: types.CallbackQuery, state: FSMContext):
     await c.answer()
     colors = {"co_oq":"Oq", "co_qora":"Qora", "co_jig":"Jigarrang"}
-    await state.update_data(glass_color=colors[c.data])
+    color_name = colors[c.data]
+    await state.update_data(glass_color=color_name)
     await state.set_state(AkfaForm.glass_pattern)
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="✨ Gulli", callback_data="p_gulli"), InlineKeyboardButton(text="🖼️ Oddiy (gulsiz)", callback_data="p_oddiy")],
-        [InlineKeyboardButton(text=BACK, callback_data="to_menu")]
+        [InlineKeyboardButton(text="✨ Gulli", callback_data="p_gulli"), InlineKeyboardButton(text="🖼️ Oddiy (gulsiz)", callback_data="p_oddiy")]
     ])
-    await c.message.edit_text('✨ **Oyna ko\'rinishini tanlang:**', reply_markup=kb, parse_mode='Markdown')
+    await c.message.answer(f'🎨 **Oyna rangi:** {color_name}\n\n✨ **Oyna ko\'rinishini tanlang:**', reply_markup=kb, parse_mode='Markdown')
 
 @dp.callback_query(AkfaForm.glass_pattern, lambda c: c.data.startswith('p_'))
 async def p_glass_pattern(c: types.CallbackQuery, state: FSMContext):
     await c.answer()
     patterns = {"p_gulli":"Gulli", "p_oddiy":"Oddiy (gulsiz)"}
-    await state.update_data(glass_pattern=patterns[c.data])
+    pattern_name = patterns[c.data]
+    await state.update_data(glass_pattern=pattern_name)
     await state.set_state(AkfaForm.profile_color)
-    await c.message.edit_text('🖌️ **Buyurtma qilayotgan profilingiz rangini tanlang:**', reply_markup=color_kb(), parse_mode='Markdown')
+    await c.message.answer(f'✨ **Oyna ko\'rinishi:** {pattern_name}\n\n🖌️ **Buyurtma qilayotgan profilingiz rangini tanlang:**', reply_markup=color_kb(), parse_mode='Markdown')
 
 @dp.callback_query(AkfaForm.profile_color, lambda c: c.data in ('coq','cji','cant','cbosh'))
 async def p_color(c: types.CallbackQuery, state: FSMContext):
     await c.answer()
-    await state.update_data(profile_color={'coq':'Oq','cji':'Jigarrang','cant':'Antratsit','cbosh':'Boshqa'}[c.data])
+    color_p = {'coq':'Oq','cji':'Jigarrang','cant':'Antratsit','cbosh':'Boshqa'}[c.data]
+    await state.update_data(profile_color=color_p)
     await state.set_state(AkfaForm.dimensions)
-    await c.message.delete()
-    await c.message.answer('📏 **Taxminiy o\'lchamlarni yozing (masalan: 120x150):**', reply_markup=back_kb(), parse_mode='Markdown')
+    await c.message.answer(f'🖌️ **Profil rangi:** {color_p}\n\n📏 **Taxminiy o\'lchamlarni yozing (masalan: 120x150):**', parse_mode='Markdown')
 
 @dp.message(AkfaForm.dimensions, lambda m: m.text and m.text.strip())
 async def p_dim(m: types.Message, state: FSMContext):
@@ -349,21 +359,20 @@ async def p_qty(m: types.Message, state: FSMContext):
 # ═══════════════════════════════════════════════
 
 @dp.callback_query(F.data == 'call_master')
-@dp.callback_query(F.data == 'np') # Eskisini ham qo'llab-quvvatlaymiz
+@dp.callback_query(F.data == 'np')
 async def c_master(c: types.CallbackQuery, state: FSMContext):
     await c.answer()
     await state.set_state(MaintenanceForm.problem)
-    await c.message.delete()
-    await c.message.answer("🛠 **Usta chaqirish (Profilaktika)**\n\nIltimos, muammoni qisqacha yozib yuboring (masalan: o'ynak qisilib qoldi):", 
-                         reply_markup=back_kb(), parse_mode='Markdown')
+    await c.message.answer("🛠 **Texnik xizmat (Profilaktika)**\n\nIltimos, muammoni qisqacha yozib yuboring (masalan: o'ynak qisilib qoldi):", 
+                         parse_mode='Markdown')
 
 @dp.message(MaintenanceForm.problem, F.text)
 async def p_problem(m: types.Message, state: FSMContext):
-    if m.text == BACK: return
+    if m.text == '🏠 Bosh menyuga': return
     await save_maintenance_request(m.from_user.id, m.from_user.full_name, 'Kontakt bazada', m.text.strip())
     await state.clear()
     await m.answer("✅ **Sizning so'rovingiz qabul qilindi.**\nMutaxassislarimiz tez orada bog'lanishadi.", 
-                 reply_markup=ReplyKeyboardRemove())
+                 reply_markup=main_reply_kb())
     await m.answer("Boshqa xizmat kerakmi?", reply_markup=main_kb())
 
 @dp.callback_query(AkfaForm.confirm, lambda c: c.data == 'cy')
@@ -378,7 +387,7 @@ async def p_yes(c: types.CallbackQuery, state: FSMContext):
     oid = await save_akfa_order(c.from_user.id, d.get('name',''), d.get('surname',''), d.get('phone',''),
                           info_text, d.get('dimensions',''), d.get('quantity',1))
     await state.clear()
-    await c.message.edit_text(
+    await c.message.answer(
         f'✅ **Buyurtmangiz qabul qilindi. ID: {oid}**\n\n'
         f'👤 **Mijoz:** {d["name"]} {d["surname"]}\n'
         f'📞 **Telefon:** {d["phone"]}\n'
@@ -392,7 +401,7 @@ async def p_no(c: types.CallbackQuery, state: FSMContext):
     await c.answer()
     await state.clear()
     await state.set_state(AkfaForm.name)
-    await c.message.edit_text('Buyurtma berish uchun savollarga javob bering.\n\n1/9: Ismingizni kiriting:', reply_markup=back_kb())
+    await c.message.answer('Buyurtma berish uchun savollarga javob bering.\n\n👤 Ismingizni kiriting:')
 
 # ═══════════════════════════════════════════════
 # ID CHECK
@@ -402,7 +411,7 @@ async def p_no(c: types.CallbackQuery, state: FSMContext):
 async def chk(c: types.CallbackQuery, state: FSMContext):
     try:
         await c.answer()
-        await c.message.edit_text('Buyurtmangizni tekshirish uchun 5 xonali ID raqamingizni kiriting:', reply_markup=back_kb())
+        await c.message.answer('🔍 **Buyurtmangizni tekshirish uchun 5 xonali ID raqamingizni kiriting:**', parse_mode='Markdown')
         await state.set_state('chk')
     except Exception as e:
         logger.error(f"Error in check_order: {e}")
@@ -411,7 +420,7 @@ async def chk(c: types.CallbackQuery, state: FSMContext):
 async def chk_id(m: types.Message, state: FSMContext):
     oid = m.text.strip()
     if not oid.isdigit() or len(oid) != 5:
-        await m.answer('Iltimos, to\'g\'ri 5 xonali ID kiriting (masalan: 54921):', reply_markup=back_kb()); return
+        await m.answer('Iltimos, to\'g\'ri 5 xonali ID kiriting (masalan: 54921):'); return
     o = await get_akfa_order(oid)
     if not o:
         await m.answer('❌ Bunday ID topilmadi.', reply_markup=main_kb()); await state.clear(); return
