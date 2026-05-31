@@ -23,18 +23,30 @@ async def lifespan(app: FastAPI):
     # DB ni ishga tushuramiz
     await init_db()
     
-    # Tokenni tekshirish (faqat boshlanishini logga chiqaramiz)
+    # Tokenni tekshirish
     token_preview = f"{BOT_TOKEN[:10]}...{BOT_TOKEN[-5:]}"
-    logger.info(f"Bot ishga tushmoqda. Token: {token_preview}")
+    logger.info(f"Bot jonlantirilmoqda... Token: {token_preview}")
     
-    # Webhookni o'rnatamiz
+    # Webhookni tozalab, qaytadan o'rnatamiz (Reset)
     webhook_url = f"{PUBLIC_URL}/webhook/bot"
-    await bot.set_webhook(url=webhook_url, drop_pending_updates=True)
-    logger.info(f"Webhook o'rnatildi: {webhook_url}")
+    await bot.delete_webhook(drop_pending_updates=True)
+    await bot.set_webhook(
+        url=webhook_url,
+        drop_pending_updates=True,
+        allowed_updates=["message", "callback_query", "my_chat_member"],
+        max_connections=40
+    )
+    
+    # Holatni tekshiramiz
+    info = await bot.get_webhook_info()
+    logger.info(f"Webhook holati: {info.url}")
+    if not info.url:
+        logger.error("DIQQAT: Webhook o'rnatilmadi!")
+    
     yield
     # To'xtatishda webhookni o'chiramiz
-    await bot.delete_webhook()
-    logger.info("Webhook o'chirildi.")
+    # await bot.delete_webhook()
+    logger.info("Server to'xtatilmoqda.")
 
 app = FastAPI(title='TriPro Admin API', lifespan=lifespan)
 
