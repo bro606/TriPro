@@ -199,10 +199,17 @@ async def cancel_any(m: types.Message, state: FSMContext):
 @dp.message(Command('start'))
 async def start(m: types.Message):
     await save_user(m.from_user.id, m.from_user.username, m.from_user.first_name, m.from_user.last_name)
-    await m.answer(
-        f'Assalomu alaykum, {m.from_user.first_name or "Foydalanuvchi"}! '
-        f'TriPro ustaxonasiga xush kelibsiz.',
-        reply_markup=main_kb())
+    welcome_txt = (
+        f"Assalomu alaykum, {m.from_user.first_name}! 👋\n\n"
+        "TriPro ustaxonasiga xush kelibsiz! Uyingiz ko‘rki va mustahkamligi uchun biz doim xizmatingizdamiz.\n\n"
+        "Bizning asosiy bo‘limlarimiz:\n"
+        "🪟 **AKFA bo‘limi:** Zamonaviy deraza va eshik tizimlari.\n"
+        "🖼 **Oyna bo‘limi:** Oyna kesish xizmatlari.\n"
+        "🪵 **Yog‘och bo‘limi:** Eshiklar, qoliplar va asalarichilik uchun maxsus yog‘och uyalar.\n\n"
+        "✅ **Kafolat:** Biz bajargan barcha ishlarimizga 1 oylik rasmiy kafolat taqdim etamiz!\n\n"
+        "TriPro Mini App'imizga kiring, barcha xizmatlarimiz va namunalarimiz bilan yaqindan tanishing! 👇"
+    )
+    await m.answer(welcome_txt, reply_markup=main_kb(), parse_mode='Markdown')
 
 @dp.callback_query(F.data == 'to_menu')
 async def to_menu(c: types.CallbackQuery, state: FSMContext):
