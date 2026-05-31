@@ -273,8 +273,8 @@ async def p_glass(c: types.CallbackQuery, state: FSMContext):
     await state.update_data(glass_layer={'g1':'1 qavatli','g2':'2 qavatli'}[c.data])
     await state.set_state(AkfaForm.glass_color)
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="⚪ Oq", callback_query_data="co_oq"), InlineKeyboardButton(text="⚫ Qora", callback_query_data="co_qora")],
-        [InlineKeyboardButton(text="🟤 Jigarrang", callback_query_data="co_jig"), InlineKeyboardButton(text=BACK, callback_query_data="to_menu")]
+        [InlineKeyboardButton(text="⚪ Oq", callback_data="co_oq"), InlineKeyboardButton(text="⚫ Qora", callback_data="co_qora")],
+        [InlineKeyboardButton(text="🟤 Jigarrang", callback_data="co_jig"), InlineKeyboardButton(text=BACK, callback_data="to_menu")]
     ])
     await c.message.edit_text('🎨 **Oyna rangini tanlang:**', reply_markup=kb, parse_mode='Markdown')
 
@@ -285,8 +285,8 @@ async def p_glass_color(c: types.CallbackQuery, state: FSMContext):
     await state.update_data(glass_color=colors[c.data])
     await state.set_state(AkfaForm.glass_pattern)
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="✨ Gulli", callback_query_data="p_gulli"), InlineKeyboardButton(text="🖼️ Oddiy (gulsiz)", callback_query_data="p_oddiy")],
-        [InlineKeyboardButton(text=BACK, callback_query_data="to_menu")]
+        [InlineKeyboardButton(text="✨ Gulli", callback_data="p_gulli"), InlineKeyboardButton(text="🖼️ Oddiy (gulsiz)", callback_data="p_oddiy")],
+        [InlineKeyboardButton(text=BACK, callback_data="to_menu")]
     ])
     await c.message.edit_text('✨ **Oyna ko\'rinishini tanlang:**', reply_markup=kb, parse_mode='Markdown')
 
