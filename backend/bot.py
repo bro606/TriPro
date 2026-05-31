@@ -297,8 +297,8 @@ async def start(m: types.Message):
 
 @dp.message(Command('cancel'))
 @dp.message(Command('bosh_menu'))
-async def cancel(m: types.Message, s: FSMContext):
-    await s.clear()
+async def cancel(m: types.Message, state: FSMContext):
+    await state.clear()
     await m.answer('Asosiy menyu:', reply_markup=main_kb())
 
 # ═══════════════════════════════════════════════
@@ -306,25 +306,25 @@ async def cancel(m: types.Message, s: FSMContext):
 # ═══════════════════════════════════════════════
 
 @dp.callback_query(F.data == 'to_menu')
-async def to_menu(c: types.CallbackQuery, s: FSMContext):
+async def to_menu(c: types.CallbackQuery, state: FSMContext):
     try:
         await c.answer()
-        await s.clear()
+        await state.clear()
         await c.message.edit_text('Asosiy menyu:', reply_markup=main_kb())
     except Exception as e:
         logger.error(f"Error in to_menu: {e}")
 
 @dp.callback_query(F.data == 'new_order')
-async def new_order(c: types.CallbackQuery, s: FSMContext):
+async def new_order(c: types.CallbackQuery, state: FSMContext):
     try:
         await c.answer()
-        await s.set_state(AkfaForm.name)
+        await state.set_state(AkfaForm.name)
         await c.message.edit_text('Buyurtma berish uchun savollarga javob bering.\n\n1/9: Ismingizni kiriting:', reply_markup=back_kb())
     except Exception as e:
         logger.error(f"Error in new_order: {e}")
 
 @dp.callback_query(F.data == 'other_services')
-async def other_svc(c: types.CallbackQuery, s: FSMContext):
+async def other_svc(c: types.CallbackQuery, state: FSMContext):
     try:
         await c.answer()
         await c.message.edit_text(
@@ -341,9 +341,9 @@ async def other_svc(c: types.CallbackQuery, s: FSMContext):
 # ═══════════════════════════════════════════════
 
 @dp.message(AkfaForm.name, lambda m: m.text and m.text.strip())
-async def p_name(m: types.Message, s: FSMContext):
-    await s.update_data(name=m.text.strip())
-    await s.set_state(AkfaForm.surname)
+async def p_name(m: types.Message, state: FSMContext):
+    await state.update_data(name=m.text.strip())
+    await state.set_state(AkfaForm.surname)
     await m.answer('2/9: Familiyangizni kiriting:', reply_markup=back_kb())
 
 @dp.message(AkfaForm.name)
@@ -351,9 +351,9 @@ async def p_name_i(m: types.Message):
     await m.answer('Iltimos, ismingizni yozing:', reply_markup=back_kb())
 
 @dp.message(AkfaForm.surname, lambda m: m.text and m.text.strip())
-async def p_surname(m: types.Message, s: FSMContext):
-    await s.update_data(surname=m.text.strip())
-    await s.set_state(AkfaForm.phone)
+async def p_surname(m: types.Message, state: FSMContext):
+    await state.update_data(surname=m.text.strip())
+    await state.set_state(AkfaForm.phone)
     await m.answer('3/9: Telefon raqamingizni yuboring.\n\n"📱 Kontaktni ulash" tugmasini bosing yoki "⌨️ Raqamni yozish" ni tanlang:', reply_markup=phone_kb())
 
 @dp.message(AkfaForm.surname)
@@ -361,55 +361,56 @@ async def p_surname_i(m: types.Message):
     await m.answer('Iltimos, familiyangizni yozing:', reply_markup=back_kb())
 
 @dp.message(AkfaForm.phone, F.contact)
-async def p_ph_contact(m: types.Message, s: FSMContext):
-    await s.update_data(phone=m.contact.phone_number)
-    await s.set_state(AkfaForm.material)
+async def p_ph_contact(m: types.Message, state: FSMContext):
+    await state.update_data(phone=m.contact.phone_number)
+    await state.set_state(AkfaForm.material)
     await m.answer('4/9: Material turini tanlang:', reply_markup=mat_kb())
 
 @dp.message(AkfaForm.phone, F.text == '⌨️ Raqamni yozish')
-async def p_ph_manual(m: types.Message, s: FSMContext):
+async def p_ph_manual(m: types.Message, state: FSMContext):
     await m.answer('Telefon raqamingizni kiriting (masalan: +998901234567):', reply_markup=back_kb())
 
 @dp.message(AkfaForm.phone, lambda m: m.text and len(m.text.strip()) > 5 and m.text.strip() != BACK)
-async def p_ph_text(m: types.Message, s: FSMContext):
-    await s.update_data(phone=m.text.strip())
-    await s.set_state(AkfaForm.material)
+async def p_ph_text(m: types.Message, state: FSMContext):
+    await state.update_data(phone=m.text.strip())
+    await state.set_state(AkfaForm.material)
     await m.answer('4/9: Material turini tanlang:', reply_markup=mat_kb())
 
 @dp.message(AkfaForm.phone, F.text == BACK)
-async def p_ph_back(m: types.Message, s: FSMContext):
-    await s.clear(); await m.answer('Asosiy menyu:', reply_markup=main_kb())
+async def p_ph_back(m: types.Message, state: FSMContext):
+    await state.clear()
+    await m.answer('Asosiy menyu:', reply_markup=main_kb())
 
 @dp.message(AkfaForm.phone)
 async def p_ph_inv(m: types.Message):
     await m.answer('Iltimos, kontakt tugmasini bosing yoki raqamingizni yozing:', reply_markup=phone_kb())
 
 @dp.callback_query(AkfaForm.material, lambda c: c.data in ('mp','ma'))
-async def p_mat(c: types.CallbackQuery, s: FSMContext):
+async def p_mat(c: types.CallbackQuery, state: FSMContext):
     await c.answer()
-    await s.update_data(material={'mp':'Plastik','ma':'Alyumin'}[c.data])
-    await s.set_state(AkfaForm.glass_layer)
+    await state.update_data(material={'mp':'Plastik','ma':'Alyumin'}[c.data])
+    await state.set_state(AkfaForm.glass_layer)
     await c.message.edit_text('5/9: Oyna qavatini tanlang:', reply_markup=glass_kb())
 
 @dp.callback_query(AkfaForm.glass_layer, lambda c: c.data in ('g1','g2'))
-async def p_glass(c: types.CallbackQuery, s: FSMContext):
+async def p_glass(c: types.CallbackQuery, state: FSMContext):
     await c.answer()
-    await s.update_data(glass_layer={'g1':'1 qavatli','g2':'2 qavatli'}[c.data])
-    await s.set_state(AkfaForm.profile_color)
+    await state.update_data(glass_layer={'g1':'1 qavatli','g2':'2 qavatli'}[c.data])
+    await state.set_state(AkfaForm.profile_color)
     await c.message.edit_text('6/9: Profil rangini tanlang:', reply_markup=color_kb())
 
 @dp.callback_query(AkfaForm.profile_color, lambda c: c.data in ('coq','cji','cant','cbosh'))
-async def p_color(c: types.CallbackQuery, s: FSMContext):
+async def p_color(c: types.CallbackQuery, state: FSMContext):
     await c.answer()
-    await s.update_data(profile_color={'coq':'Oq','cji':'Jigarrang','cant':'Antratsit','cbosh':'Boshqa'}[c.data])
-    await s.set_state(AkfaForm.dimensions)
+    await state.update_data(profile_color={'coq':'Oq','cji':'Jigarrang','cant':'Antratsit','cbosh':'Boshqa'}[c.data])
+    await state.set_state(AkfaForm.dimensions)
     await c.message.delete()
     await c.message.answer('7/9: Taxminiy o\'lchamlarni yozing (masalan: 80x90):', reply_markup=back_kb())
 
 @dp.message(AkfaForm.dimensions, lambda m: m.text and m.text.strip())
-async def p_dim(m: types.Message, s: FSMContext):
-    await s.update_data(dimensions=m.text.strip())
-    await s.set_state(AkfaForm.quantity)
+async def p_dim(m: types.Message, state: FSMContext):
+    await state.update_data(dimensions=m.text.strip())
+    await state.set_state(AkfaForm.quantity)
     await m.answer('8/9: Mahsulot sonini yozing (masalan: 2):', reply_markup=back_kb())
 
 @dp.message(AkfaForm.dimensions)
@@ -417,15 +418,15 @@ async def p_dim_i(m: types.Message):
     await m.answer('Iltimos, o\'lchamlarni yozing (masalan: 80x90):', reply_markup=back_kb())
 
 @dp.message(AkfaForm.quantity, lambda m: m.text and m.text.strip().isdigit() and int(m.text.strip()) > 0)
-async def p_qty(m: types.Message, s: FSMContext):
-    await s.update_data(quantity=int(m.text.strip()))
-    d = await s.get_data()
+async def p_qty(m: types.Message, state: FSMContext):
+    await state.update_data(quantity=int(m.text.strip()))
+    d = await state.get_data()
     txt = (f'📋 Buyurtmangiz tasdiqlash uchun tayyor:\n\n'
            f'👤 Ism: {d["name"]} {d["surname"]}\n📞 Telefon: {d["phone"]}\n'
            f'🛠 Material: {d["material"]}\n🪟 Oyna qavati: {d["glass_layer"]}\n'
            f'🎨 Rang: {d["profile_color"]}\n📐 O\'lcham: {d["dimensions"]}\n'
            f'📦 Soni: {d["quantity"]} ta\n\nHammasi to\'g\'rimi?')
-    await s.set_state(AkfaForm.confirm)
+    await state.set_state(AkfaForm.confirm)
     await m.answer(txt, reply_markup=confirm_kb())
 
 @dp.message(AkfaForm.quantity)
@@ -433,13 +434,13 @@ async def p_qty_i(m: types.Message):
     await m.answer('Iltimos, musbat son kiriting (masalan: 2):', reply_markup=back_kb())
 
 @dp.callback_query(AkfaForm.confirm, lambda c: c.data == 'cy')
-async def p_yes(c: types.CallbackQuery, s: FSMContext):
+async def p_yes(c: types.CallbackQuery, state: FSMContext):
     await c.answer()
-    d = await s.get_data()
+    d = await state.get_data()
     oid = await save_akfa_order(c.from_user.id, d.get('name',''), d.get('surname',''), d.get('phone',''),
                           d.get('material',''), d.get('glass_layer',''), d.get('profile_color',''),
                           d.get('dimensions',''), d.get('quantity',1))
-    await s.clear()
+    await state.clear()
     await c.message.edit_text(
         f'✅ Buyurtmangiz qabul qilindi. ID: {oid}\n\n'
         f'👤 Ism: {d["name"]} {d["surname"]}\n📞 Telefon: {d["phone"]}\n'
@@ -452,9 +453,10 @@ async def p_yes(c: types.CallbackQuery, s: FSMContext):
         reply_markup=offer_kb())
 
 @dp.callback_query(AkfaForm.confirm, lambda c: c.data == 'cr')
-async def p_no(c: types.CallbackQuery, s: FSMContext):
-    await c.answer(); await s.clear()
-    await s.set_state(AkfaForm.name)
+async def p_no(c: types.CallbackQuery, state: FSMContext):
+    await c.answer()
+    await state.clear()
+    await state.set_state(AkfaForm.name)
     await c.message.edit_text('Buyurtma berish uchun savollarga javob bering.\n\n1/9: Ismingizni kiriting:', reply_markup=back_kb())
 
 # ═══════════════════════════════════════════════
@@ -462,22 +464,22 @@ async def p_no(c: types.CallbackQuery, s: FSMContext):
 # ═══════════════════════════════════════════════
 
 @dp.callback_query(F.data == 'check_order')
-async def chk(c: types.CallbackQuery, s: FSMContext):
+async def chk(c: types.CallbackQuery, state: FSMContext):
     try:
         await c.answer()
         await c.message.edit_text('Buyurtmangizni tekshirish uchun 5 xonali ID raqamingizni kiriting:', reply_markup=back_kb())
-        await s.set_state('chk')
+        await state.set_state('chk')
     except Exception as e:
         logger.error(f"Error in check_order: {e}")
 
 @dp.message(StateFilter('chk'))
-async def chk_id(m: types.Message, s: FSMContext):
+async def chk_id(m: types.Message, state: FSMContext):
     oid = m.text.strip()
     if not oid.isdigit() or len(oid) != 5:
         await m.answer('Iltimos, to\'g\'ri 5 xonali ID kiriting (masalan: 54921):', reply_markup=back_kb()); return
     o = await get_akfa_order(oid)
     if not o:
-        await m.answer('❌ Bunday ID topilmadi.', reply_markup=main_kb()); await s.clear(); return
+        await m.answer('❌ Bunday ID topilmadi.', reply_markup=main_kb()); await state.clear(); return
     sm = {'pending':'⏳ Kutilmoqda','material_delivered':'🚚 Material olib kelindi','assembling':'🔧 Yig\'ilmoqda','cutting':'🪟 Oyna kesilmoqda','ready':'📦 Tayyor va yetkazilmoqda'}
     await m.answer(
         f'🔍 Buyurtma ID: {o["order_id"]}\n\n'
@@ -486,61 +488,63 @@ async def chk_id(m: types.Message, s: FSMContext):
         f'🎨 Rang: {o["profile_color"]}\n📐 O\'lcham: {o["dimensions"]}\n'
         f'📦 Soni: {o["quantity"]} ta\n📊 Holati: {sm.get(o["status"],o["status"])}\n'
         f'📅 Yaratilgan: {o["created_at"]}', reply_markup=main_kb())
-    await s.clear()
+    await state.clear()
 
 # ═══════════════════════════════════════════════
 # PROFILAKTIKA
 # ═══════════════════════════════════════════════
 
 @dp.callback_query(F.data == 'np')
-async def np_start(c: types.CallbackQuery, s: FSMContext):
+async def np_start(c: types.CallbackQuery, state: FSMContext):
     try:
         await c.answer()
-        await s.set_state(ProfilaktikaForm.location)
+        await state.set_state(ProfilaktikaForm.location)
         await c.message.edit_text('🛡 Profilaktika xizmati\n\nManzilingizni yuboring yoki yozing (masalan: Farg\'ona sh., Navoiy ko\'ch. 15):', reply_markup=loc_kb())
     except Exception as e:
         logger.error(f"Error in np_start: {e}")
 
 @dp.message(ProfilaktikaForm.location, F.location)
-async def np_loc_share(m: types.Message, s: FSMContext):
-    await s.update_data(location=f'{m.location.latitude}, {m.location.longitude}')
-    await s.set_state(ProfilaktikaForm.time)
+async def np_loc_share(m: types.Message, state: FSMContext):
+    await state.update_data(location=f'{m.location.latitude}, {m.location.longitude}')
+    await state.set_state(ProfilaktikaForm.time)
     await m.answer('Qulay vaqtni tanlang:', reply_markup=time_kb())
 
 @dp.message(ProfilaktikaForm.location, F.text == '✏️ Manzilni yozish')
-async def np_loc_manual(m: types.Message, s: FSMContext):
+async def np_loc_manual(m: types.Message, state: FSMContext):
     await m.answer('Manzilingizni yozing (masalan: Farg\'ona sh., Navoiy ko\'ch. 15):', reply_markup=back_kb())
 
 @dp.message(ProfilaktikaForm.location, lambda m: m.text and len(m.text.strip()) > 3 and m.text.strip() != BACK)
-async def np_loc_text(m: types.Message, s: FSMContext):
-    await s.update_data(location=m.text.strip())
-    await s.set_state(ProfilaktikaForm.time)
+async def np_loc_text(m: types.Message, state: FSMContext):
+    await state.update_data(location=m.text.strip())
+    await state.set_state(ProfilaktikaForm.time)
     await m.answer('Qulay vaqtni tanlang:', reply_markup=time_kb())
 
 @dp.message(ProfilaktikaForm.location, F.text == BACK)
-async def np_loc_back(m: types.Message, s: FSMContext):
-    await s.clear(); await m.answer('Asosiy menyu:', reply_markup=main_kb())
+async def np_loc_back(m: types.Message, state: FSMContext):
+    await state.clear()
+    await m.answer('Asosiy menyu:', reply_markup=main_kb())
 
 @dp.message(ProfilaktikaForm.location)
 async def np_loc_inv(m: types.Message):
     await m.answer('Iltimos, joylashuv yuboring yoki manzilni yozing:', reply_markup=loc_kb())
 
-@dp.callback_query(ProfilaktikaForm.time, lambda c: c.data.startswith('t'))
-async def np_time(c: types.CallbackQuery, s: FSMContext):
+@dp.callback_query(ProfilaktikaForm.time, lambda c: c.data in ('t0900','t1100','t1400','t1600'))
+async def p_time(c: types.CallbackQuery, state: FSMContext):
     await c.answer()
     tm = {'t0900':'09:00 - 11:00','t1100':'11:00 - 13:00','t1400':'14:00 - 16:00','t1600':'16:00 - 18:00'}
     ts = tm[c.data]
-    d = await s.get_data()
+    d = await state.get_data()
     u = c.from_user
     await save_profilaktika(u.id, u.first_name or '', u.last_name or '', '', d.get('location',''), ts)
-    await s.clear()
+    await state.clear()
     await c.message.edit_text(
         f'✅ Profilaktika xizmatiga yozildingiz!\n\n📍 Manzil: {d["location"]}\n⏰ Vaqt: {ts}\n\nMutaxassisimiz belgilangan vaqtda siz bilan bog\'lanadi.',
         reply_markup=main_kb())
 
 @dp.callback_query(ProfilaktikaForm.time, lambda c: c.data == 'to_menu')
-async def np_time_back(c: types.CallbackQuery, s: FSMContext):
-    await c.answer(); await s.clear()
+async def np_time_back(c: types.CallbackQuery, state: FSMContext):
+    await c.answer()
+    await state.clear()
     await c.message.edit_text('Asosiy menyu:', reply_markup=main_kb())
 
 # ═══════════════════════════════════════════════
@@ -548,7 +552,6 @@ async def np_time_back(c: types.CallbackQuery, s: FSMContext):
 # ═══════════════════════════════════════════════
 
 async def run_bot_polling():
-    # Bu funksiya faqat lokal test qilish uchun qoldi
     await init_db()
     await bot.delete_webhook(drop_pending_updates=True)
     logger.info('Bot polling (LOCAL MODE)...')
