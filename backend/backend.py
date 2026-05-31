@@ -18,8 +18,6 @@ PORT = int(os.getenv('PORT', '10000'))
 PUBLIC_URL = os.getenv('PUBLIC_URL', 'https://tripro.onrender.com').strip()
 if PUBLIC_URL.endswith('/'): PUBLIC_URL = PUBLIC_URL[:-1]
 
-import asyncio
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # MA'LUMOTLAR BAZASINI ISHGA TUSHIRAMIZ
@@ -27,29 +25,41 @@ async def lifespan(app: FastAPI):
     
     # BOT TOKENINI TEKSHIRAMIZ
     token_preview = f"{BOT_TOKEN[:10]}...{BOT_TOKEN[-5:]}"
-    logger.info(f"===> Bot professional rejimda ishga tushirildi. Token: {token_preview}")
+    logger.info(f"===> Bot professional rejimda (WEBHOOK) ishga tushirildi. Token: {token_preview}")
     
-    # WEBHOOKLARNI TOZALAYMIZ (muammolarni oldini olish uchun)
+    # WEBHOOKNI O'RNATAMIZ (Bu botning Render'da uxlab qolmasligini ta'minlaydi)
+    webhook_url = f"{PUBLIC_URL}/webhook/bot"
     await bot.delete_webhook(drop_pending_updates=True)
+    await bot.set_webhook(
+        url=webhook_url,
+        drop_pending_updates=True,
+        allowed_updates=["message", "callback_query", "my_chat_member"],
+        max_connections=40
+    )
     
-    # POLLINGNI FONDA ISHGA TUSHIRAMIZ (Xizmatingiz darajasi: Super)
-    # Bu usul Uptime Robot bilan birgalikda eng barqaror ishlaydi.
-    polling_task = asyncio.create_task(dp.start_polling(bot))
-    logger.info("===> Bot polling (background task) boshlandi.")
+    info = await bot.get_webhook_info()
+    logger.info(f"===> Webhook muvaffaqiyatli o'rnatildi: {info.url}")
     
     yield
-    # TO'XTATISHDA TOZALASH
-    polling_task.cancel()
+    # To'xtatishda tozalash shart emas (webhook tursin)
     logger.info("===> Server to'xtatilmoqda.")
 
 app = FastAPI(title='TriPro Admin API', lifespan=lifespan)
 
-# Webhook endpoitlari endi kerak emas, lekin xato bermasligi uchun qoldiramiz 
-# yoki o'chirib tashlagan ma'qul. Biz toza kod uchun o'chirib tashlaymiz.
+@app.post('/webhook/bot')
+async def telegram_webhook(update: dict):
+    # Telegramdan kelgan xabarlarni qabul qilish va botga proksi qilish
+    try:
+        telegram_update = types.Update.model_validate(update, context={"bot": bot})
+        await dp.feed_update(bot=bot, update=telegram_update)
+        return {"status": "ok"}
+    except Exception as e:
+        logger.error(f"Webhook process error: {e}")
+        return {"status": "error"}
 
 @app.api_route('/', methods=['GET', 'HEAD'])
 async def health():
-    return {"status": "active", "service": "TriPro Professional Bot", "mode": "polling"}
+    return {"status": "active", "service": "TriPro Professional Bot", "mode": "webhook"}
 
 # ──────────────────────────────────────────────
 # Admin HTML
