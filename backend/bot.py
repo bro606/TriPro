@@ -149,10 +149,10 @@ def glass_kb():
 
 def color_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Oq', callback_data='coq')],
-        [InlineKeyboardButton(text='Jigarrang', callback_data='cji')],
-        [InlineKeyboardButton(text='Antratsit', callback_data='cant')],
-        [InlineKeyboardButton(text='Boshqa', callback_data='cbosh')],
+        [InlineKeyboardButton(text='⚪ Oq', callback_data='coq')],
+        [InlineKeyboardButton(text='🟤 Jigarrang', callback_data='cji')],
+        [InlineKeyboardButton(text='⚫ Antratsit', callback_data='cant')],
+        [InlineKeyboardButton(text='🎨 Boshqa', callback_data='cbosh')],
         [InlineKeyboardButton(text=BACK, callback_data='to_menu')]])
 
 def confirm_kb():
@@ -310,7 +310,7 @@ async def p_glass_pattern(c: types.CallbackQuery, state: FSMContext):
     patterns = {"p_gulli":"Gulli", "p_oddiy":"Oddiy (gulsiz)"}
     await state.update_data(glass_pattern=patterns[c.data])
     await state.set_state(AkfaForm.profile_color)
-    await c.message.edit_text('🖌️ **Profil rangini tanlang:**', reply_markup=color_kb(), parse_mode='Markdown')
+    await c.message.edit_text('🖌️ **Buyurtma qilayotgan profilingiz rangini tanlang:**', reply_markup=color_kb(), parse_mode='Markdown')
 
 @dp.callback_query(AkfaForm.profile_color, lambda c: c.data in ('coq','cji','cant','cbosh'))
 async def p_color(c: types.CallbackQuery, state: FSMContext):
