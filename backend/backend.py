@@ -9,7 +9,7 @@ from pydantic import BaseModel
 import uvicorn
 
 from aiogram import types
-from bot import bot, dp, get_akfa_order, get_all_akfa, update_akfa, get_all_prof, update_prof, get_combined_orders, init_db, logger
+from bot import bot, dp, BOT_TOKEN, get_akfa_order, get_all_akfa, update_akfa, get_all_prof, update_prof, get_combined_orders, init_db, logger
 
 PORT = int(os.getenv('PORT', '10000'))
 
@@ -22,6 +22,11 @@ if PUBLIC_URL.endswith('/'): PUBLIC_URL = PUBLIC_URL[:-1]
 async def lifespan(app: FastAPI):
     # DB ni ishga tushuramiz
     await init_db()
+    
+    # Tokenni tekshirish (faqat boshlanishini logga chiqaramiz)
+    token_preview = f"{BOT_TOKEN[:10]}...{BOT_TOKEN[-5:]}"
+    logger.info(f"Bot ishga tushmoqda. Token: {token_preview}")
+    
     # Webhookni o'rnatamiz
     webhook_url = f"{PUBLIC_URL}/webhook/bot"
     await bot.set_webhook(url=webhook_url, drop_pending_updates=True)
@@ -41,11 +46,12 @@ app = FastAPI(title='TriPro Admin API', lifespan=lifespan)
 async def telegram_webhook(update: dict):
     # Telegram xabarlarini qabul qilish
     try:
-        telegram_update = types.Update(**update)
+        # logger.info(f"Yangi so'rov keldi: {list(update.keys())}")
+        telegram_update = types.Update.model_validate(update, context={"bot": bot})
         await dp.feed_update(bot=bot, update=telegram_update)
         return {"status": "ok"}
     except Exception as e:
-        logger.error(f"Webhook xatosi: {e}")
+        logger.error(f"Webhook xatosi: {e}", exc_info=True)
         return {"status": "error", "message": str(e)}
 
 @app.api_route('/', methods=['GET', 'HEAD'])
