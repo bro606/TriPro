@@ -58,8 +58,9 @@ class ThrottlingMiddleware(BaseMiddleware):
         self.users[user_id] = now
         return await handler(event, data)
 
-dp.message.middleware(ThrottlingMiddleware())
-dp.callback_query.middleware(ThrottlingMiddleware())
+# Middleware vaqtincha o'chirildi (Anti-flood muammosini istisno qilish uchun)
+# dp.message.middleware(ThrottlingMiddleware())
+# dp.callback_query.middleware(ThrottlingMiddleware())
 
 # ═══════════════════════════════════════════════
 # GLOBAL ERROR HANDLER
@@ -67,14 +68,14 @@ dp.callback_query.middleware(ThrottlingMiddleware())
 
 @dp.error()
 async def error_handler(event: ErrorEvent):
-    logger.error(f"Kutilmagan xato: {event.exception}", exc_info=True)
+    logger.error(f"❌ KUTILMAGAN XATO: {event.exception}", exc_info=True)
     try:
-        if event.update.message:
-            await event.update.message.answer("⚠️ Kechirasiz, texnik xatolik yuz berdi. Iltimos, /start buyrug'ini tushirib ko'ring.")
-        elif event.update.callback_query:
-            await event.update.callback_query.answer("⚠️ Texnik xatolik! /start bosing.", show_alert=True)
-    except:
-        pass
+        if event.update.callback_query:
+            await event.update.callback_query.answer("⚠️ Texnik xatolik! Qaytadan urinib ko'ring.", show_alert=True)
+        elif event.update.message:
+            await event.update.message.answer("⚠️ Kechirasiz, xatolik yuz berdi. Iltimos, /start bosing.")
+    except Exception as e:
+        logger.error(f"Error handler xatosi: {e}")
 
 # ═══════════════════════════════════════════════
 # FSM STATES
