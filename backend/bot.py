@@ -120,8 +120,8 @@ def main_kb():
         [InlineKeyboardButton(text='🌐 Saytni ko\'rish', url=SITE_URL)],
         [InlineKeyboardButton(text='🪟 AKFA buyurtmasi', callback_data='new_order')],
         [InlineKeyboardButton(text='🔍 ID tekshirish', callback_data='check_order')],
-        [InlineKeyboardButton(text='🛠 Usta chaqirish', callback_data='call_master')],
-        [InlineKeyboardButton(text='🛠 Boshqa xizmatlar', callback_data='other_services')],
+        [InlineKeyboardButton(text='🛠 Texnik xizmat', callback_data='call_master')],
+        [InlineKeyboardButton(text='⚙️ Boshqa xizmatlar', callback_data='other_services')],
     ])
 
 def back_kb():
@@ -211,7 +211,7 @@ async def start(m: types.Message):
         "Bizning asosiy bo‘limlarimiz:\n"
         "🪟 **AKFA bo‘limi:** Zamonaviy deraza va eshik tizimlari.\n"
         "🖼 **Oyna bo‘limi:** Oyna kesish xizmatlari.\n"
-        "🪵 **Yog‘och bo‘limi:** Eshiklar, qoliplar va asalarichilik uchun maxsus yog‘och uyalar.\n\n"
+        "🪵 **Yog‘och bo‘limi:** Asalarichilik uchun maxsus yog‘och uyalar.\n\n"
         "✅ **Kafolat:** Biz bajargan barcha ishlarimizga 1 oylik rasmiy kafolat taqdim etamiz!\n\n"
         "TriPro Mini App'imizga kiring, barcha xizmatlarimiz va namunalarimiz bilan yaqindan tanishing! 👇"
     )
