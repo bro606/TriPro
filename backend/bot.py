@@ -16,7 +16,9 @@ import time
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-BOT_TOKEN = (os.getenv('BOT_TOKEN') or '8745687733:AAF_yQ-euksdfk2LfnmJXm_8Qaw0_yVqVpY').strip()
+BOT_TOKEN = os.getenv('BOT_TOKEN', '').strip()
+if not BOT_TOKEN:
+    logger.error("DIQQAT: BOT_TOKEN topilmadi! Render Environment Variables-ni tekshiring.")
 ADMIN_USERNAME = os.getenv('ADMIN_USERNAME', 'Username')
 SITE_URL = 'https://tri-pro-bro606s-projects.vercel.app'
 BASE_DIR = Path(__file__).parent
