@@ -1,26 +1,25 @@
-# TriPro Telegram Bot - Aiogram 3.x
-# FSM: AKFA (9 bosqich) + Profilaktika (2 bosqich)
-# SQLite ma'lumotlar bazasi: akfa_orders va profilaktika jadvallari
-
-import asyncio, os, random, aiosqlite, logging
+import asyncio, os, random, logging, time
 from pathlib import Path
 from aiogram import Bot, Dispatcher, types, F, BaseMiddleware
-from aiogram.filters import Command, StateFilter
+from aiogram.filters import Command, StateFilter, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, ErrorEvent
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, ErrorEvent, ReplyKeyboardRemove
 from aiogram.fsm.storage.memory import MemoryStorage
 from typing import Any, Awaitable, Callable, Dict
-import time
+
+# Yangi database modulidan import
+from .database import (
+    init_db, save_akfa_order, get_akfa_order, save_maintenance_request, 
+    save_user, get_orders_for_maintenance
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 BOT_TOKEN = os.getenv('BOT_TOKEN', '').strip()
-if not BOT_TOKEN:
-    logger.error("DIQQAT: BOT_TOKEN topilmadi! Render Environment Variables-ni tekshiring.")
-ADMIN_USERNAME = os.getenv('ADMIN_USERNAME', 'Username')
-SITE_URL = 'https://tri-pro-bro606s-projects.vercel.app'
+ADMIN_USERNAME = os.getenv('ADMIN_USERNAME', 'TriPro_Admin')
+SITE_URL = 'https://tripro.vercel.app'
 BASE_DIR = Path(__file__).parent
 LOCAL_DB = str(BASE_DIR / 'tripro.db')
 
@@ -94,121 +93,14 @@ class AkfaForm(StatesGroup):
     quantity = State()
     confirm = State()
 
+class MaintenanceForm(StatesGroup):
+    problem = State()
+
 class ProfilaktikaForm(StatesGroup):
     location = State()
     time = State()
 
-# ═══════════════════════════════════════════════
-# SQLITE DATABASE
-# ═══════════════════════════════════════════════
-
-async def init_db():
-    async with aiosqlite.connect(LOCAL_DB) as conn:
-        await conn.execute('''CREATE TABLE IF NOT EXISTS akfa_orders (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            order_id TEXT UNIQUE,
-            telegram_id INTEGER,
-            name TEXT, surname TEXT, phone TEXT,
-            material TEXT, glass_layer TEXT, profile_color TEXT,
-            dimensions TEXT, quantity INTEGER DEFAULT 1,
-            status TEXT DEFAULT 'pending',
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )''')
-        await conn.execute('''CREATE TABLE IF NOT EXISTS profilaktika (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            telegram_id INTEGER,
-            name TEXT, surname TEXT, phone TEXT,
-            location TEXT, time_slot TEXT,
-            status TEXT DEFAULT 'pending',
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )''')
-        await conn.commit()
-
-async def _gen_oid():
-    async with aiosqlite.connect(LOCAL_DB) as conn:
-        async with conn.execute('SELECT order_id FROM akfa_orders WHERE order_id IS NOT NULL') as cursor:
-            rows = await cursor.fetchall()
-            ids = {r[0] for r in rows}
-    
-    for _ in range(100):
-        oid = str(random.randint(10000, 99999))
-        if oid not in ids:
-            return oid
-    return str(random.randint(10000, 99999))
-
-async def save_akfa_order(tg, name, surname, phone, material, glass, color, dims, qty=1):
-    oid = await _gen_oid()
-    async with aiosqlite.connect(LOCAL_DB) as conn:
-        await conn.execute('INSERT INTO akfa_orders (order_id,telegram_id,name,surname,phone,material,glass_layer,profile_color,dimensions,quantity) VALUES (?,?,?,?,?,?,?,?,?,?)',
-                     (oid, tg, name, surname, phone, material, glass, color, dims, qty))
-        await conn.commit()
-    return oid
-
-async def get_akfa_order(oid):
-    async with aiosqlite.connect(LOCAL_DB) as conn:
-        conn.row_factory = aiosqlite.Row
-        async with conn.execute('SELECT * FROM akfa_orders WHERE order_id = ?', (oid,)) as cursor:
-            r = await cursor.fetchone()
-            return dict(r) if r else None
-
-async def get_all_akfa():
-    async with aiosqlite.connect(LOCAL_DB) as conn:
-        conn.row_factory = aiosqlite.Row
-        async with conn.execute('SELECT * FROM akfa_orders ORDER BY created_at DESC') as cursor:
-            rows = await cursor.fetchall()
-            return [dict(r) for r in rows]
-
-async def update_akfa(oid, status):
-    if status not in ('pending','material_delivered','assembling','cutting','ready'):
-        return None
-    async with aiosqlite.connect(LOCAL_DB) as conn:
-        conn.row_factory = aiosqlite.Row
-        await conn.execute('UPDATE akfa_orders SET status = ? WHERE order_id = ?', (status, oid))
-        await conn.commit()
-        async with conn.execute('SELECT * FROM akfa_orders WHERE order_id = ?', (oid,)) as cursor:
-            r = await cursor.fetchone()
-            return dict(r) if r else None
-
-async def save_profilaktika(tg, name, surname, phone, location, time_slot):
-    async with aiosqlite.connect(LOCAL_DB) as conn:
-        await conn.execute('INSERT INTO profilaktika (telegram_id,name,surname,phone,location,time_slot) VALUES (?,?,?,?,?,?)',
-                     (tg, name, surname, phone, location, time_slot))
-        await conn.commit()
-
-async def get_all_prof():
-    async with aiosqlite.connect(LOCAL_DB) as conn:
-        conn.row_factory = aiosqlite.Row
-        async with conn.execute('SELECT * FROM profilaktika ORDER BY created_at DESC') as cursor:
-            rows = await cursor.fetchall()
-            return [dict(r) for r in rows]
-
-async def update_prof(pk, status):
-    if status not in ('pending','accepted','completed'):
-        return None
-    async with aiosqlite.connect(LOCAL_DB) as conn:
-        conn.row_factory = aiosqlite.Row
-        await conn.execute('UPDATE profilaktika SET status = ? WHERE id = ?', (status, pk))
-        await conn.commit()
-        async with conn.execute('SELECT * FROM profilaktika WHERE id = ?', (pk,)) as cursor:
-            r = await cursor.fetchone()
-            return dict(r) if r else None
-
-async def get_combined_orders():
-    res = []
-    akfa = await get_all_akfa()
-    for o in akfa:
-        res.append({'id':f'akfa_{o["id"]}','pk':o['id'],'type':'akfa',
-            'order_id':o['order_id'] or '','client':f"{o['name'] or ''} {o['surname'] or ''}".strip() or str(o['telegram_id']),
-            'phone':o['phone'] or '','info':f"Material: {o['material']}, Oyna: {o['glass_layer']}, Rang: {o['profile_color']}, O'lcham: {o['dimensions']}, Soni: {o['quantity']}",
-            'status':o['status'],'created_at':o['created_at']})
-    prof = await get_all_prof()
-    for p in prof:
-        res.append({'id':f'prof_{p["id"]}','pk':p['id'],'type':'profilaktika','order_id':'',
-            'client':f"{p['name'] or ''} {p['surname'] or ''}".strip() or str(p['telegram_id']),
-            'phone':p['phone'] or '','info':f"Manzil: {p['location']}, Vaqt: {p['time_slot']}",
-            'status':p['status'],'created_at':p['created_at']})
-    res.sort(key=lambda x: x['created_at'], reverse=True)
-    return res
+# Database logic is now in database.py
 
 # ═══════════════════════════════════════════════
 # KEYBOARDS
@@ -221,6 +113,7 @@ def main_kb():
         [InlineKeyboardButton(text='🌐 Saytni ko\'rish', url=SITE_URL)],
         [InlineKeyboardButton(text='🪟 AKFA buyurtmasi', callback_data='new_order')],
         [InlineKeyboardButton(text='🔍 ID tekshirish', callback_data='check_order')],
+        [InlineKeyboardButton(text='🛠 Usta chaqirish', callback_data='call_master')],
         [InlineKeyboardButton(text='🛠 Boshqa xizmatlar', callback_data='other_services')],
     ])
 
@@ -289,32 +182,33 @@ def offer_kb():
 # START / CANCEL
 # ═══════════════════════════════════════════════
 
-@dp.message(Command('start'))
-async def start(m: types.Message):
-    await m.answer(
-        f'Assalomu alaykum, {m.from_user.first_name or "Foydalanuvchi"}! '
-        f'TriPro ustaxonasiga xush kelibsiz. '
-        f'Biz sizga sifatli AKFA romlar, yog\'och va shisha mahsulotlarini yetkazib beramiz.',
-        reply_markup=main_kb())
+# ═══════════════════════════════════════════════
+# GLOBAL HANDLERS (BASH MENU MUAMMOSI YECHIMI)
+# ═══════════════════════════════════════════════
 
+@dp.message(F.text == BACK)
 @dp.message(Command('cancel'))
 @dp.message(Command('bosh_menu'))
-async def cancel(m: types.Message, state: FSMContext):
+async def cancel_any(m: types.Message, state: FSMContext):
+    """Barcha holatlarda (FSM ichida bo'lsa ham) ishlaydi va menyuga qaytaradi"""
     await state.clear()
-    await m.answer('Asosiy menyu:', reply_markup=main_kb())
+    await m.answer('🤖 **Asosiy menyu:**', reply_markup=ReplyKeyboardRemove())
+    await m.answer('Quyidagi xizmatlardan birini tanlang:', reply_markup=main_kb(), parse_mode='Markdown')
 
-# ═══════════════════════════════════════════════
-# MENU CALLBACKS
-# ═══════════════════════════════════════════════
+@dp.message(Command('start'))
+async def start(m: types.Message):
+    await save_user(m.from_user.id, m.from_user.username, m.from_user.first_name, m.from_user.last_name)
+    await m.answer(
+        f'Assalomu alaykum, {m.from_user.first_name or "Foydalanuvchi"}! '
+        f'TriPro ustaxonasiga xush kelibsiz.',
+        reply_markup=main_kb())
 
 @dp.callback_query(F.data == 'to_menu')
 async def to_menu(c: types.CallbackQuery, state: FSMContext):
-    try:
-        await c.answer()
-        await state.clear()
-        await c.message.edit_text('Asosiy menyu:', reply_markup=main_kb())
-    except Exception as e:
-        logger.error(f"Error in to_menu: {e}")
+    await state.clear()
+    await c.answer()
+    await c.message.answer('🤖 **Asosiy menyu:**', reply_markup=main_kb(), parse_mode='Markdown')
+    await c.message.delete()
 
 @dp.callback_query(F.data == 'new_order')
 async def new_order(c: types.CallbackQuery, state: FSMContext):
@@ -436,9 +330,27 @@ async def p_qty(m: types.Message, state: FSMContext):
     await state.set_state(AkfaForm.confirm)
     await m.answer(txt, reply_markup=confirm_kb(), parse_mode='Markdown')
 
-@dp.message(AkfaForm.quantity)
-async def p_qty_i(m: types.Message):
-    await m.answer('Iltimos, musbat son kiriting (masalan: 2):', reply_markup=back_kb())
+# ═══════════════════════════════════════════════
+# MAINTENANCE REQUEST (USTA CHAQIRISH)
+# ═══════════════════════════════════════════════
+
+@dp.callback_query(F.data == 'call_master')
+@dp.callback_query(F.data == 'np') # Eskisini ham qo'llab-quvvatlaymiz
+async def c_master(c: types.CallbackQuery, state: FSMContext):
+    await c.answer()
+    await state.set_state(MaintenanceForm.problem)
+    await c.message.delete()
+    await c.message.answer("🛠 **Usta chaqirish (Profilaktika)**\n\nIltimos, muammoni qisqacha yozib yuboring (masalan: o'ynak qisilib qoldi):", 
+                         reply_markup=back_kb(), parse_mode='Markdown')
+
+@dp.message(MaintenanceForm.problem, F.text)
+async def p_problem(m: types.Message, state: FSMContext):
+    if m.text == BACK: return
+    await save_maintenance_request(m.from_user.id, m.from_user.full_name, 'Kontakt bazada', m.text.strip())
+    await state.clear()
+    await m.answer("✅ **Sizning so'rovingiz qabul qilindi.**\nMutaxassislarimiz tez orada bog'lanishadi.", 
+                 reply_markup=ReplyKeyboardRemove())
+    await m.answer("Boshqa xizmat kerakmi?", reply_markup=main_kb())
 
 @dp.callback_query(AkfaForm.confirm, lambda c: c.data == 'cy')
 async def p_yes(c: types.CallbackQuery, state: FSMContext):
@@ -500,70 +412,13 @@ async def chk_id(m: types.Message, state: FSMContext):
     await state.clear()
 
 # ═══════════════════════════════════════════════
-# PROFILAKTIKA
-# ═══════════════════════════════════════════════
-
-@dp.callback_query(F.data == 'np')
-async def np_start(c: types.CallbackQuery, state: FSMContext):
-    try:
-        await c.answer()
-        await state.set_state(ProfilaktikaForm.location)
-        await c.message.edit_text('🛡 Profilaktika xizmati\n\nManzilingizni yuboring yoki yozing (masalan: Farg\'ona sh., Navoiy ko\'ch. 15):', reply_markup=loc_kb())
-    except Exception as e:
-        logger.error(f"Error in np_start: {e}")
-
-@dp.message(ProfilaktikaForm.location, F.location)
-async def np_loc_share(m: types.Message, state: FSMContext):
-    await state.update_data(location=f'{m.location.latitude}, {m.location.longitude}')
-    await state.set_state(ProfilaktikaForm.time)
-    await m.answer('Qulay vaqtni tanlang:', reply_markup=time_kb())
-
-@dp.message(ProfilaktikaForm.location, F.text == '✏️ Manzilni yozish')
-async def np_loc_manual(m: types.Message, state: FSMContext):
-    await m.answer('Manzilingizni yozing (masalan: Farg\'ona sh., Navoiy ko\'ch. 15):', reply_markup=back_kb())
-
-@dp.message(ProfilaktikaForm.location, lambda m: m.text and len(m.text.strip()) > 3 and m.text.strip() != BACK)
-async def np_loc_text(m: types.Message, state: FSMContext):
-    await state.update_data(location=m.text.strip())
-    await state.set_state(ProfilaktikaForm.time)
-    await m.answer('Qulay vaqtni tanlang:', reply_markup=time_kb())
-
-@dp.message(ProfilaktikaForm.location, F.text == BACK)
-async def np_loc_back(m: types.Message, state: FSMContext):
-    await state.clear()
-    await m.answer('Asosiy menyu:', reply_markup=main_kb())
-
-@dp.message(ProfilaktikaForm.location)
-async def np_loc_inv(m: types.Message):
-    await m.answer('Iltimos, joylashuv yuboring yoki manzilni yozing:', reply_markup=loc_kb())
-
-@dp.callback_query(ProfilaktikaForm.time, lambda c: c.data in ('t0900','t1100','t1400','t1600'))
-async def p_time(c: types.CallbackQuery, state: FSMContext):
-    await c.answer()
-    tm = {'t0900':'09:00 - 11:00','t1100':'11:00 - 13:00','t1400':'14:00 - 16:00','t1600':'16:00 - 18:00'}
-    ts = tm[c.data]
-    d = await state.get_data()
-    u = c.from_user
-    await save_profilaktika(u.id, u.first_name or '', u.last_name or '', '', d.get('location',''), ts)
-    await state.clear()
-    await c.message.edit_text(
-        f'✅ Profilaktika xizmatiga yozildingiz!\n\n📍 Manzil: {d["location"]}\n⏰ Vaqt: {ts}\n\nMutaxassisimiz belgilangan vaqtda siz bilan bog\'lanadi.',
-        reply_markup=main_kb())
-
-@dp.callback_query(ProfilaktikaForm.time, lambda c: c.data == 'to_menu')
-async def np_time_back(c: types.CallbackQuery, state: FSMContext):
-    await c.answer()
-    await state.clear()
-    await c.message.edit_text('Asosiy menyu:', reply_markup=main_kb())
-
-# ═══════════════════════════════════════════════
 # BOT START
 # ═══════════════════════════════════════════════
 
 async def run_bot_polling():
     await init_db()
     await bot.delete_webhook(drop_pending_updates=True)
-    logger.info('Bot polling (LOCAL MODE)...')
+    logger.info('===> Bot professional rejimda (Polling) ishlamoqda...')
     await dp.start_polling(bot)
 
 if __name__ == '__main__':

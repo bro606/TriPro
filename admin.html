@@ -971,7 +971,7 @@
         </button>
         <div class="search-bar">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-muted)"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <input type="text" placeholder="Qidirish...">
+          <input type="text" id="global-search" placeholder="Ism, Familiya yoki ID..." onkeyup="handleGlobalSearch()">
         </div>
       </div>
       <div class="user-profile">
@@ -1224,25 +1224,21 @@
 
     <!-- Orders Tab (Telegram Bot) -->
     <div class="dashboard-content" id="tab-orders" style="display: none;">
-      <h1 class="page-title">Buyurtmalar (Telegram Bot)</h1>
-      <div class="table-section" style="padding: 20px;">
+      <h1 class="page-title">Buyurtmalar va Profilaktika</h1>
+      
+      <!-- Akfa Orders -->
+      <div class="table-section" style="padding: 20px; margin-bottom: 30px;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
-          <h3 style="font-family:'Montserrat',sans-serif; color:var(--navy);">Barcha buyurtmalar</h3>
-          <div style="display:flex; gap:8px;">
-            <button onclick="loadBotOrders()" style="padding:8px 16px; background:var(--navy); color:white; border:none; border-radius:6px; cursor:pointer; font-weight:500;">🔄 Yangilash</button>
-          </div>
+          <h3 style="font-family:'Montserrat',sans-serif; color:var(--navy);">🪟 Akfa Buyurtmalari</h3>
+          <button onclick="loadBotOrders()" class="btn-export">🔄 Yangilash</button>
         </div>
         <div style="overflow-x:auto;">
-          <table>
+          <table id="akfa-table">
             <thead>
               <tr>
                 <th>ID</th>
                 <th>Mijoz</th>
-                <th>Material</th>
-                <th>Profil rangi</th>
-                <th>Oyna qavati</th>
-                <th>Oyna naqshi</th>
-                <th>Oyna rangi</th>
+                <th>Xususiyatlar</th>
                 <th>O'lcham</th>
                 <th>Soni</th>
                 <th>Telefon</th>
@@ -1251,7 +1247,31 @@
               </tr>
             </thead>
             <tbody id="orders-tbody">
-              <tr><td colspan="12" style="text-align:center; padding:30px; color:var(--text-muted);">API ga ulanilmoqda...</td></tr>
+              <tr><td colspan="8" style="text-align:center; padding:30px;">Ma'lumotlar yuklanmoqda...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Maintenance Requests -->
+      <div class="table-section" style="padding: 20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+          <h3 style="font-family:'Montserrat',sans-serif; color:var(--navy);">🛠 Profilaktika (Usta chaqirish)</h3>
+        </div>
+        <div style="overflow-x:auto;">
+          <table id="maintenance-table">
+            <thead>
+              <tr>
+                <th>Sana</th>
+                <th>Mijoz</th>
+                <th>Muammo</th>
+                <th>Turi</th>
+                <th>Holat</th>
+                <th>Amal</th>
+              </tr>
+            </thead>
+            <tbody id="maintenance-tbody">
+              <tr><td colspan="6" style="text-align:center; padding:30px;">Talablar yo'q</td></tr>
             </tbody>
           </table>
         </div>
@@ -2236,6 +2256,113 @@
         alert('Xatolik: ' + e.message);
       }
     };
+    // ─── BOT API LOGIC ───
+
+    window.loadBotOrders = async function() {
+      try {
+        // Load Akfa Orders
+        const ordRes = await fetch('/api/orders');
+        const orders = await ordRes.json();
+        const tbody = document.getElementById('orders-tbody');
+        
+        if (orders.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px;">Buyurtmalar mavjud emas</td></tr>';
+        } else {
+          tbody.innerHTML = orders.map(o => `
+            <tr class="searchable-row">
+              <td style="font-weight:600; color:var(--gold);">#${o.order_id}</td>
+              <td class="search-target">${o.name} ${o.surname}</td>
+              <td style="font-size:0.8rem; max-width:200px;">${o.info}</td>
+              <td>${o.dimensions}</td>
+              <td>${o.quantity} ta</td>
+              <td class="search-target">${o.phone}</td>
+              <td>
+                <span class="status-badge ${o.status==='ready'?'status-done':'status-process'}">
+                  ${o.status==='ready'?'Tayyor':'Jarayonda'}
+                </span>
+              </td>
+              <td>
+                <div class="action-btns">
+                  <button title="Qabul qilish" class="btn-icon" onclick="updateOrderStatus('${o.order_id}', 'assembling')">✅</button>
+                  <button title="Tayyor" class="btn-icon" onclick="updateOrderStatus('${o.order_id}', 'ready')">🏁</button>
+                </div>
+              </td>
+            </tr>
+          `).join('');
+        }
+
+        // Load Maintenance
+        const mntRes = await fetch('/api/maintenance');
+        const mnts = await mntRes.json();
+        const mtbody = document.getElementById('maintenance-tbody');
+        
+        if (mnts.length === 0) {
+          mtbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px;">Profilaktika talablari yo'q</td></tr>';
+        } else {
+          mtbody.innerHTML = mnts.map(m => `
+            <tr class="searchable-row">
+              <td style="font-size:0.8rem;">${m.created_at.split(' ')[0]}</td>
+              <td class="search-target">${m.name}</td>
+              <td style="font-size:0.8rem;">${m.problem}</td>
+              <td><span style="font-size:0.7rem; background:#f0f0f0; padding:2px 6px; border-radius:4px;">${m.type==='auto'?'🤖 Auto':'👤 Manuel'}</span></td>
+              <td><span class="status-badge ${m.status==='ready'?'status-done':'status-process'}">${m.status}</span></td>
+              <td>
+                <div class="action-btns">
+                   <button title="Qabul" class="btn-icon" onclick="updateMntStatus(${m.id}, 'accepted')">✅</button>
+                   <button title="Yakunlandi" class="btn-icon" onclick="updateMntStatus(${m.id}, 'ready')">🏁</button>
+                </div>
+              </td>
+            </tr>
+          `).join('');
+        }
+      } catch(e) {
+        console.error("Fetch error:", e);
+      }
+    };
+
+    window.updateOrderStatus = async function(oid, status) {
+       await fetch(`/api/orders/${oid}/status`, {
+         method: 'POST',
+         headers: {'Content-Type': 'application/json'},
+         body: JSON.stringify({status: status})
+       });
+       loadBotOrders();
+    };
+
+    window.updateMntStatus = async function(mid, status) {
+       await fetch(`/api/maintenance/${mid}/status`, {
+         method: 'POST',
+         headers: {'Content-Type': 'application/json'},
+         body: JSON.stringify({status: status})
+       });
+       loadBotOrders();
+    };
+
+    // SEARCH LOGIC
+    window.handleGlobalSearch = function() {
+      const q = document.getElementById('global-search').value.toLowerCase();
+      const rows = document.querySelectorAll('.searchable-row');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(q) ? '' : 'none';
+      });
+    };
+
+    // Auto load on tab click or startup
+    setInterval(loadBotOrders, 30000); // 30s da yangilash
+
+    // Call onload
+    window.onload = function() {
+       loadBotOrders();
+       loadContactSettings();
+       // Session check
+       if (!sessionStorage.getItem('tripro_logged_in')) {
+         document.getElementById('login-screen').classList.remove('hidden');
+       } else {
+         document.getElementById('login-screen').classList.add('hidden');
+       }
+    };
+
   </script>
 </body>
 </html>
