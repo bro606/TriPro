@@ -7,14 +7,21 @@ from fastapi import FastAPI, Query, HTTPException
 from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
 from pydantic import BaseModel
 import uvicorn
+from aiogram import types
 
 # Bot va Baza importlari
-from aiogram import types
-from .bot import bot, dp
-from .database import (
-    init_db, save_akfa_order, get_akfa_order, get_all_orders, update_order_status,
-    get_all_maintenance, update_maintenance_status, get_orders_for_maintenance
-)
+try:
+    from .bot import bot, dp
+    from .database import (
+        init_db, save_akfa_order, get_akfa_order, get_all_orders, update_order_status,
+        get_all_maintenance, update_maintenance_status, get_orders_for_maintenance
+    )
+except ImportError:
+    from bot import bot, dp
+    from database import (
+        init_db, save_akfa_order, get_akfa_order, get_all_orders, update_order_status,
+        get_all_maintenance, update_maintenance_status, get_orders_for_maintenance
+    )
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('backend')

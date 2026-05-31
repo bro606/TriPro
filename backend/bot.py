@@ -9,10 +9,16 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from typing import Any, Awaitable, Callable, Dict
 
 # Yangi database modulidan import
-from .database import (
-    init_db, save_akfa_order, get_akfa_order, save_maintenance_request, 
-    save_user, get_orders_for_maintenance
-)
+try:
+    from .database import (
+        init_db, save_akfa_order, get_akfa_order, save_maintenance_request, 
+        save_user, get_orders_for_maintenance
+    )
+except ImportError:
+    from database import (
+        init_db, save_akfa_order, get_akfa_order, save_maintenance_request, 
+        save_user, get_orders_for_maintenance
+    )
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
