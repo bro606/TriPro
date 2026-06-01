@@ -35,7 +35,7 @@ async def init_db():
                 phone TEXT,
                 problem TEXT,
                 status TEXT DEFAULT 'pending',
-                type TEXT DEFAULT 'manual', -- 'manual' (u quyida chaqirgan) yoki 'auto' (bot taklif qilgan)
+                type TEXT DEFAULT 'manual'
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ''')
