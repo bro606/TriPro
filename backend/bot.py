@@ -600,6 +600,45 @@ async def chk_id(m: types.Message, state: FSMContext):
     await state.clear()
 
 # ═══════════════════════════════════════════════
+# FALLBACK HANDLERS — SERVER RESTART DAN KEYIN
+# Agar foydalanuvchi so'rovnoma o'rta bog'ida server
+# qayta ishga tushsa, MemoryStorage o'chadi.
+# Bu handler "qotib qolgan" foydalanuvchilarga
+# avtomatik yordam beradi.
+# ═══════════════════════════════════════════════
+
+@dp.callback_query()
+async def fallback_callback(c: types.CallbackQuery, state: FSMContext):
+    """Hech bir handler ushlamagan callback — state yo'qolgan bo'lishi mumkin"""
+    current_state = await state.get_state()
+    logger.warning(f"Fallback callback: data={c.data}, state={current_state}, user={c.from_user.id}")
+    await c.answer("⚠️ Sessiya tugadi", show_alert=False)
+    await state.clear()
+    await c.message.answer(
+        "⏱  *Server yangilandi*\n"
+        "━━━━━━━━━━━━━━━━━━━━\n\n"
+        "Kechirasiz, server yangilanishi sababli joriy sessiya uzildi.\n\n"
+        "Iltimos, bosh menyudan qaytadan boshlang 👇",
+        reply_markup=main_kb(),
+        parse_mode='Markdown'
+    )
+
+@dp.message()
+async def fallback_message(m: types.Message, state: FSMContext):
+    """Hech bir handler ushlamagan xabar — noto'g'ri state yoki yo'qolgan state"""
+    current_state = await state.get_state()
+    logger.warning(f"Fallback message: text={m.text!r}, state={current_state}, user={m.from_user.id}")
+    await state.clear()
+    await m.answer(
+        "⏱  *Server yangilandi*\n"
+        "━━━━━━━━━━━━━━━━━━━━\n\n"
+        "Kechirasiz, server yangilanishi sababli joriy sessiya uzildi.\n\n"
+        "Iltimos, bosh menyudan qaytadan boshlang 👇",
+        reply_markup=main_kb(),
+        parse_mode='Markdown'
+    )
+
+# ═══════════════════════════════════════════════
 # BOT START
 # ═══════════════════════════════════════════════
 

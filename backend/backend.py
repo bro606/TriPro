@@ -1,5 +1,6 @@
 # TriPro FastAPI Backend - professional CRM mantiqi
 import asyncio, os, logging
+import aiohttp
 from pathlib import Path
 from typing import Optional
 from contextlib import asynccontextmanager
@@ -112,6 +113,23 @@ async def setup_webhook(max_retries: int = 3) -> bool:
     return False
 
 # ═══════════════════════════════════════════════
+# KEEP-ALIVE (RENDER UXLAB QOLMASLIGI UCHUN)
+# ═══════════════════════════════════════════════
+
+async def keep_alive_task():
+    """Har 10 daqiqada o'z-o'ziga ping yuboradi — Render uxlab qolmasligi uchun"""
+    await asyncio.sleep(30)  # Server to'liq ishga tushguncha kutish
+    ping_url = f"{PUBLIC_URL}/health"
+    while True:
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(ping_url, timeout=aiohttp.ClientTimeout(total=10)) as resp:
+                    logger.info(f"===> Keep-alive ping: {resp.status} ({ping_url})")
+        except Exception as e:
+            logger.warning(f"===> Keep-alive xatosi: {e}")
+        await asyncio.sleep(600)  # 10 daqiqa
+
+# ═══════════════════════════════════════════════
 # LIFESPAN
 # ═══════════════════════════════════════════════
 
@@ -124,7 +142,8 @@ async def lifespan(app: FastAPI):
     await setup_webhook()
 
     asyncio.create_task(maintenance_reminder_task())
-    logger.info("===> Barcha xizmatlar ishga tushdi.")
+    asyncio.create_task(keep_alive_task())
+    logger.info("===> Barcha xizmatlar ishga tushdi (keep-alive faol).")
 
     yield
 
@@ -149,6 +168,12 @@ async def telegram_webhook(update: dict):
     except Exception as e:
         logger.error(f"Webhook process error: {e}")
         return {"status": "error"}
+
+@app.get('/health')
+async def health_check():
+    """Keep-alive va monitoring uchun endpoint"""
+    return {"status": "alive", "service": "TriPro Bot API", "public_url": PUBLIC_URL}
+
 
 @app.get('/webhook/info')
 async def webhook_info():
