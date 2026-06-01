@@ -28,8 +28,17 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('backend')
 
 PORT = int(os.getenv('PORT', '10000'))
-PUBLIC_URL = os.getenv('PUBLIC_URL', 'https://tripro.onrender.com').strip()
-if PUBLIC_URL.endswith('/'): PUBLIC_URL = PUBLIC_URL[:-1]
+
+# PUBLIC_URL avtomatik aniqlash: RENDER_EXTERNAL_URL > PUBLIC_URL > fallback
+def get_public_url() -> str:
+    url = (
+        os.getenv('RENDER_EXTERNAL_URL', '').strip() or
+        os.getenv('PUBLIC_URL', '').strip() or
+        'https://tripro.onrender.com'
+    )
+    return url.rstrip('/')
+
+PUBLIC_URL = get_public_url()
 
 # ═══════════════════════════════════════════════
 # AUTO MAINTENANCE TASK (180 KUNLIK TEKSHIRUV)
@@ -57,11 +66,50 @@ async def maintenance_reminder_task():
                     logger.info(f"===> Reminder sent to {o['user_id']}")
                 except Exception as ex:
                     logger.warning(f"Reminder error for user {o['user_id']}: {ex}")
-            
-            await asyncio.sleep(86400) # 24 soat kutiladi
+
+            await asyncio.sleep(86400)
         except Exception as e:
             logger.error(f"Maintenance task loop error: {e}")
             await asyncio.sleep(3600)
+
+# ═══════════════════════════════════════════════
+# WEBHOOK O'RNATISH (RETRY BILAN)
+# ═══════════════════════════════════════════════
+
+async def setup_webhook(max_retries: int = 3) -> bool:
+    """Webhook o'rnatadi, muvaffaqiyatsiz bo'lsa qayta urinadi"""
+    webhook_url = f"{PUBLIC_URL}/webhook/bot"
+
+    for attempt in range(1, max_retries + 1):
+        try:
+            logger.info(f"===> Webhook o'rnatilmoqda (urinish {attempt}/{max_retries}): {webhook_url}")
+
+            await bot.delete_webhook(drop_pending_updates=True)
+            await asyncio.sleep(1)
+
+            await bot.set_webhook(
+                url=webhook_url,
+                allowed_updates=["message", "callback_query"],
+                drop_pending_updates=True,
+                max_connections=40
+            )
+            await asyncio.sleep(1)
+
+            # Tekshirish
+            info = await bot.get_webhook_info()
+            if info.url == webhook_url:
+                logger.info(f"===> Webhook tasdiqlandi: {info.url}")
+                return True
+            else:
+                logger.warning(f"===> Webhook URL mos emas! Kutilgan: {webhook_url}, Hozirgi: {info.url}")
+
+        except Exception as e:
+            logger.error(f"===> Webhook xatosi (urinish {attempt}): {e}")
+            if attempt < max_retries:
+                await asyncio.sleep(attempt * 3)
+
+    logger.error("===> OGOHLANTIRISH: Webhook o'rnatib bo'lmadi!")
+    return False
 
 # ═══════════════════════════════════════════════
 # LIFESPAN
@@ -70,18 +118,21 @@ async def maintenance_reminder_task():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
-    
-    # Webhook
-    webhook_url = f"{PUBLIC_URL}/webhook/bot"
-    await bot.delete_webhook(drop_pending_updates=True)
-    await bot.set_webhook(url=webhook_url, allowed_updates=["message", "callback_query"])
-    logger.info(f"===> Webhook set: {webhook_url}")
-    
-    # Fon vazifasini ishga tushirish
+    logger.info("===> Ma'lumotlar bazasi tayyor.")
+    logger.info(f"===> PUBLIC_URL: {PUBLIC_URL}")
+
+    await setup_webhook()
+
     asyncio.create_task(maintenance_reminder_task())
-    
+    logger.info("===> Barcha xizmatlar ishga tushdi.")
+
     yield
-    logger.info("Server shuts down.")
+
+    try:
+        await bot.delete_webhook()
+        logger.info("===> Webhook o'chirildi. Server to'xtatildi.")
+    except Exception as e:
+        logger.error(f"===> Shutdown xatosi: {e}")
 
 app = FastAPI(title='TriPro Professional API', lifespan=lifespan)
 
@@ -98,6 +149,24 @@ async def telegram_webhook(update: dict):
     except Exception as e:
         logger.error(f"Webhook process error: {e}")
         return {"status": "error"}
+
+@app.get('/webhook/info')
+async def webhook_info():
+    """Webhook holatini tekshirish uchun debug endpoint"""
+    try:
+        info = await bot.get_webhook_info()
+        return {
+            "public_url": PUBLIC_URL,
+            "expected_webhook": f"{PUBLIC_URL}/webhook/bot",
+            "current_webhook": info.url,
+            "match": info.url == f"{PUBLIC_URL}/webhook/bot",
+            "pending_updates": info.pending_update_count,
+            "last_error": info.last_error_message,
+            "last_error_date": str(info.last_error_date) if info.last_error_date else None,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
 
 @app.get('/', response_class=HTMLResponse)
 async def health_and_admin():
