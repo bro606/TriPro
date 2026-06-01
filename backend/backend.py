@@ -8,6 +8,7 @@ from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
 from pydantic import BaseModel
 import uvicorn
 from aiogram import types
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 # Bot va Baza importlari
 try:
@@ -48,8 +49,9 @@ async def maintenance_reminder_task():
                         "ustalarimiz borib ko'rishadi va ish hajmidan kelib chiqib narx kelishiladi.\n\n"
                         "Xizmatdan foydalanish uchun quyidagi tugmani bosing:"
                     )
-                    kb = types.InlineKeyboardMarkup(inline_keyboard=[
-                        [types.InlineKeyboardButton(text="🛠 Usta chaqirish", callback_data="call_master")]
+                    kb = InlineKeyboardMarkup(inline_keyboard=[
+                        [InlineKeyboardButton(text='🛠  Usta Chaqirish', callback_data='call_master')],
+                        [InlineKeyboardButton(text='⛔  Kerak emas', callback_data='to_menu')]
                     ])
                     await bot.send_message(chat_id=o['user_id'], text=txt, reply_markup=kb, parse_mode='Markdown')
                     logger.info(f"===> Reminder sent to {o['user_id']}")
