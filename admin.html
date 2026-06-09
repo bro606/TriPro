@@ -1364,6 +1364,20 @@
       let validUser = 'tripro';
       let validPassword = '2025';
 
+      // Default login always works, Firebase override optional (case-insensitive login check)
+      if (user.toLowerCase() === 'tripro' && pw === '2025') {
+        try {
+          sessionStorage.setItem('tripro_logged_in', 'true');
+        } catch (e) {
+          console.warn('sessionStorage is not available:', e);
+        }
+        document.getElementById('login-screen').classList.add('hidden');
+        document.body.style.overflow = '';
+        btn.disabled = false;
+        btn.textContent = 'Kirish';
+        return;
+      }
+
       // Try Firebase (non-blocking, gracefully fallback to default)
       if (window._firebaseDB && window._firebaseRef) {
         try {
@@ -1379,8 +1393,12 @@
         }
       }
 
-      if (user === validUser && pw === validPassword) {
-        sessionStorage.setItem('tripro_logged_in', 'true');
+      if (user.toLowerCase() === validUser.toLowerCase() && pw === validPassword) {
+        try {
+          sessionStorage.setItem('tripro_logged_in', 'true');
+        } catch (e) {
+          console.warn('sessionStorage is not available:', e);
+        }
         document.getElementById('login-screen').classList.add('hidden');
         document.body.style.overflow = '';
       } else {
@@ -2134,19 +2152,18 @@
             <div style="display:flex; gap:10px; margin-top:10px; border-top:1px solid var(--border); padding-top:10px;">
               <button onclick="openServiceModal('${sv.id}')" style="flex:1; padding:8px; background:var(--navy); color:white; border:none; border-radius:4px; cursor:pointer;">Tahrirlash</button>
               <button onclick="deleteService('${sv.id}')" style="padding:8px; background:#FEE2E2; color:#DC2626; border:none; border-radius:4px; cursor:pointer;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    };
-
-    // Initialize on file load
+           // Initialize on file load
     window.onload = function() {
       // Check if already logged in (from same browser session)
-      if (sessionStorage.getItem('tripro_logged_in') === 'true') {
-        document.getElementById('login-screen').classList.add('hidden');
+      try {
+        if (sessionStorage.getItem('tripro_logged_in') === 'true') {
+          document.getElementById('login-screen').classList.add('hidden');
+          document.body.style.overflow = '';
+        } else {
+          document.getElementById('login-screen').classList.remove('hidden');
+        }
+      } catch (e) {
+        console.warn('sessionStorage is not available:', e);
       }
 
       // Clear legacy dummy data if length is 3 (was hardcoded)
@@ -2167,10 +2184,15 @@
       
       // Load contact settings from cache (Firebase will update when ready)
       window.loadContactSettings();
+
+      // Load Bot Orders from API
+      loadBotOrders();
     };
 
     // ─── BOT ORDERS (API) ───
-    const API_BASE = 'https://tripro.onrender.com/api';
+    const API_BASE = window.location.origin === 'null' || window.location.protocol === 'file:' 
+      ? 'https://tripro.onrender.com' 
+      : '';
 
     // ─── KEEP-ALIVE PING (har 10 daqiqada Render'ni uxlatmaslik uchun) ───
     setInterval(() => {
@@ -2178,92 +2200,13 @@
     }, 10 * 60 * 1000); // 10 daqiqa
 
     window.loadBotOrders = async function() {
-      const tbody = document.getElementById('orders-tbody');
-      if (!tbody) return;
-      tbody.innerHTML = '<tr><td colspan="12" style="text-align:center; padding:30px; color:var(--text-muted);">Yuklanmoqda...</td></tr>';
-      try {
-        const res = await fetch(API_BASE + '/orders');
-        if (!res.ok) throw new Error('API error');
-        const orders = await res.json();
-        if (!orders.length) {
-          tbody.innerHTML = '<tr><td colspan="12" style="text-align:center; padding:30px; color:var(--text-muted);">Hali buyurtmalar mavjud emas.</td></tr>';
-          return;
-        }
-        const statusMap = {
-          pending: '<span style="background:rgba(245,158,11,0.1); color:#F59E0B; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">⏳ Kutilmoqda</span>',
-          confirmed: '<span style="background:rgba(34,197,94,0.1); color:#22C55E; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">✅ Tasdiqlangan</span>',
-          material_delivered: '<span style="background:rgba(59,130,246,0.1); color:#3B82F6; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">🚚 Material olib kelinmoqda</span>',
-          in_progress: '<span style="background:rgba(139,92,246,0.1); color:#8B5CF6; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">🔧 Ishlab chiqarish jarayonida</span>',
-          ready: '<span style="background:rgba(14,165,233,0.1); color:#0EA5E9; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">✨ Oyna qismi tayyorlanmoqda</span>',
-          delivered: '<span style="background:rgba(34,197,94,0.1); color:#22C55E; padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">📦 To\'liq tayyor</span>',
-        };
-        tbody.innerHTML = orders.map(o => {
-          let confirmBtn = o.status === 'pending' 
-            ? `<button onclick="confirmOrder('${o.order_id || o.id}')" style="padding:4px 8px; background:#22C55E; color:white; border:none; border-radius:4px; cursor:pointer; font-size:0.7rem;">✅ Tasdiqlash</button>`
-            : '';
-          let statusChanger = o.status !== 'pending' && o.order_id
-            ? `<select onchange="changeOrderStatus('${o.order_id}', this.value)" style="padding:4px; border:1px solid var(--border); border-radius:4px; font-size:0.7rem;">
-                <option value="">O\'zgartirish</option>
-                <option value="material_delivered">🚚 Material olib kelinmoqda</option>
-                <option value="in_progress">🔧 Ishlab chiqarish jarayonida</option>
-                <option value="ready">✨ Oyna qismi tayyorlanmoqda</option>
-                <option value="delivered">📦 To\'liq tayyor</option>
-              </select>`
-            : '';
-          let dims = (o.dimensions || '—').replace(/\n/g, '<br>');
-          return `<tr>
-            <td style="font-weight:600;">${o.order_id || '—'}</td>
-            <td>${o.telegram_id ? '👤 User #' + o.telegram_id : '—'}</td>
-            <td>${o.material_type || '—'}</td>
-            <td>${o.profile_color || '—'}</td>
-            <td>${o.glass_type || '—'}</td>
-            <td>${o.glass_pattern || '—'}</td>
-            <td>${o.glass_color || '—'}</td>
-            <td>${dims}</td>
-            <td>${o.quantity || 1}</td>
-            <td><a href="tel:${o.phone}" style="color:var(--navy); text-decoration:none;">${o.phone || '—'}</a></td>
-            <td>${statusMap[o.status] || o.status}</td>
-            <td style="display:flex; flex-direction:column; gap:4px;">${confirmBtn}${statusChanger}</td>
-          </tr>`;
-        }).join('');
-      } catch(e) {
-        tbody.innerHTML = '<tr><td colspan="12" style="text-align:center; padding:30px; color:#DC2626;">API ga ulanib bo\'lmadi. Backend server ishlayotganiga ishonch hosil qiling.</td></tr>';
-      }
-    };
-
-    window.confirmOrder = async function(id) {
-      if (!confirm('Ushbu buyurtmani tasdiqlashni xohlaysizmi?')) return;
-      try {
-        const res = await fetch(API_BASE + '/orders/' + id + '/confirm', { method: 'POST' });
-        if (!res.ok) throw new Error('Confirm failed');
-        loadBotOrders();
-      } catch(e) {
-        alert('Xatolik: ' + e.message);
-      }
-    };
-
-    window.changeOrderStatus = async function(orderId, newStatus) {
-      if (!newStatus) return;
-      try {
-        const res = await fetch(API_BASE + '/orders/' + orderId + '/status', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ status: newStatus })
-        });
-        if (!res.ok) throw new Error('Status update failed');
-        loadBotOrders();
-      } catch(e) {
-        alert('Xatolik: ' + e.message);
-      }
-    };
-    // ─── BOT API LOGIC ───
-
-    window.loadBotOrders = async function() {
       try {
         // Load Akfa Orders
-        const ordRes = await fetch('/api/orders');
+        const ordRes = await fetch(API_BASE + '/api/orders');
+        if (!ordRes.ok) throw new Error('API error');
         const orders = await ordRes.json();
         const tbody = document.getElementById('orders-tbody');
+        if (!tbody) return;
         
         if (orders.length === 0) {
           tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px;">Buyurtmalar mavjud emas</td></tr>';
@@ -2271,11 +2214,11 @@
           tbody.innerHTML = orders.map(o => `
             <tr class="searchable-row">
               <td style="font-weight:600; color:var(--gold);">#${o.order_id}</td>
-              <td class="search-target">${o.name} ${o.surname}</td>
-              <td style="font-size:0.8rem; max-width:200px;">${o.info}</td>
-              <td>${o.dimensions}</td>
-              <td>${o.quantity} ta</td>
-              <td class="search-target">${o.phone}</td>
+              <td class="search-target">${o.name || ''} ${o.surname || ''}</td>
+              <td style="font-size:0.8rem; max-width:200px;">${o.info || ''}</td>
+              <td>${o.dimensions || ''}</td>
+              <td>${o.quantity || 1} ta</td>
+              <td class="search-target">${o.phone || ''}</td>
               <td>
                 <span class="status-badge ${o.status==='ready'?'status-done':'status-process'}">
                   ${o.status==='ready'?'Tayyor':'Jarayonda'}
@@ -2292,20 +2235,22 @@
         }
 
         // Load Maintenance
-        const mntRes = await fetch('/api/maintenance');
+        const mntRes = await fetch(API_BASE + '/api/maintenance');
+        if (!mntRes.ok) throw new Error('API error');
         const mnts = await mntRes.json();
         const mtbody = document.getElementById('maintenance-tbody');
+        if (!mtbody) return;
         
         if (mnts.length === 0) {
-          mtbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px;">Profilaktika talablari yo'q</td></tr>';
+          mtbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px;">Profilaktika talablari yo\'q</td></tr>';
         } else {
           mtbody.innerHTML = mnts.map(m => `
             <tr class="searchable-row">
-              <td style="font-size:0.8rem;">${m.created_at.split(' ')[0]}</td>
-              <td class="search-target">${m.name}</td>
-              <td style="font-size:0.8rem;">${m.problem}</td>
+              <td style="font-size:0.8rem;">${m.created_at ? m.created_at.split(' ')[0] : ''}</td>
+              <td class="search-target">${m.name || ''}</td>
+              <td style="font-size:0.8rem;">${m.problem || ''}</td>
               <td><span style="font-size:0.7rem; background:#f0f0f0; padding:2px 6px; border-radius:4px;">${m.type==='auto'?'🤖 Auto':'👤 Manuel'}</span></td>
-              <td><span class="status-badge ${m.status==='ready'?'status-done':'status-process'}">${m.status}</span></td>
+              <td><span class="status-badge ${m.status==='ready'?'status-done':'status-process'}">${m.status || ''}</span></td>
               <td>
                 <div class="action-btns">
                    <button title="Qabul" class="btn-icon" onclick="updateMntStatus(${m.id}, 'accepted')">✅</button>
@@ -2317,25 +2262,39 @@
         }
       } catch(e) {
         console.error("Fetch error:", e);
+        const tbody = document.getElementById('orders-tbody');
+        if (tbody) {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px; color:#DC2626;">API ga ulanib bo\'lmadi.</td></tr>';
+        }
       }
     };
 
     window.updateOrderStatus = async function(oid, status) {
-       await fetch(`/api/orders/${oid}/status`, {
-         method: 'POST',
-         headers: {'Content-Type': 'application/json'},
-         body: JSON.stringify({status: status})
-       });
-       loadBotOrders();
+       try {
+         const res = await fetch(API_BASE + `/api/orders/${oid}/status`, {
+           method: 'POST',
+           headers: {'Content-Type': 'application/json'},
+           body: JSON.stringify({status: status})
+         });
+         if (!res.ok) throw new Error('Status update failed');
+         loadBotOrders();
+       } catch(e) {
+         console.error(e);
+       }
     };
 
     window.updateMntStatus = async function(mid, status) {
-       await fetch(`/api/maintenance/${mid}/status`, {
-         method: 'POST',
-         headers: {'Content-Type': 'application/json'},
-         body: JSON.stringify({status: status})
-       });
-       loadBotOrders();
+       try {
+         const res = await fetch(API_BASE + `/api/maintenance/${mid}/status`, {
+           method: 'POST',
+           headers: {'Content-Type': 'application/json'},
+           body: JSON.stringify({status: status})
+         });
+         if (!res.ok) throw new Error('Status update failed');
+         loadBotOrders();
+       } catch(e) {
+         console.error(e);
+       }
     };
 
     // SEARCH LOGIC
@@ -2349,19 +2308,18 @@
     };
 
     // Auto load on tab click or startup
+    setInterval(loadBotOrders, 30000); // 30s da yangilash    const q = document.getElementById('global-search').value.toLowerCase();
+      const rows = document.querySelectorAll('.searchable-row');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(q) ? '' : 'none';
+      });
+    };
+
+    // Auto load on tab click or startup
     setInterval(loadBotOrders, 30000); // 30s da yangilash
 
-    // Call onload
-    window.onload = function() {
-       loadBotOrders();
-       loadContactSettings();
-       // Session check
-       if (!sessionStorage.getItem('tripro_logged_in')) {
-         document.getElementById('login-screen').classList.remove('hidden');
-       } else {
-         document.getElementById('login-screen').classList.add('hidden');
-       }
-    };
+    // The duplicate onload has been merged into the main window.onload above.
 
   </script>
 </body>
