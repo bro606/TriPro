@@ -2308,15 +2308,6 @@
     };
 
     // Auto load on tab click or startup
-    setInterval(loadBotOrders, 30000); // 30s da yangilash    const q = document.getElementById('global-search').value.toLowerCase();
-      const rows = document.querySelectorAll('.searchable-row');
-      rows.forEach(row => {
-        const text = row.innerText.toLowerCase();
-        row.style.display = text.includes(q) ? '' : 'none';
-      });
-    };
-
-    // Auto load on tab click or startup
     setInterval(loadBotOrders, 30000); // 30s da yangilash
 
     // The duplicate onload has been merged into the main window.onload above.
