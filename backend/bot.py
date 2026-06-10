@@ -76,15 +76,11 @@ class ProfilaktikaForm(StatesGroup):
 
 def main_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='🌐  Saytni ko\'rish', url=SITE_URL)],
-        [
-            InlineKeyboardButton(text='🪟  Buyurtma berish', callback_data='start_order'),
-            InlineKeyboardButton(text='🔍  ID tekshirish', callback_data='check_id'),
-        ],
-        [
-            InlineKeyboardButton(text='🛠  Texnik xizmat', callback_data='start_maintenance'),
-            InlineKeyboardButton(text='⚙️  Boshqa xizmatlar', callback_data='other_services'),
-        ],
+        [InlineKeyboardButton(text='🌐 Saytni ko\'rish', url=SITE_URL)],
+        [InlineKeyboardButton(text='🚪 AKFA buyurtmasi', callback_data='start_order')],
+        [InlineKeyboardButton(text='🔍 ID tekshirish', callback_data='check_id')],
+        [InlineKeyboardButton(text='🛠 Texnik xizmat', callback_data='start_maintenance')],
+        [InlineKeyboardButton(text='⚙️ Boshqa xizmatlar', callback_data='other_services')]
     ])
 
 def cancel_kb():
@@ -181,12 +177,8 @@ def maintenance_reminder_kb():
 
 async def send_main_menu(target):
     """target: message yoki callback_query.message"""
-    text = (
-        "🏠  *Asosiy Menyu*\n"
-        "━━━━━━━━━━━━━━━━━━━━\n"
-        "Quyidagi xizmatlardan birini tanlang:"
-    )
-    await target.answer(text, reply_markup=main_kb(), parse_mode='Markdown')
+    text = "Asosiy menyu. Quyidagi xizmatlardan birini tanlang 👇"
+    await target.answer(text, reply_markup=main_kb())
 
 # ═══════════════════════════════════════════════
 # START / CANCEL
@@ -197,18 +189,16 @@ async def start(m: types.Message, state: FSMContext):
     await state.clear()
     await save_user(m.from_user.id, m.from_user.username, m.from_user.first_name, m.from_user.last_name)
     welcome_txt = (
-        f"👋  *Assalomu alaykum, {m.from_user.first_name}!*\n\n"
-        "🏢  *TriPro Ustaxonasiga xush kelibsiz!*\n"
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
-        "Bizning xizmatlarimiz:\n\n"
-        "🪟  *AKFA bo'limi* — Deraza va eshik tizimlari\n"
-        "🔧  *Texnik xizmat* — Profilaktika va ta'mir\n"
-        "⚙️  *Boshqa xizmatlar* — Yog'och, shisha va h.k.\n\n"
-        "✅  *Kafolat:* Barcha ishlarimizga 1 oylik rasmiy kafolat!\n\n"
-        "_Quyidagi menyudan xizmatni tanlang:_"
+        f"Assalomu alaykum, {m.from_user.first_name}! 👋\n\n"
+        "TriPro ustaxonasiga xush kelibsiz! Uyingiz ko'rki va mustahkamligi uchun biz doim xizmatingizdamiz.\n\n"
+        "Bizning asosiy bo'limlarimiz:\n"
+        "🚪 AKFA bo'limi: Zamonaviy deraza va eshik tizimlari.\n"
+        "🖼 Oyna bo'limi: Oyna kesish xizmatlari.\n"
+        "🪵 Yog'och bo'limi: Asalarichilik uchun maxsus yog'och uyalar.\n\n"
+        "✅ Kafolat: Biz bajargan barcha ishlarimizga 1 oylik rasmiy kafolat taqdim etamiz!\n\n"
+        "TriPro Mini App'imizga kiring, barcha xizmatlarimiz va namunalarimiz bilan yaqindan tanishing! 👇"
     )
-    await m.answer(welcome_txt, parse_mode='Markdown')
-    await send_main_menu(m)
+    await m.answer(welcome_txt, reply_markup=main_kb())
 
 @dp.message(Command('cancel'))
 async def cancel_cmd(m: types.Message, state: FSMContext):
