@@ -183,6 +183,20 @@ async def health_check():
     """Keep-alive va monitoring uchun endpoint"""
     return {"status": "alive", "service": "TriPro Bot API", "public_url": PUBLIC_URL}
 
+@app.get('/debug/env')
+async def debug_env():
+    """Token va muhim env varlarni tekshirish uchun vaqtinchalik endpoint"""
+    token = os.getenv('BOT_TOKEN', '')
+    return {
+        "bot_token_set": bool(token),
+        "bot_token_length": len(token),
+        "bot_token_start": token[:10] + '...' if len(token) > 10 else '(empty)',
+        "render_external_url": os.getenv('RENDER_EXTERNAL_URL', 'NOT SET'),
+        "public_url": os.getenv('PUBLIC_URL', 'NOT SET'),
+        "computed_public_url": PUBLIC_URL,
+        "port": os.getenv('PORT', 'NOT SET'),
+    }
+
 
 @app.get('/webhook/info')
 async def webhook_info():
