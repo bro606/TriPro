@@ -237,7 +237,27 @@ async def set_order_status(order_id: str, body: StatusUpdate):
         try:
             await bot.send_message(o['user_id'], f"🏁 **Buyurtmangiz (ID: {order_id}) tayyor va yetkazilmoqda!**\nXizmatimizdan foydalanganingiz uchun rahmat.", parse_mode='Markdown')
         except: pass
-    return {"ok": True}
+
+@app.post('/api/orders/{order_id}/send-id')
+async def send_order_id(order_id: str):
+    o = await get_akfa_order(order_id)
+    if not o:
+        raise HTTPException(status_code=404, detail="Order not found")
+    try:
+        user_id = o['user_id']
+        txt = (
+            f"🎉 **Buyurtmangiz to'lovi tasdiqlandi!**\n\n"
+            f"🆔 Sizning buyurtma ID raqamingiz: **#{order_id}**\n\n"
+            f"🔍 Ushbu ID orqali botdagi **«ID tekshirish»** bo'limida "
+            f"buyurtmangiz holatini (tayyorlanish jarayonini) istalgan vaqtda tekshirishingiz mumkin."
+        )
+        await bot.send_message(chat_id=user_id, text=txt, parse_mode='Markdown')
+        return {"ok": True}
+    except Exception as ex:
+        logger.error(f"Error sending ID to user: {ex}")
+        raise HTTPException(status_code=500, detail=f"Bot failed to send message: {str(ex)}")
+
+
 
 @app.post('/api/maintenance/{req_id}/status')
 async def set_maintenance_status(req_id: int, body: StatusUpdate):

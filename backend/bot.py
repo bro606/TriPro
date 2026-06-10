@@ -463,15 +463,13 @@ async def p_yes(c: types.CallbackQuery, state: FSMContext):
     await c.message.answer(
         "🎉  *Buyurtmangiz muvaffaqiyatli qabul qilindi!*\n"
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
-        f"🆔  Buyurtma raqami: *#{oid}*\n\n"
         f"👤  Mijoz: *{d['name']} {d['surname']}*\n"
         f"📞  Telefon: *{d['phone']}*\n"
         f"📐  O'lcham: *{d['dimensions']}*\n"
         f"📦  Soni: *{d['quantity']} ta*\n\n"
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-        "📌  Buyurtma ID raqamingizni *eslab qoling!*\n"
-        "🔍  Holat tekshirish uchun «ID tekshirish» tugmasini bosing.\n\n"
-        "⏰  Mutaxassisimiz tez orada siz bilan bog'lanadi!",
+        "⏰  Buyurtmangiz qabul qilindi. Tez orada mutaxassisimiz siz bilan bog'lanib to'lov tafsilotlarini tushuntiradi.\n"
+        "💳  To'lov amalga oshirilgandan so'ng, sizga buyurtma ID raqami yuboriladi va u orqali buyurtma holatini tekshirishingiz mumkin bo'ladi!",
         reply_markup=offer_kb(),
         parse_mode='Markdown'
     )

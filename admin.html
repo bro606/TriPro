@@ -2247,6 +2247,7 @@
                 <div class="action-btns">
                   <button title="Qabul qilish" class="btn-icon" onclick="updateOrderStatus('${o.order_id}', 'assembling')">✅</button>
                   <button title="Tayyor" class="btn-icon" onclick="updateOrderStatus('${o.order_id}', 'ready')">🏁</button>
+                  <button title="ID yuborish" class="btn-icon" onclick="sendOrderId('${o.order_id}')">✉️</button>
                 </div>
               </td>
             </tr>
@@ -2299,6 +2300,20 @@
          loadBotOrders();
        } catch(e) {
          console.error(e);
+       }
+    };
+
+    window.sendOrderId = async function(oid) {
+       if(!confirm('Mijozga ID raqamini va yo\'riqnomani yubormoqchimisiz?')) return;
+       try {
+         const res = await fetch(API_BASE + `/api/orders/${oid}/send-id`, {
+           method: 'POST'
+         });
+         if (!res.ok) throw new Error('Failed to send ID');
+         alert('ID mijozga muvaffaqiyatli yuborildi!');
+       } catch(e) {
+         console.error(e);
+         alert('ID yuborishda xatolik yuz berdi!');
        }
     };
 
