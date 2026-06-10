@@ -913,7 +913,7 @@
         <input type="password" id="login-password" placeholder="Parolni kiriting" autocomplete="current-password">
       </div>
 
-      <button class="login-btn" id="login-btn">Kirish</button>
+      <button class="login-btn" id="login-btn" onclick="window.handleLogin()">Kirish</button>
 
       <div class="login-footer">TriPro © 2026</div>
       <div style="margin-top:10px; font-size:0.75rem;">
@@ -1344,72 +1344,81 @@
     };
 
     // ─── LOGIN ───
-    let _loginPasswordRef = null;
-
-    window.handleLogin = async function() {
-      const username = document.getElementById('login-username');
-      const password = document.getElementById('login-password');
+    window.handleLogin = function() {
+      const usernameEl = document.getElementById('login-username');
+      const passwordEl = document.getElementById('login-password');
       const btn = document.getElementById('login-btn');
       const err = document.getElementById('login-error');
-      const user = username.value.trim();
-      const pw = password.value.trim();
 
-      if (!user) { err.textContent = 'Loginni kiriting'; err.classList.add('show'); return; }
-      if (!pw) { err.textContent = 'Parolni kiriting'; err.classList.add('show'); return; }
+      const user = usernameEl.value.trim();
+      const pw = passwordEl.value.trim();
 
-      btn.disabled = true;
-      btn.textContent = 'Tekshirilmoqda...';
       err.classList.remove('show');
 
-      let validUser = 'tripro';
-      let validPassword = '2025';
-
-      // Default login always works, Firebase override optional (case-insensitive login check)
-      if (user.toLowerCase() === 'tripro' && pw === '2025') {
-        try {
-          sessionStorage.setItem('tripro_logged_in', 'true');
-        } catch (e) {
-          console.warn('sessionStorage is not available:', e);
-        }
-        document.getElementById('login-screen').classList.add('hidden');
-        document.body.style.overflow = '';
-        btn.disabled = false;
-        btn.textContent = 'Kirish';
+      if (!user) {
+        err.textContent = 'Loginni kiriting';
+        err.classList.add('show');
+        return;
+      }
+      if (!pw) {
+        err.textContent = 'Parolni kiriting';
+        err.classList.add('show');
         return;
       }
 
-      // Try Firebase (non-blocking, gracefully fallback to default)
-      if (window._firebaseDB && window._firebaseRef) {
-        try {
-          const { get, child } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js');
-          const snap = await get(child(window._firebaseRef(window._firebaseDB), 'adminSettings'));
-          if (snap.exists()) {
-            const settings = snap.val();
-            if (settings && typeof settings.login === 'string' && settings.login.length >= 3) validUser = settings.login;
-            if (settings && typeof settings.password === 'string' && settings.password.length >= 4) validPassword = settings.password;
-          }
-        } catch(e) {
-          console.warn('Firebase login fetch failed, using defaults:', e.message);
-        }
-      }
+      // Default login (har doim ishlaydi)
+      const defaultUser = 'tripro';
+      const defaultPass = '2025';
 
-      if (user.toLowerCase() === validUser.toLowerCase() && pw === validPassword) {
-        try {
-          sessionStorage.setItem('tripro_logged_in', 'true');
-        } catch (e) {
-          console.warn('sessionStorage is not available:', e);
-        }
+      if (user.toLowerCase() === defaultUser && pw === defaultPass) {
+        try { sessionStorage.setItem('tripro_logged_in', 'true'); } catch(e) {}
         document.getElementById('login-screen').classList.add('hidden');
         document.body.style.overflow = '';
-      } else {
-        err.textContent = 'Noto\'g\'ri login yoki parol';
-        err.classList.add('show');
-        password.value = '';
-        password.focus();
+        return;
       }
 
-      btn.disabled = false;
-      btn.textContent = 'Kirish';
+      // Firebase dan olingan parol bilan tekshirish
+      if (window._firebaseDB && window._firebaseRef && window._firebaseGet && window._firebaseChild) {
+        btn.disabled = true;
+        btn.textContent = 'Tekshirilmoqda...';
+        window._firebaseGet(window._firebaseChild(window._firebaseRef(window._firebaseDB), 'adminSettings'))
+          .then(function(snap) {
+            let validUser = defaultUser;
+            let validPass = defaultPass;
+            if (snap.exists()) {
+              const s = snap.val();
+              if (s && s.login && s.login.length >= 3) validUser = s.login;
+              if (s && s.password && s.password.length >= 4) validPass = s.password;
+            }
+            if (user.toLowerCase() === validUser.toLowerCase() && pw === validPass) {
+              try { sessionStorage.setItem('tripro_logged_in', 'true'); } catch(e) {}
+              document.getElementById('login-screen').classList.add('hidden');
+              document.body.style.overflow = '';
+            } else {
+              err.textContent = "Noto'g'ri login yoki parol";
+              err.classList.add('show');
+              passwordEl.value = '';
+              passwordEl.focus();
+            }
+          })
+          .catch(function() {
+            err.textContent = "Noto'g'ri login yoki parol";
+            err.classList.add('show');
+            passwordEl.value = '';
+            passwordEl.focus();
+          })
+          .finally(function() {
+            btn.disabled = false;
+            btn.textContent = 'Kirish';
+          });
+        return;
+      }
+
+      // Firebase yo'q — xato parol
+      err.textContent = "Noto'g'ri login yoki parol";
+      err.classList.add('show');
+      passwordEl.value = '';
+      passwordEl.focus();
     };
 
     // Enter key support
