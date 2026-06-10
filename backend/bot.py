@@ -402,9 +402,12 @@ async def p_color(c: types.CallbackQuery, state: FSMContext):
         "📋  *Yangi Buyurtma — 9/9 (a)*\n"
         "━━━━━━━━━━━━━━━━━━━━\n\n"
         f"✅  Profil rangi: *{color_p}*\n\n"
-        "📐  Taxminiy o'lchamlarni yozing:\n\n"
-        "_Ko'rinish: Kenglik × Balandlik (sm)\n"
-        "Masalan: 120×150_",
+        "📐  *Taxminiy o'lchamlarni yozing (Kenglik × Balandlik, smda):*\n"
+        "Agar sizda bir nechta har xil o'lchamdagi mahsulotlar bo'lsa, hammasini ajratib yozishingiz mumkin.\n\n"
+        "*Masalan:*\n"
+        "1️⃣ Bitta o'lcham uchun: `120×150`\n"
+        "2️⃣ Bir nechta o'lchamlar uchun: `120×150=2 ta, 90×200=1 ta` yoki `Rom: 120×150 (3 ta), Eshik: 90×200 (2 ta)`\n\n"
+        "_💡 Eslatma: Ustalarimiz baribir o'zlari borib aniq o'lchab olishadi, shuning uchun hozircha taxminiy yozishingiz mumkin._",
         reply_markup=cancel_kb(),
         parse_mode='Markdown'
     )
@@ -416,9 +419,10 @@ async def p_dim(m: types.Message, state: FSMContext):
     await m.answer(
         "📋  *Yangi Buyurtma — 9/9 (b)*\n"
         "━━━━━━━━━━━━━━━━━━━━\n\n"
-        f"✅  O'lcham: *{m.text.strip()}*\n\n"
-        "📦  Nechta buyurtma berasiz?\n\n"
-        "_Masalan: 2_",
+        f"✅  O'lchamlar: *{m.text.strip()}*\n\n"
+        "📦  *Jami nechta mahsulot buyurtma qilyapsiz?*\n"
+        "Yuqorida yozgan mahsulotlaringizning umumiy sonini yozing.\n\n"
+        "_Masalan: 3_",
         reply_markup=cancel_kb(),
         parse_mode='Markdown'
     )
