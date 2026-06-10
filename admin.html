@@ -887,7 +887,98 @@
       }
     }
 
+    .login-error.show {
+      display: block !important;
+    }
+
   </style>
+
+  <script>
+    // LOGIN — oddiy script (module emas), tugma bosilganda darhol ishlaydi
+    function doLogin() {
+      var usernameEl = document.getElementById('login-username');
+      var passwordEl = document.getElementById('login-password');
+      var btn = document.getElementById('login-btn');
+      var err = document.getElementById('login-error');
+
+      var user = usernameEl.value.trim();
+      var pw = passwordEl.value.trim();
+
+      err.style.display = 'none';
+
+      if (!user) {
+        err.textContent = 'Loginni kiriting';
+        err.style.display = 'block';
+        return;
+      }
+      if (!pw) {
+        err.textContent = 'Parolni kiriting';
+        err.style.display = 'block';
+        return;
+      }
+
+      var defaultUser = 'tripro';
+      var defaultPass = '2025';
+
+      if (user.toLowerCase() === defaultUser && pw === defaultPass) {
+        try { sessionStorage.setItem('tripro_logged_in', 'true'); } catch(e) {}
+        document.getElementById('login-screen').style.display = 'none';
+        document.body.style.overflow = '';
+        return;
+      }
+
+      // Firebase parolini tekshirish
+      if (window._firebaseGet && window._firebaseRef && window._firebaseDB && window._firebaseChild) {
+        btn.disabled = true;
+        btn.textContent = 'Tekshirilmoqda...';
+        window._firebaseGet(window._firebaseChild(window._firebaseRef(window._firebaseDB), 'adminSettings'))
+          .then(function(snap) {
+            var validUser = defaultUser;
+            var validPass = defaultPass;
+            if (snap.exists()) {
+              var s = snap.val();
+              if (s && s.login && s.login.length >= 3) validUser = s.login;
+              if (s && s.password && s.password.length >= 4) validPass = s.password;
+            }
+            if (user.toLowerCase() === validUser.toLowerCase() && pw === validPass) {
+              try { sessionStorage.setItem('tripro_logged_in', 'true'); } catch(e) {}
+              document.getElementById('login-screen').style.display = 'none';
+              document.body.style.overflow = '';
+            } else {
+              err.textContent = "Noto'g'ri login yoki parol";
+              err.style.display = 'block';
+              passwordEl.value = '';
+              passwordEl.focus();
+            }
+          })
+          .catch(function() {
+            err.textContent = "Noto'g'ri login yoki parol";
+            err.style.display = 'block';
+            passwordEl.value = '';
+            passwordEl.focus();
+          })
+          .finally(function() {
+            btn.disabled = false;
+            btn.textContent = 'Kirish';
+          });
+        return;
+      }
+
+      // Firebase yo'q — noto'g'ri parol
+      err.textContent = "Noto'g'ri login yoki parol";
+      err.style.display = 'block';
+      passwordEl.value = '';
+      passwordEl.focus();
+    }
+
+    // Enter tugmasi bilan kirish
+    document.addEventListener('keydown', function(e) {
+      var ls = document.getElementById('login-screen');
+      if (e.key === 'Enter' && ls && ls.style.display !== 'none') {
+        doLogin();
+      }
+    });
+  </script>
 </head>
 
 <body>
@@ -913,7 +1004,7 @@
         <input type="password" id="login-password" placeholder="Parolni kiriting" autocomplete="current-password">
       </div>
 
-      <button class="login-btn" id="login-btn" onclick="window.handleLogin()">Kirish</button>
+      <button class="login-btn" id="login-btn" onclick="doLogin()">Kirish</button>
 
       <div class="login-footer">TriPro © 2026</div>
       <div style="margin-top:10px; font-size:0.75rem;">
@@ -1343,90 +1434,8 @@
       appId: "1:581495600669:web:da0d2727be542bec0178f4"
     };
 
-    // ─── LOGIN ───
-    window.handleLogin = function() {
-      const usernameEl = document.getElementById('login-username');
-      const passwordEl = document.getElementById('login-password');
-      const btn = document.getElementById('login-btn');
-      const err = document.getElementById('login-error');
 
-      const user = usernameEl.value.trim();
-      const pw = passwordEl.value.trim();
 
-      err.classList.remove('show');
-
-      if (!user) {
-        err.textContent = 'Loginni kiriting';
-        err.classList.add('show');
-        return;
-      }
-      if (!pw) {
-        err.textContent = 'Parolni kiriting';
-        err.classList.add('show');
-        return;
-      }
-
-      // Default login (har doim ishlaydi)
-      const defaultUser = 'tripro';
-      const defaultPass = '2025';
-
-      if (user.toLowerCase() === defaultUser && pw === defaultPass) {
-        try { sessionStorage.setItem('tripro_logged_in', 'true'); } catch(e) {}
-        document.getElementById('login-screen').classList.add('hidden');
-        document.body.style.overflow = '';
-        return;
-      }
-
-      // Firebase dan olingan parol bilan tekshirish
-      if (window._firebaseDB && window._firebaseRef && window._firebaseGet && window._firebaseChild) {
-        btn.disabled = true;
-        btn.textContent = 'Tekshirilmoqda...';
-        window._firebaseGet(window._firebaseChild(window._firebaseRef(window._firebaseDB), 'adminSettings'))
-          .then(function(snap) {
-            let validUser = defaultUser;
-            let validPass = defaultPass;
-            if (snap.exists()) {
-              const s = snap.val();
-              if (s && s.login && s.login.length >= 3) validUser = s.login;
-              if (s && s.password && s.password.length >= 4) validPass = s.password;
-            }
-            if (user.toLowerCase() === validUser.toLowerCase() && pw === validPass) {
-              try { sessionStorage.setItem('tripro_logged_in', 'true'); } catch(e) {}
-              document.getElementById('login-screen').classList.add('hidden');
-              document.body.style.overflow = '';
-            } else {
-              err.textContent = "Noto'g'ri login yoki parol";
-              err.classList.add('show');
-              passwordEl.value = '';
-              passwordEl.focus();
-            }
-          })
-          .catch(function() {
-            err.textContent = "Noto'g'ri login yoki parol";
-            err.classList.add('show');
-            passwordEl.value = '';
-            passwordEl.focus();
-          })
-          .finally(function() {
-            btn.disabled = false;
-            btn.textContent = 'Kirish';
-          });
-        return;
-      }
-
-      // Firebase yo'q — xato parol
-      err.textContent = "Noto'g'ri login yoki parol";
-      err.classList.add('show');
-      passwordEl.value = '';
-      passwordEl.focus();
-    };
-
-    // Enter key support
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' && !document.getElementById('login-screen').classList.contains('hidden')) {
-        window.handleLogin();
-      }
-    });
 
     window.saveAdminPassword = async function() {
       if (!window._firebaseDB) { alert('Firebase ulanmagan'); return; }
@@ -2160,20 +2169,23 @@
             </div>
             <div style="display:flex; gap:10px; margin-top:10px; border-top:1px solid var(--border); padding-top:10px;">
               <button onclick="openServiceModal('${sv.id}')" style="flex:1; padding:8px; background:var(--navy); color:white; border:none; border-radius:4px; cursor:pointer;">Tahrirlash</button>
-              <button onclick="deleteService('${sv.id}')" style="padding:8px; background:#FEE2E2; color:#DC2626; border:none; border-radius:4px; cursor:pointer;">
-           // Initialize on file load
+              <button onclick="deleteService('${sv.id}')" style="padding:8px; background:#FEE2E2; color:#DC2626; border:none; border-radius:4px; cursor:pointer;">O'chirish</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    // Initialize on file load
     window.onload = function() {
       // Check if already logged in (from same browser session)
+      var loginScreen = document.getElementById('login-screen');
       try {
         if (sessionStorage.getItem('tripro_logged_in') === 'true') {
-          document.getElementById('login-screen').classList.add('hidden');
+          loginScreen.style.display = 'none';
           document.body.style.overflow = '';
-        } else {
-          document.getElementById('login-screen').classList.remove('hidden');
         }
-      } catch (e) {
-        console.warn('sessionStorage is not available:', e);
-      }
+      } catch (e) {}
 
       // Clear legacy dummy data if length is 3 (was hardcoded)
       try {
