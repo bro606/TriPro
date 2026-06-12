@@ -428,10 +428,12 @@ async def p_dim(m: types.Message, state: FSMContext):
         parse_mode='Markdown'
     )
 
-@dp.message(AkfaForm.quantity, lambda m: m.text and m.text.strip().isdigit() and int(m.text.strip()) > 0)
+@dp.message(AkfaForm.quantity, F.text)
 async def p_qty(m: types.Message, state: FSMContext):
-    await state.update_data(quantity=int(m.text.strip()))
+    qty_val = m.text.strip()
+    await state.update_data(quantity=qty_val)
     d = await state.get_data()
+    qty_display = qty_val if 'ta' in str(qty_val).lower() else f"{qty_val} ta"
     txt = (
         "📋  *Buyurtma Tasdiqlash*\n"
         "━━━━━━━━━━━━━━━━━━━━\n\n"
@@ -444,7 +446,7 @@ async def p_qty(m: types.Message, state: FSMContext):
         f"✨  Oyna turi: *{d['glass_pattern']}*\n"
         f"🖌️  Profil rangi: *{d['profile_color']}*\n"
         f"📐  O'lcham: *{d['dimensions']}*\n"
-        f"📦  Soni: *{d['quantity']} ta*\n\n"
+        f"📦  Soni: *{qty_display}*\n\n"
         "━━━━━━━━━━━━━━━━━━━━\n"
         "✅  Hammasi to'g'rimi?"
     )
@@ -462,16 +464,18 @@ async def p_yes(c: types.CallbackQuery, state: FSMContext):
     info_text = (f"Material: {d['material']}, Oyna: {d['glass_layer']}, "
                  f"Oyna Rangi: {d['glass_color']}, Turi: {d['glass_pattern']}, "
                  f"Profil: {d['profile_color']}")
+    qty_val = d.get('quantity', 1)
     oid = await save_akfa_order(c.from_user.id, d.get('name',''), d.get('surname',''), d.get('phone',''),
-                          info_text, d.get('dimensions',''), d.get('quantity',1))
+                          info_text, d.get('dimensions',''), qty_val)
     await state.clear()
+    qty_display = qty_val if 'ta' in str(qty_val).lower() else f"{qty_val} ta"
     await c.message.answer(
         "🎉  *Buyurtmangiz muvaffaqiyatli qabul qilindi!*\n"
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
         f"👤  Mijoz: *{d['name']} {d['surname']}*\n"
         f"📞  Telefon: *{d['phone']}*\n"
         f"📐  O'lcham: *{d['dimensions']}*\n"
-        f"📦  Soni: *{d['quantity']} ta*\n\n"
+        f"📦  Soni: *{qty_display}*\n\n"
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
         "⏰  Buyurtmangiz qabul qilindi. Tez orada mutaxassisimiz siz bilan bog'lanib to'lov tafsilotlarini tushuntiradi.\n"
         "💳  To'lov amalga oshirilgandan so'ng, sizga buyurtma ID raqami yuboriladi va u orqali buyurtma holatini tekshirishingiz mumkin bo'ladi!",
