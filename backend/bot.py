@@ -340,11 +340,26 @@ async def p_mat(c: types.CallbackQuery, state: FSMContext):
     mat_type = c.data.replace('mat_', '')
     await c.answer(f"✅ {mat_type} tanlandi")
     await state.update_data(material=mat_type)
-    await state.set_state(AkfaForm.glass_layer)
+    await state.set_state(AkfaForm.profile_color)
     await c.message.answer(
         "📋  *Yangi Buyurtma — 5/9*\n"
         "━━━━━━━━━━━━━━━━━━━━\n\n"
         f"✅  Material: *{mat_type}*\n\n"
+        "🖌️  Profil (rama) rangini tanlang:",
+        reply_markup=color_kb(),
+        parse_mode='Markdown'
+    )
+
+@dp.callback_query(AkfaForm.profile_color, F.data.startswith('pcol_'))
+async def p_color(c: types.CallbackQuery, state: FSMContext):
+    color_p = c.data.replace('pcol_', '')
+    await c.answer(f"✅ {color_p} tanlandi")
+    await state.update_data(profile_color=color_p)
+    await state.set_state(AkfaForm.glass_layer)
+    await c.message.answer(
+        "📋  *Yangi Buyurtma — 6/9*\n"
+        "━━━━━━━━━━━━━━━━━━━━\n\n"
+        f"✅  Profil rangi: *{color_p}*\n\n"
         "🪟  Oyna qavatini tanlang:",
         reply_markup=glass_kb(),
         parse_mode='Markdown'
@@ -357,7 +372,7 @@ async def p_glass(c: types.CallbackQuery, state: FSMContext):
     await state.update_data(glass_layer=layer)
     await state.set_state(AkfaForm.glass_color)
     await c.message.answer(
-        "📋  *Yangi Buyurtma — 6/9*\n"
+        "📋  *Yangi Buyurtma — 7/9*\n"
         "━━━━━━━━━━━━━━━━━━━━\n\n"
         f"✅  Oyna qavati: *{layer}*\n\n"
         "🎨  Oyna rangini tanlang:",
@@ -372,7 +387,7 @@ async def p_glass_color(c: types.CallbackQuery, state: FSMContext):
     await state.update_data(glass_color=color_name)
     await state.set_state(AkfaForm.glass_pattern)
     await c.message.answer(
-        "📋  *Yangi Buyurtma — 7/9*\n"
+        "📋  *Yangi Buyurtma — 8/9*\n"
         "━━━━━━━━━━━━━━━━━━━━\n\n"
         f"✅  Oyna rangi: *{color_name}*\n\n"
         "✨  Oyna ko'rinishini tanlang:",
@@ -385,26 +400,11 @@ async def p_glass_pattern(c: types.CallbackQuery, state: FSMContext):
     pattern_name = c.data.replace('gpat_', '')
     await c.answer(f"✅ {pattern_name} tanlandi")
     await state.update_data(glass_pattern=pattern_name)
-    await state.set_state(AkfaForm.profile_color)
-    await c.message.answer(
-        "📋  *Yangi Buyurtma — 8/9*\n"
-        "━━━━━━━━━━━━━━━━━━━━\n\n"
-        f"✅  Oyna turi: *{pattern_name}*\n\n"
-        "🖌️  Profil (rama) rangini tanlang:",
-        reply_markup=color_kb(),
-        parse_mode='Markdown'
-    )
-
-@dp.callback_query(AkfaForm.profile_color, F.data.startswith('pcol_'))
-async def p_color(c: types.CallbackQuery, state: FSMContext):
-    color_p = c.data.replace('pcol_', '')
-    await c.answer(f"✅ {color_p} tanlandi")
-    await state.update_data(profile_color=color_p)
     await state.set_state(AkfaForm.dimensions)
     await c.message.answer(
         "📋  *Yangi Buyurtma — 9/9 (a)*\n"
         "━━━━━━━━━━━━━━━━━━━━\n\n"
-        f"✅  Profil rangi: *{color_p}*\n\n"
+        f"✅  Oyna turi: *{pattern_name}*\n\n"
         "📐  *Taxminiy o'lchamlarni yozing (Kenglik × Balandlik, smda):*\n"
         "Agar sizda bir nechta har xil o'lchamdagi mahsulotlar bo'lsa, hammasini ajratib yozishingiz mumkin.\n\n"
         "*Misol uchun:* `120x150=2 ta rom, 90x200=1 ta eshik`\n\n"
@@ -620,6 +620,9 @@ async def fallback_callback(c: types.CallbackQuery, state: FSMContext):
     """Hech bir handler ushlamagan callback — state yo'qolgan bo'lishi mumkin"""
     current_state = await state.get_state()
     logger.warning(f"Fallback callback: data={c.data}, state={current_state}, user={c.from_user.id}")
+    if current_state is not None:
+        await c.answer("⚠️ Noto'g'ri tanlov", show_alert=True)
+        return
     await c.answer("⚠️ Sessiya tugadi", show_alert=False)
     await state.clear()
     await c.message.answer(
@@ -636,6 +639,22 @@ async def fallback_message(m: types.Message, state: FSMContext):
     """Hech bir handler ushlamagan xabar — noto'g'ri state yoki yo'qolgan state"""
     current_state = await state.get_state()
     logger.warning(f"Fallback message: text={m.text!r}, state={current_state}, user={m.from_user.id}")
+    if current_state is not None:
+        if current_state == 'AkfaForm:quantity':
+            await m.answer(
+                "⚠️  *Jami son faqat raqamlarda kiritilishi kerak!*\n\n"
+                "Iltimos, mahsulotlarning umumiy sonini faqat son ko'rinishida yozing (masalan: `12`).\n\n"
+                "_Yoki bekor qilish uchun /cancel bosing._",
+                parse_mode='Markdown'
+            )
+        else:
+            await m.answer(
+                "⚠️  *Noto'g'ri formatda ma'lumot kiritildi!*\n\n"
+                "Iltimos, so'ralgan ma'lumotni to'g'ri shaklda yozib yuboring.\n\n"
+                "_Bosh menyuga qaytish uchun /cancel bosing._",
+                parse_mode='Markdown'
+            )
+        return
     await state.clear()
     await m.answer(
         "⏱  *Server yangilandi*\n"
