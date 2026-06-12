@@ -217,6 +217,36 @@ async def debug_test_token():
     except Exception as e:
         return {"error": str(e)}
 
+@app.get('/debug/token-detail')
+async def debug_token_detail():
+    """Token tarkibini chuqur tekshirish (typografik xatolar, qator o'tishlar va hokazo)"""
+    token = os.getenv('BOT_TOKEN', '')
+    if not token:
+        return {"error": "BOT_TOKEN topilmadi"}
+    
+    # Belgilar kodlarini tahlil qilish (yashirin belgilar borligini tekshirish uchun)
+    char_codes = [ord(c) for c in token]
+    
+    # Birinchi va oxirgi 4 ta belgini ko'rsatish
+    masked_token = ""
+    if len(token) > 10:
+        masked_token = f"{token[:5]}...{token[-5:]}"
+    else:
+        masked_token = "juda qisqa token"
+        
+    return {
+        "raw_length": len(token),
+        "stripped_length": len(token.strip()),
+        "masked_token": masked_token,
+        "starts_with_digit": token[0].isdigit() if token else False,
+        "contains_colon": ":" in token,
+        "colon_index": token.find(":") if ":" in token else -1,
+        "char_codes": char_codes[:10] + ["..."] + char_codes[-5:] if len(char_codes) > 15 else char_codes,
+        "has_carriage_return": "\r" in token,
+        "has_newline": "\n" in token,
+        "has_spaces": " " in token,
+    }
+
 
 @app.get('/webhook/info')
 async def webhook_info():
