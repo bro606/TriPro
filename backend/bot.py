@@ -79,7 +79,7 @@ def main_kb():
         [InlineKeyboardButton(text='🌐 Saytni ko\'rish', url=SITE_URL)],
         [InlineKeyboardButton(text='🚪 AKFA buyurtmasi', callback_data='start_order')],
         [InlineKeyboardButton(text='🔍 ID tekshirish', callback_data='check_id')],
-        [InlineKeyboardButton(text='🛠 Texnik xizmat', callback_data='start_maintenance')],
+        [InlineKeyboardButton(text='🛡 Profilaktikaga yozilish', callback_data='np')],
         [InlineKeyboardButton(text='⚙️ Boshqa xizmatlar', callback_data='other_services')]
     ])
 
@@ -97,7 +97,7 @@ def phone_kb():
 def mat_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text='🏗  Plastik', callback_data='mat_Plastik'),
+            InlineKeyboardButton(text='🚪  Plastik', callback_data='mat_Plastik'),
             InlineKeyboardButton(text='🪟  Alyumin', callback_data='mat_Alyumin'),
         ],
         [InlineKeyboardButton(text='🏠  Bosh menyuga qaytish', callback_data='to_menu')]
@@ -115,9 +115,12 @@ def glass_kb():
 def glass_color_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text='⚪  Shaffof', callback_data='gcol_Shaffof'),
+            InlineKeyboardButton(text='⚪  Shaffof (Oq)', callback_data='gcol_Shaffof (Oq)'),
+            InlineKeyboardButton(text='🟤  Jigarrang', callback_data='gcol_Jigarrang'),
+        ],
+        [
+            InlineKeyboardButton(text='⚫  Qora', callback_data='gcol_Qora'),
             InlineKeyboardButton(text='🩶  Kulrang', callback_data='gcol_Kulrang'),
-            InlineKeyboardButton(text='🟤  Bronza', callback_data='gcol_Bronza'),
         ],
         [InlineKeyboardButton(text='🏠  Bosh menyuga qaytish', callback_data='to_menu')]
     ])
@@ -404,9 +407,7 @@ async def p_color(c: types.CallbackQuery, state: FSMContext):
         f"✅  Profil rangi: *{color_p}*\n\n"
         "📐  *Taxminiy o'lchamlarni yozing (Kenglik × Balandlik, smda):*\n"
         "Agar sizda bir nechta har xil o'lchamdagi mahsulotlar bo'lsa, hammasini ajratib yozishingiz mumkin.\n\n"
-        "*Masalan:*\n"
-        "1️⃣ Bitta o'lcham uchun: `120×150`\n"
-        "2️⃣ Bir nechta o'lchamlar uchun: `120×150=2 ta, 90×200=1 ta` yoki `Rom: 120×150 (3 ta), Eshik: 90×200 (2 ta)`\n\n"
+        "*Misol uchun:* `120x150=2 ta rom, 90x200=1 ta eshik`\n\n"
         "_💡 Eslatma: Ustalarimiz baribir o'zlari borib aniq o'lchab olishadi, shuning uchun hozircha taxminiy yozishingiz mumkin._",
         reply_markup=cancel_kb(),
         parse_mode='Markdown'
@@ -474,7 +475,7 @@ async def p_yes(c: types.CallbackQuery, state: FSMContext):
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
         "⏰  Buyurtmangiz qabul qilindi. Tez orada mutaxassisimiz siz bilan bog'lanib to'lov tafsilotlarini tushuntiradi.\n"
         "💳  To'lov amalga oshirilgandan so'ng, sizga buyurtma ID raqami yuboriladi va u orqali buyurtma holatini tekshirishingiz mumkin bo'ladi!",
-        reply_markup=offer_kb(),
+        reply_markup=cancel_kb(),
         parse_mode='Markdown'
     )
 
