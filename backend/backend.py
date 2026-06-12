@@ -200,22 +200,41 @@ async def debug_env():
 @app.get('/debug/test-token')
 async def debug_test_token():
     """Tokenni to'g'ridan-to'g'ri Telegram API orqali tekshirish"""
-    token = os.getenv('BOT_TOKEN', '').strip()
-    if not token:
-        return {"error": "BOT_TOKEN environment variable topilmadi yoki bo'sh."}
+    token_current = os.getenv('BOT_TOKEN', '').strip()
+    token_doc = "8745687733:AAGcftZHiq3jZkyvWN6IZglvyxz26kJ5G-4"
     
-    url = f"https://api.telegram.org/bot{token}/getMe"
+    results = {}
+    
+    # Current token test
+    if token_current:
+        url_current = f"https://api.telegram.org/bot{token_current}/getMe"
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url_current) as resp:
+                    results["current_token"] = {
+                        "masked": f"{token_current[:5]}...{token_current[-5:]}" if len(token_current) > 10 else "short",
+                        "status_code": resp.status,
+                        "response": await resp.json()
+                    }
+        except Exception as e:
+            results["current_token"] = {"error": str(e)}
+    else:
+        results["current_token"] = {"error": "No current token"}
+        
+    # Doc token test
+    url_doc = f"https://api.telegram.org/bot{token_doc}/getMe"
     try:
         async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
-                status = resp.status
-                body = await resp.json()
-                return {
-                    "status_code": status,
-                    "telegram_response": body
+            async with session.get(url_doc) as resp:
+                results["doc_token"] = {
+                    "masked": f"{token_doc[:5]}...{token_doc[-5:]}",
+                    "status_code": resp.status,
+                    "response": await resp.json()
                 }
     except Exception as e:
-        return {"error": str(e)}
+        results["doc_token"] = {"error": str(e)}
+        
+    return results
 
 @app.get('/debug/token-detail')
 async def debug_token_detail():
