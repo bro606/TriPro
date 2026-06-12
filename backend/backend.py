@@ -197,6 +197,26 @@ async def debug_env():
         "port": os.getenv('PORT', 'NOT SET'),
     }
 
+@app.get('/debug/test-token')
+async def debug_test_token():
+    """Tokenni to'g'ridan-to'g'ri Telegram API orqali tekshirish"""
+    token = os.getenv('BOT_TOKEN', '').strip()
+    if not token:
+        return {"error": "BOT_TOKEN environment variable topilmadi yoki bo'sh."}
+    
+    url = f"https://api.telegram.org/bot{token}/getMe"
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as resp:
+                status = resp.status
+                body = await resp.json()
+                return {
+                    "status_code": status,
+                    "telegram_response": body
+                }
+    except Exception as e:
+        return {"error": str(e)}
+
 
 @app.get('/webhook/info')
 async def webhook_info():
