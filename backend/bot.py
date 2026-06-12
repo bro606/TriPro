@@ -433,7 +433,7 @@ async def p_qty(m: types.Message, state: FSMContext):
     qty_val = m.text.strip()
     await state.update_data(quantity=qty_val)
     d = await state.get_data()
-    qty_display = qty_val if 'ta' in str(qty_val).lower() else f"{qty_val} ta"
+    qty_display = f"{qty_val} ta" if str(qty_val).isdigit() else qty_val
     txt = (
         "📋  *Buyurtma Tasdiqlash*\n"
         "━━━━━━━━━━━━━━━━━━━━\n\n"
@@ -468,7 +468,7 @@ async def p_yes(c: types.CallbackQuery, state: FSMContext):
     oid = await save_akfa_order(c.from_user.id, d.get('name',''), d.get('surname',''), d.get('phone',''),
                           info_text, d.get('dimensions',''), qty_val)
     await state.clear()
-    qty_display = qty_val if 'ta' in str(qty_val).lower() else f"{qty_val} ta"
+    qty_display = f"{qty_val} ta" if str(qty_val).isdigit() else qty_val
     await c.message.answer(
         "🎉  *Buyurtmangiz muvaffaqiyatli qabul qilindi!*\n"
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"

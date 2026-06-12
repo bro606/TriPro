@@ -2258,7 +2258,7 @@
                 <td class="search-target">${o.name || ''} ${o.surname || ''}</td>
                 <td style="font-size:0.8rem; max-width:200px;">${o.info || ''}</td>
                 <td>${o.dimensions || ''}</td>
-                <td>${String(o.quantity || 1).toLowerCase().includes('ta') ? (o.quantity || 1) : (o.quantity || 1) + ' ta'}</td>
+                <td>${/^\d+$/.test(String(o.quantity || 1)) ? (o.quantity || 1) + ' ta' : (o.quantity || 1)}</td>
                 <td class="search-target">${o.phone || ''}</td>
                 <td>
                   <select onchange="updateOrderStatus('${o.order_id}', this.value)" class="status-select-dropdown" style="${statusStyle}">
