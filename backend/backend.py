@@ -287,6 +287,23 @@ async def webhook_info():
     except Exception as e:
         return {"error": str(e)}
 
+@app.get('/debug/setup-webhook')
+async def trigger_setup_webhook():
+    """Tizimda webhookni qaytadan o'rnatish uchun va xatoni ko'rish uchun debug endpoint"""
+    try:
+        success = await setup_webhook()
+        info = await bot.get_webhook_info()
+        return {
+            "setup_success": success,
+            "expected_webhook": f"{PUBLIC_URL}/webhook/bot",
+            "current_webhook": info.url,
+            "pending_updates": info.pending_update_count,
+            "last_error": info.last_error_message,
+            "last_error_date": str(info.last_error_date) if info.last_error_date else None,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
 
 @app.get('/', response_class=HTMLResponse)
 async def health_and_admin():
