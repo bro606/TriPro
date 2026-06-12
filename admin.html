@@ -356,6 +356,22 @@
       color: #22C55E;
     }
 
+    .status-select-dropdown {
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      font-family: inherit;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-weight: 600;
+      outline: none;
+      transition: var(--transition);
+    }
+    .status-select-dropdown:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-color: var(--gold);
+    }
+
     .action-btns {
       display: flex;
       gap: 10px;
@@ -1358,11 +1374,10 @@
                 <th>Muammo</th>
                 <th>Turi</th>
                 <th>Holat</th>
-                <th>Amal</th>
               </tr>
             </thead>
             <tbody id="maintenance-tbody">
-              <tr><td colspan="6" style="text-align:center; padding:30px;">Talablar yo'q</td></tr>
+              <tr><td colspan="5" style="text-align:center; padding:30px;">Talablar yo'q</td></tr>
             </tbody>
           </table>
         </div>
@@ -2230,28 +2245,40 @@
         if (orders.length === 0) {
           tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px;">Buyurtmalar mavjud emas</td></tr>';
         } else {
-          tbody.innerHTML = orders.map(o => `
-            <tr class="searchable-row">
-              <td style="font-weight:600; color:var(--gold);">#${o.order_id}</td>
-              <td class="search-target">${o.name || ''} ${o.surname || ''}</td>
-              <td style="font-size:0.8rem; max-width:200px;">${o.info || ''}</td>
-              <td>${o.dimensions || ''}</td>
-              <td>${o.quantity || 1} ta</td>
-              <td class="search-target">${o.phone || ''}</td>
-              <td>
-                <span class="status-badge ${o.status==='ready'?'status-done':'status-process'}">
-                  ${o.status==='ready'?'Tayyor':'Jarayonda'}
-                </span>
-              </td>
-              <td>
-                <div class="action-btns">
-                  <button title="Qabul qilish" class="btn-icon" onclick="updateOrderStatus('${o.order_id}', 'assembling')">✅</button>
-                  <button title="Tayyor" class="btn-icon" onclick="updateOrderStatus('${o.order_id}', 'ready')">🏁</button>
-                  <button title="ID yuborish" class="btn-icon" onclick="sendOrderId('${o.order_id}')">✉️</button>
-                </div>
-              </td>
-            </tr>
-          `).join('');
+          tbody.innerHTML = orders.map(o => {
+            const ost = o.status || 'pending';
+            const statusStyle = ost === 'ready' 
+              ? 'background: rgba(34, 197, 94, 0.1); color: #22C55E; border-color: rgba(34, 197, 94, 0.2);' 
+              : ost === 'pending' 
+                ? 'background: rgba(59, 130, 246, 0.1); color: #3B82F6; border-color: rgba(59, 130, 246, 0.2);' 
+                : 'background: rgba(245, 158, 11, 0.1); color: #F59E0B; border-color: rgba(245, 158, 11, 0.2);';
+            return `
+              <tr class="searchable-row">
+                <td style="font-weight:600; color:var(--gold);">#${o.order_id}</td>
+                <td class="search-target">${o.name || ''} ${o.surname || ''}</td>
+                <td style="font-size:0.8rem; max-width:200px;">${o.info || ''}</td>
+                <td>${o.dimensions || ''}</td>
+                <td>${o.quantity || 1} ta</td>
+                <td class="search-target">${o.phone || ''}</td>
+                <td>
+                  <select onchange="updateOrderStatus('${o.order_id}', this.value)" class="status-select-dropdown" style="${statusStyle}">
+                    <option value="pending" ${ost === 'pending' ? 'selected' : ''}>⏳ Kutilmoqda</option>
+                    <option value="material_delivered" ${ost === 'material_delivered' ? 'selected' : ''}>1-bosqich: 🚚 Material</option>
+                    <option value="assembling" ${ost === 'assembling' ? 'selected' : ''}>2-bosqich: 🛠 Yasash</option>
+                    <option value="cutting" ${ost === 'cutting' ? 'selected' : ''}>3-bosqich: ✨ Oynak</option>
+                    <option value="ready" ${ost === 'ready' ? 'selected' : ''}>4-bosqich: 🎉 Tayyor</option>
+                  </select>
+                </td>
+                <td>
+                  <div class="action-btns">
+                    <button title="ID yuborish" class="btn-export" onclick="sendOrderId('${o.order_id}')" style="font-size: 0.8rem; padding: 6px 12px; min-height: unset; gap: 4px; display: inline-flex; align-items: center; border-radius: 8px;">
+                      <span>✉️ ID Yuborish</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          }).join('');
         }
 
         // Load Maintenance
@@ -2262,23 +2289,31 @@
         if (!mtbody) return;
         
         if (mnts.length === 0) {
-          mtbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px;">Profilaktika talablari yo\'q</td></tr>';
+          mtbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">Profilaktika talablari yo\'q</td></tr>';
         } else {
-          mtbody.innerHTML = mnts.map(m => `
-            <tr class="searchable-row">
-              <td style="font-size:0.8rem;">${m.created_at ? m.created_at.split(' ')[0] : ''}</td>
-              <td class="search-target">${m.name || ''}</td>
-              <td style="font-size:0.8rem;">${m.problem || ''}</td>
-              <td><span style="font-size:0.7rem; background:#f0f0f0; padding:2px 6px; border-radius:4px;">${m.type==='auto'?'🤖 Auto':'👤 Manuel'}</span></td>
-              <td><span class="status-badge ${m.status==='ready'?'status-done':'status-process'}">${m.status || ''}</span></td>
-              <td>
-                <div class="action-btns">
-                   <button title="Qabul" class="btn-icon" onclick="updateMntStatus(${m.id}, 'accepted')">✅</button>
-                   <button title="Yakunlandi" class="btn-icon" onclick="updateMntStatus(${m.id}, 'ready')">🏁</button>
-                </div>
-              </td>
-            </tr>
-          `).join('');
+          mtbody.innerHTML = mnts.map(m => {
+            const mst = m.status || 'pending';
+            const statusStyle = mst === 'ready'
+              ? 'background: rgba(34, 197, 94, 0.1); color: #22C55E; border-color: rgba(34, 197, 94, 0.2);'
+              : mst === 'pending'
+                ? 'background: rgba(59, 130, 246, 0.1); color: #3B82F6; border-color: rgba(59, 130, 246, 0.2);'
+                : 'background: rgba(245, 158, 11, 0.1); color: #F59E0B; border-color: rgba(245, 158, 11, 0.2);';
+            return `
+              <tr class="searchable-row">
+                <td style="font-size:0.8rem;">${m.created_at ? m.created_at.split(' ')[0] : ''}</td>
+                <td class="search-target">${m.name || ''}</td>
+                <td style="font-size:0.8rem;">${m.problem || ''}</td>
+                <td><span style="font-size:0.7rem; background:#f0f0f0; padding:2px 6px; border-radius:4px;">${m.type==='auto'?'🤖 Auto':'👤 Manuel'}</span></td>
+                <td>
+                  <select onchange="updateMntStatus(${m.id}, this.value)" class="status-select-dropdown" style="${statusStyle}">
+                    <option value="pending" ${mst === 'pending' ? 'selected' : ''}>⏳ Kutilmoqda</option>
+                    <option value="accepted" ${mst === 'accepted' ? 'selected' : ''}>✅ Qabul qilindi</option>
+                    <option value="ready" ${mst === 'ready' ? 'selected' : ''}>🏁 Yakunlandi</option>
+                  </select>
+                </td>
+              </tr>
+            `;
+          }).join('');
         }
       } catch(e) {
         console.error("Fetch error:", e);

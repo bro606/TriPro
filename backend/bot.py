@@ -565,31 +565,46 @@ async def chk_id(m: types.Message, state: FSMContext):
         )
         await state.clear()
         return
-    sm = {
-        'pending':            '⏳  Kutilmoqda',
-        'material_delivered': '🚚  Material olib kelindi',
-        'assembling':         '🔧  Yig\'ilmoqda',
-        'cutting':            '🪟  Oyna kesilmoqda',
-        'ready':              '📦  Tayyor va yetkazilmoqda',
-    }
-    status_label = sm.get(o['status'], o['status'])
-    await m.answer(
-        "🔍  *Buyurtma Ma'lumotlari*\n"
+    # Progress indicators based on status
+    status = o['status'] or 'pending'
+    s1_icon = "⚪"
+    s2_icon = "⚪"
+    s3_icon = "⚪"
+    s4_icon = "⚪"
+    
+    if status == 'pending':
+        s1_icon = "⏳"
+    elif status == 'material_delivered':
+        s1_icon = "🟡"
+    elif status == 'assembling':
+        s1_icon = "🟢"
+        s2_icon = "🟡"
+    elif status == 'cutting':
+        s1_icon = "🟢"
+        s2_icon = "🟢"
+        s3_icon = "🟡"
+    elif status == 'ready':
+        s1_icon = "🟢"
+        s2_icon = "🟢"
+        s3_icon = "🟢"
+        s4_icon = "🟢"
+
+    msg = (
+        "Assalomu alaykum! TriPro jamoasini tanlaganingizdan xursandmiz. Buyurtmangiz holatini kuzatib boring:\n\n"
+        f"🆔 Buyurtma ID: **#{o['order_id']}**\n"
         "━━━━━━━━━━━━━━━━━━━━\n\n"
-        f"🆔  Buyurtma ID: *#{o['order_id']}*\n\n"
-        f"👤  Ism: *{o['name']} {o['surname']}*\n"
-        f"📞  Telefon: *{o['phone']}*\n"
-        f"🏗️  Material: *{o['material']}*\n"
-        f"🪟  Oyna qavati: *{o['glass_layer']}*\n"
-        f"🎨  Rang: *{o['profile_color']}*\n"
-        f"📐  O'lcham: *{o['dimensions']}*\n"
-        f"📦  Soni: *{o['quantity']} ta*\n\n"
-        "━━━━━━━━━━━━━━━━━━━━\n"
-        f"📊  Holati: {status_label}\n"
-        f"📅  Sana: {o['created_at']}",
-        reply_markup=main_kb(),
-        parse_mode='Markdown'
+        f"{s1_icon} **1-bosqich:** 🚛 Buyurtmangiz uchun kerakli materiallar omborimizga keltirilish jarayonida. Tez orada ustalarimiz ishlarni boshlashadi.\n\n"
+        f"{s2_icon} **2-bosqich:** 🛠 Mahsulotingiz yasalmoqda...\n\n"
+        f"{s3_icon} **3-bosqich:** ✨ Oynak qismlari o‘ziga xos aniqlik bilan tayyorlanmoqda, yakuniy bosqichga yaqinmiz.\n\n"
+        f"{s4_icon} **4-bosqich:** 🎉 Tabriklaymiz! Buyurtmangiz tayyor va sifat nazoratidan o‘tdi. Tez orada menejerimiz o‘rnatish vaqtini kelishish uchun siz bilan bog‘lanadi."
     )
+    
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="📞 Menejer bilan bog'lanish", url=f"https://t.me/{ADMIN_USERNAME}")],
+        [InlineKeyboardButton(text="🏠 Bosh menyuga qaytish", callback_data="to_menu")]
+    ])
+    
+    await m.answer(msg, reply_markup=kb, parse_mode='Markdown')
     await state.clear()
 
 # ═══════════════════════════════════════════════

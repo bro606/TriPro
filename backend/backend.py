@@ -16,13 +16,15 @@ try:
     from .bot import bot, dp
     from .database import (
         init_db, save_akfa_order, get_akfa_order, get_all_orders, update_order_status,
-        get_all_maintenance, update_maintenance_status, get_orders_for_maintenance
+        get_all_maintenance, update_maintenance_status, get_orders_for_maintenance,
+        get_maintenance_request
     )
 except ImportError:
     from bot import bot, dp
     from database import (
         init_db, save_akfa_order, get_akfa_order, get_all_orders, update_order_status,
-        get_all_maintenance, update_maintenance_status, get_orders_for_maintenance
+        get_all_maintenance, update_maintenance_status, get_orders_for_maintenance,
+        get_maintenance_request
     )
 
 logging.basicConfig(level=logging.INFO)
@@ -78,20 +80,25 @@ async def maintenance_reminder_task():
 # ═══════════════════════════════════════════════
 
 async def setup_webhook(max_retries: int = 3) -> bool:
-    """Webhook o'rnatadi, muvaffaqiyatsiz bo'lsa qayta urinadi"""
+    """Webhook o'rnatadi, agar u allaqachon to'g'ri o'rnatilgan bo'lsa teginmaydi"""
     webhook_url = f"{PUBLIC_URL}/webhook/bot"
+
+    try:
+        info = await bot.get_webhook_info()
+        if info.url == webhook_url:
+            logger.info(f"===> Webhook allaqachon to'g'ri o'rnatilgan: {info.url}")
+            return True
+    except Exception as e:
+        logger.warning(f"===> Webhook holatini tekshirishda xatolik: {e}")
 
     for attempt in range(1, max_retries + 1):
         try:
             logger.info(f"===> Webhook o'rnatilmoqda (urinish {attempt}/{max_retries}): {webhook_url}")
 
-            await bot.delete_webhook(drop_pending_updates=True)
-            await asyncio.sleep(1)
-
             await bot.set_webhook(
                 url=webhook_url,
                 allowed_updates=["message", "callback_query"],
-                drop_pending_updates=True,
+                drop_pending_updates=False,
                 max_connections=40
             )
             await asyncio.sleep(1)
@@ -147,11 +154,7 @@ async def lifespan(app: FastAPI):
 
     yield
 
-    try:
-        await bot.delete_webhook()
-        logger.info("===> Webhook o'chirildi. Server to'xtatildi.")
-    except Exception as e:
-        logger.error(f"===> Shutdown xatosi: {e}")
+    logger.info("===> Server to'xtatildi. Webhook saqlab qolindi.")
 
 app = FastAPI(title='TriPro Professional API', lifespan=lifespan)
 
@@ -316,10 +319,25 @@ async def set_order_status(order_id: str, body: StatusUpdate):
     await update_order_status(order_id, body.status)
     # Bildirishnoma yuborish
     o = await get_akfa_order(order_id)
-    if o and body.status == 'ready':
+    if o:
+        sm = {
+            'pending':            '⏳  Kutilmoqda',
+            'material_delivered': '1-bosqich: 🚛 Buyurtmangiz uchun kerakli materiallar omborimizga keltirilish jarayonida. Tez orada ustalarimiz ishlarni boshlashadi.',
+            'assembling':         '2-bosqich: 🛠 Mahsulotingiz yasalmoqda...',
+            'cutting':            '3-bosqich: ✨ Oynak qismlari o‘ziga xos aniqlik bilan tayyorlanmoqda, yakuniy bosqichga yaqinmiz.',
+            'ready':              '4-bosqich: 🎉 Tabriklaymiz! Buyurtmangiz tayyor va sifat nazoratidan o‘tdi. Tez orada menejerimiz o‘rnatish vaqtini kelishish uchun siz bilan bog‘lanadi.',
+        }
+        status_label = sm.get(body.status, body.status)
         try:
-            await bot.send_message(o['user_id'], f"🏁 **Buyurtmangiz (ID: {order_id}) tayyor va yetkazilmoqda!**\nXizmatimizdan foydalanganingiz uchun rahmat.", parse_mode='Markdown')
-        except: pass
+            txt = (
+                f"📊 **Buyurtmangiz holati yangilandi!**\n"
+                f"━━━━━━━━━━━━━━━━━━━━\n\n"
+                f"🆔 Buyurtma ID: **#{order_id}**\n"
+                f"📈 Yangi holat:\n{status_label}"
+            )
+            await bot.send_message(o['user_id'], txt, parse_mode='Markdown')
+        except Exception as ex:
+            logger.error(f"Failed to send status update notification: {ex}")
 
 @app.post('/api/orders/{order_id}/send-id')
 async def send_order_id(order_id: str):
@@ -345,6 +363,23 @@ async def send_order_id(order_id: str):
 @app.post('/api/maintenance/{req_id}/status')
 async def set_maintenance_status(req_id: int, body: StatusUpdate):
     await update_maintenance_status(req_id, body.status)
+    m = await get_maintenance_request(req_id)
+    if m and m['user_id']:
+        sm = {
+            'pending':  '⏳ Kutilmoqda',
+            'accepted': '✅ Qabul qilindi. Tez orada ustalarimiz siz bilan bog\'lanishadi.',
+            'ready':    '🏁 Yakunlandi. TriPro xizmatidan foydalanganingiz uchun rahmat!'
+        }
+        status_label = sm.get(body.status, body.status)
+        try:
+            txt = (
+                f"🛠 **Profilaktika so'rovingiz holati yangilandi!**\n"
+                f"━━━━━━━━━━━━━━━━━━━━\n\n"
+                f"📈 Yangi holat: **{status_label}**"
+            )
+            await bot.send_message(m['user_id'], txt, parse_mode='Markdown')
+        except Exception as ex:
+            logger.error(f"Failed to send maintenance status update: {ex}")
     return {"ok": True}
 
 if __name__ == '__main__':

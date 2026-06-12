@@ -1,126 +1,130 @@
-import aiosqlite
 import datetime
 import os
+import time
+import aiohttp
 
-from pathlib import Path
-BASE_DIR = Path(__file__).parent.parent
-DB_PATH = os.getenv('DATABASE_PATH', str(BASE_DIR / 'tripro.db'))
+FIREBASE_URL = os.getenv('FIREBASE_DATABASE_URL', 'https://tripro-d6f16-default-rtdb.firebaseio.com').rstrip('/')
 
 async def init_db():
-    async with aiosqlite.connect(DB_PATH) as db:
-        # Akfa buyurtmalari jadvali
-        await db.execute('''
-            CREATE TABLE IF NOT EXISTS akfa_orders (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER,
-                order_id TEXT UNIQUE,
-                name TEXT,
-                surname TEXT,
-                phone TEXT,
-                info TEXT,
-                dimensions TEXT,
-                quantity INTEGER,
-                status TEXT DEFAULT 'pending',
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                completed_at TIMESTAMP
-            )
-        ''')
-        
-        # Profilaktika va usta chaqirish jadvali
-        await db.execute('''
-            CREATE TABLE IF NOT EXISTS maintenance_requests (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER,
-                name TEXT,
-                phone TEXT,
-                problem TEXT,
-                status TEXT DEFAULT 'pending',
-                type TEXT DEFAULT 'manual',
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
-        
-        # Foydalanuvchilar (reklama yuborish uchun)
-        await db.execute('''
-            CREATE TABLE IF NOT EXISTS users (
-                user_id INTEGER PRIMARY KEY,
-                username TEXT,
-                first_name TEXT,
-                last_name TEXT,
-                joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
-        await db.commit()
+    # Firebase Realtime Database is schema-less; tables are automatically created on insertion.
+    pass
 
 # --- AKFA ORDERS QUERIES ---
 
 async def save_akfa_order(user_id, name, surname, phone, info, dimensions, quantity):
     oid = datetime.datetime.now().strftime('%H%M%S')[-5:]
-    async with aiosqlite.connect(DB_PATH) as db:
-        await db.execute('''
-            INSERT INTO akfa_orders (user_id, order_id, name, surname, phone, info, dimensions, quantity)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (user_id, oid, name, surname, phone, info, dimensions, quantity))
-        await db.commit()
+    created_at = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    order_data = {
+        "user_id": user_id,
+        "order_id": oid,
+        "name": name,
+        "surname": surname,
+        "phone": phone,
+        "info": info,
+        "dimensions": dimensions,
+        "quantity": quantity,
+        "status": "pending",
+        "created_at": created_at,
+        "completed_at": None
+    }
+    async with aiohttp.ClientSession() as session:
+        async with session.put(f"{FIREBASE_URL}/akfa_orders/{oid}.json", json=order_data) as resp:
+            await resp.json()
     return oid
 
 async def get_akfa_order(order_id):
-    async with aiosqlite.connect(DB_PATH) as db:
-        db.row_factory = aiosqlite.Row
-        async with db.execute('SELECT * FROM akfa_orders WHERE order_id = ?', (order_id,)) as cursor:
-            return await cursor.fetchone()
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{FIREBASE_URL}/akfa_orders/{order_id}.json") as resp:
+            data = await resp.json()
+            return data
 
 async def get_all_orders():
-    async with aiosqlite.connect(DB_PATH) as db:
-        db.row_factory = aiosqlite.Row
-        async with db.execute('SELECT * FROM akfa_orders ORDER BY created_at DESC') as cursor:
-            return await cursor.fetchall()
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{FIREBASE_URL}/akfa_orders.json") as resp:
+            data = await resp.json()
+            if not data:
+                return []
+            orders = list(data.values())
+            # Sort by created_at descending
+            orders.sort(key=lambda x: x.get('created_at', ''), reverse=True)
+            return orders
 
 async def update_order_status(order_id, status):
-    async with aiosqlite.connect(DB_PATH) as db:
-        completed_at = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') if status == 'ready' else None
-        if completed_at:
-            await db.execute('UPDATE akfa_orders SET status = ?, completed_at = ? WHERE order_id = ?', 
-                           (status, completed_at, order_id))
-        else:
-            await db.execute('UPDATE akfa_orders SET status = ? WHERE order_id = ?', (status, order_id))
-        await db.commit()
+    completed_at = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') if status == 'ready' else None
+    updates = {
+        "status": status
+    }
+    if completed_at:
+        updates["completed_at"] = completed_at
+    async with aiohttp.ClientSession() as session:
+        async with session.patch(f"{FIREBASE_URL}/akfa_orders/{order_id}.json", json=updates) as resp:
+            await resp.json()
 
 # --- MAINTENANCE QUERIES ---
 
 async def save_maintenance_request(user_id, name, phone, problem, request_type='manual'):
-    async with aiosqlite.connect(DB_PATH) as db:
-        await db.execute('''
-            INSERT INTO maintenance_requests (user_id, name, phone, problem, type)
-            VALUES (?, ?, ?, ?, ?)
-        ''', (user_id, name, phone, problem, request_type))
-        await db.commit()
+    req_id = int(time.time())
+    created_at = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    req_data = {
+        "id": req_id,
+        "user_id": user_id,
+        "name": name,
+        "phone": phone,
+        "problem": problem,
+        "status": "pending",
+        "type": request_type,
+        "created_at": created_at
+    }
+    async with aiohttp.ClientSession() as session:
+        async with session.put(f"{FIREBASE_URL}/maintenance_requests/{req_id}.json", json=req_data) as resp:
+            await resp.json()
+    return req_id
 
 async def get_all_maintenance():
-    async with aiosqlite.connect(DB_PATH) as db:
-        db.row_factory = aiosqlite.Row
-        async with db.execute('SELECT * FROM maintenance_requests ORDER BY created_at DESC') as cursor:
-            return await cursor.fetchall()
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{FIREBASE_URL}/maintenance_requests.json") as resp:
+            data = await resp.json()
+            if not data:
+                return []
+            reqs = list(data.values())
+            reqs.sort(key=lambda x: x.get('created_at', ''), reverse=True)
+            return reqs
 
 async def update_maintenance_status(request_id, status):
-    async with aiosqlite.connect(DB_PATH) as db:
-        await db.execute('UPDATE maintenance_requests SET status = ? WHERE id = ?', (status, request_id))
-        await db.commit()
+    async with aiohttp.ClientSession() as session:
+        async with session.patch(f"{FIREBASE_URL}/maintenance_requests/{request_id}.json", json={"status": status}) as resp:
+            await resp.json()
+
+async def get_maintenance_request(request_id):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{FIREBASE_URL}/maintenance_requests/{request_id}.json") as resp:
+            return await resp.json()
 
 # --- AUTO CHECK 6 MONTHS ---
 
 async def get_orders_for_maintenance():
     """Builds a list of users who completed orders exactly 180 days ago."""
-    async with aiosqlite.connect(DB_PATH) as db:
-        db.row_factory = aiosqlite.Row
-        target_date = (datetime.datetime.now() - datetime.timedelta(days=180)).strftime('%Y-%m-%d')
-        # We search orders that were 'ready' 180 days ago
-        async with db.execute("SELECT * FROM akfa_orders WHERE status = 'ready' AND completed_at LIKE ?", (f'{target_date}%',)) as cursor:
-            return await cursor.fetchall()
+    target_date = (datetime.datetime.now() - datetime.timedelta(days=180)).strftime('%Y-%m-%d')
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{FIREBASE_URL}/akfa_orders.json") as resp:
+            data = await resp.json()
+            if not data:
+                return []
+            matches = []
+            for o in data.values():
+                if o.get('status') == 'ready' and o.get('completed_at') and o.get('completed_at').startswith(target_date):
+                    matches.append(o)
+            return matches
 
 # --- SYSTEM ---
 async def save_user(u_id, username, f_name, l_name):
-    async with aiosqlite.connect(DB_PATH) as db:
-        await db.execute('INSERT OR IGNORE INTO users (user_id, username, first_name, last_name) VALUES (?, ?, ?, ?)',
-                       (u_id, username, f_name, l_name))
-        await db.commit()
+    user_data = {
+        "user_id": u_id,
+        "username": username,
+        "first_name": f_name,
+        "last_name": l_name,
+        "joined_at": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    }
+    async with aiohttp.ClientSession() as session:
+        async with session.put(f"{FIREBASE_URL}/users/{u_id}.json", json=user_data) as resp:
+            await resp.json()
