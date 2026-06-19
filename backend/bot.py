@@ -593,14 +593,22 @@ async def chk_id(m: types.Message, state: FSMContext):
         s3_icon = "🟢"
         s4_icon = "🟢"
 
+    status_text = ""
+    if status == 'pending' or status == 'material_delivered':
+        status_text = "**1-bosqich:** 🚛 Buyurtmangiz uchun kerakli materiallar omborimizga keltirilish jarayonida. Tez orada ustalarimiz ishlarni boshlashadi."
+    elif status == 'assembling':
+        status_text = "**2-bosqich:** 🛠 Mahsulotingiz yasalmoqda..."
+    elif status == 'cutting':
+        status_text = "**3-bosqich:** ✨ Oynak qismlari o‘ziga xos aniqlik bilan tayyorlanmoqda, yakuniy bosqichga yaqinmiz."
+    elif status == 'ready':
+        status_text = "**4-bosqich:** 🎉 Tabriklaymiz! Buyurtmangiz tayyor va sifat nazoratidan o‘tdi. Tez orada menejerimiz o‘rnatish vaqtini kelishish uchun siz bilan bog‘lanadi."
+
     msg = (
         "Assalomu alaykum! TriPro jamoasini tanlaganingizdan xursandmiz. Buyurtmangiz holatini kuzatib boring:\n\n"
         f"🆔 Buyurtma ID: **#{o['order_id']}**\n"
         "━━━━━━━━━━━━━━━━━━━━\n\n"
-        f"{s1_icon} **1-bosqich:** 🚛 Buyurtmangiz uchun kerakli materiallar omborimizga keltirilish jarayonida. Tez orada ustalarimiz ishlarni boshlashadi.\n\n"
-        f"{s2_icon} **2-bosqich:** 🛠 Mahsulotingiz yasalmoqda...\n\n"
-        f"{s3_icon} **3-bosqich:** ✨ Oynak qismlari o‘ziga xos aniqlik bilan tayyorlanmoqda, yakuniy bosqichga yaqinmiz.\n\n"
-        f"{s4_icon} **4-bosqich:** 🎉 Tabriklaymiz! Buyurtmangiz tayyor va sifat nazoratidan o‘tdi. Tez orada menejerimiz o‘rnatish vaqtini kelishish uchun siz bilan bog‘lanadi."
+        f"📊 **Jarayon:** {s1_icon} ── {s2_icon} ── {s3_icon} ── {s4_icon}\n\n"
+        f"🔹 **Joriy holat:**\n{status_text}"
     )
     
     kb = InlineKeyboardMarkup(inline_keyboard=[
