@@ -80,7 +80,8 @@ def main_kb():
         [InlineKeyboardButton(text='🚪 AKFA buyurtmasi', callback_data='start_order')],
         [InlineKeyboardButton(text='🔍 ID tekshirish', callback_data='check_id')],
         [InlineKeyboardButton(text='🛡 Profilaktikaga yozilish', callback_data='np')],
-        [InlineKeyboardButton(text='⚙️ Boshqa xizmatlar', callback_data='other_services')]
+        [InlineKeyboardButton(text='⚙️ Boshqa xizmatlar', callback_data='other_services')],
+        [InlineKeyboardButton(text='🎁 Aksiyalar va Bonuslar', callback_data='promos')]
     ])
 
 def cancel_kb():
@@ -271,6 +272,20 @@ async def cb_other_services(c: types.CallbackQuery):
         "xizmatimizdan foydalanishingiz mumkin!",
         reply_markup=other_kb(),
         parse_mode='Markdown'
+    )
+
+@dp.callback_query(F.data == 'promos')
+async def cb_promos(c: types.CallbackQuery):
+    await c.answer()
+    promo_kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text='📢 Rasmiy Kanalga O\'tish', url='https://t.me/tripro_official')], # Kanal silkasi uchun joy (keyinroq o'zgartirish mumkin)
+        [InlineKeyboardButton(text='🏠 Bosh menyuga qaytish', callback_data='to_menu')]
+    ])
+    await c.message.answer(
+        "TriPro jamoasidan har oy ajoyib yangiliklar va maxsus aksiyalar! 🎁\n\n"
+        "Biz mijozlarimiz uchun har oy yangi va qiziqarli aksiyalar tashkil qilib boramiz.\n\n"
+        "Ayni damda qanday aksiya ketayotganini va unda qanday ishtirok etishni bilish uchun rasmiy kanalimizga o‘ting: 👇",
+        reply_markup=promo_kb
     )
 
 # ═══════════════════════════════════════════════
