@@ -2278,27 +2278,38 @@
       fetch('https://tripro.onrender.com/api/orders/pending', { mode: 'cors' }).catch(() => {});
     }, 10 * 60 * 1000); // 10 daqiqa
 
-    // ─── INFO MATNINI BADGE KO'RINISHGA O'ZGARTIRUVCHI FUNKSIYA ───
-    function formatInfoBadges(info) {
+    window.formatInfoBadges = function(info) {
       if (!info) return '<span style="color:var(--text-muted);font-size:0.75rem;">—</span>';
 
-      // Har bir "Kalit: Qiymat" juftini ajratib olamiz
+      // Ma'lum tartibdagi kalitlar bilan ajratamiz (uzunrog'i birinchi bo'lishi kerak)
+      const knownKeys = ['Oyna Rangi', 'Material', 'Oyna', 'Turi', 'Profil'];
       const pairs = [];
-      const regex = /([^:,]+):\s*([^,]+(?:,[^:,]*(?!\s*[A-Za-zА-Яа-яА-ЯЎўҚқҒғҲҳ]\s*:))*)/g;
-      let m;
-      while ((m = regex.exec(info)) !== null) {
-        pairs.push({ key: m[1].trim(), val: m[2].trim() });
+      let remaining = info;
+
+      // Har bir kalitni ketma-ket qidiramiz
+      for (const key of knownKeys) {
+        const pattern = new RegExp(key + ':\\s*([^,]+(?:,\\s*(?!' + knownKeys.join('|') + ')[^,]+)*)', 'i');
+        const match = pattern.exec(remaining);
+        if (match) {
+          pairs.push({ key, val: match[1].trim() });
+          remaining = remaining.replace(match[0], '').replace(/^[,\s]+/, '').replace(/[,\s]+$/, '');
+        }
       }
+
+      // Tartibini to'g'irlash: botdagi ketma-ketlik
+      const order = ['Material', 'Oyna', 'Oyna Rangi', 'Turi', 'Profil'];
+      pairs.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key));
+
       if (pairs.length === 0) {
         return `<span style="font-size:0.78rem;color:var(--text-muted);">${info}</span>`;
       }
 
       const iconMap = {
-        'Material':    '🏗',
-        'Oyna':        '🪟',
-        'Oyna Rangi':  '🎨',
-        'Turi':        '✨',
-        'Profil':      '🖌️',
+        'Material':   '🏗',
+        'Oyna':       '🪟',
+        'Oyna Rangi': '🎨',
+        'Turi':       '✨',
+        'Profil':     '🖌️',
       };
 
       const classMap = (key, val) => {
