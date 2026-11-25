@@ -1311,51 +1311,235 @@
     }
 
     /* ══════════════════════════════════════════════════════════
-       ORDER ATTRIBUTES & BADGES
+       ORDER ATTRIBUTES & BADGES (STRUCTURED CLARITY)
     ══════════════════════════════════════════════════════════ */
     .props-grid {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      min-width: 170px;
+      gap: 6px;
+      min-width: 210px;
     }
     .prop-row {
       display: flex;
       align-items: center;
-      gap: 5px;
-      font-size: 0.75rem;
-      line-height: 1.3;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.8rem;
+      line-height: 1.35;
+      padding: 2px 0;
+      border-bottom: 1px dashed rgba(226, 232, 240, 0.7);
+    }
+    .prop-row:last-child {
+      border-bottom: none;
     }
     .prop-label {
-      color: var(--text-muted);
-      font-weight: 600;
+      color: var(--text-secondary);
+      font-weight: 500;
       white-space: nowrap;
-      min-width: 52px;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
+      font-size: 0.75rem;
     }
     .prop-val {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 2px 8px;
-      font-weight: 500;
+      padding: 2px 9px;
+      font-weight: 600;
       color: var(--navy);
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       white-space: nowrap;
     }
-    .prop-val.mat-plastik  { background: rgba(99,102,241,0.08); border-color: rgba(99,102,241,0.25); color: #6366f1; }
-    .prop-val.mat-alyumin  { background: rgba(14,165,233,0.08); border-color: rgba(14,165,233,0.25); color: #0EA5E9; }
-    .prop-val.col-oq       { background: rgba(241,245,249,0.9);  border-color: #CBD5E1; color: #475569; }
-    .prop-val.col-jigar    { background: rgba(120,53,15,0.08);   border-color: rgba(120,53,15,0.25); color: #78350f; }
-    .prop-val.col-qora     { background: rgba(15,23,42,0.08);    border-color: rgba(15,23,42,0.25);  color: #0F172A; }
+    .prop-val.mat-plastik  { background: rgba(99,102,241,0.08); border-color: rgba(99,102,241,0.25); color: #4F46E5; }
+    .prop-val.mat-alyumin  { background: rgba(14,165,233,0.08); border-color: rgba(14,165,233,0.25); color: #0284C7; }
+    .prop-val.col-oq       { background: rgba(241,245,249,0.95); border-color: #CBD5E1; color: #334155; }
+    .prop-val.col-jigar    { background: rgba(120,53,15,0.08);   border-color: rgba(120,53,15,0.25); color: #78350F; }
+    .prop-val.col-qora     { background: rgba(15,23,42,0.09);    border-color: rgba(15,23,42,0.25);  color: #0F172A; }
     .prop-val.col-kulrang  { background: rgba(100,116,139,0.1);  border-color: rgba(100,116,139,0.3); color: #475569; }
-    .prop-val.col-antratsit{ background: rgba(51,65,85,0.1);     border-color: rgba(51,65,85,0.3);   color: #334155; }
-    .prop-val.glass-1      { background: rgba(245,158,11,0.08);  border-color: rgba(245,158,11,0.25); color: #D97706; }
-    .prop-val.glass-2      { background: rgba(16,185,129,0.08);  border-color: rgba(16,185,129,0.25); color: #059669; }
-    .prop-val.pat-gulli    { background: rgba(236,72,153,0.08);  border-color: rgba(236,72,153,0.25); color: #DB2777; }
-    .prop-val.pat-oddiy    { background: rgba(148,163,184,0.1);  border-color: rgba(148,163,184,0.3); color: #64748B; }
+    .prop-val.col-antratsit{ background: rgba(51,65,85,0.12);    border-color: rgba(51,65,85,0.35);   color: #1E293B; }
+    .prop-val.glass-1      { background: rgba(245,158,11,0.08);  border-color: rgba(245,158,11,0.25); color: #B45309; }
+    .prop-val.glass-2      { background: rgba(16,185,129,0.08);  border-color: rgba(16,185,129,0.25); color: #047857; }
+    .prop-val.pat-gulli    { background: rgba(236,72,153,0.08);  border-color: rgba(236,72,153,0.25); color: #BE185D; }
+    .prop-val.pat-oddiy    { background: rgba(148,163,184,0.1);  border-color: rgba(148,163,184,0.3); color: #475569; }
+
+    /* Desktop sticky table header & balanced cells */
+    .table-responsive {
+      max-height: 68vh;
+      overflow-y: auto;
+    }
+    .table-responsive thead th {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      box-shadow: 0 1px 0 var(--border);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       MOBILE CARDS LIST (ORDERS, MAINTENANCE, INQUIRIES)
+    ══════════════════════════════════════════════════════════ */
+    .mobile-cards-list {
+      display: none;
+    }
+
+    .mobile-order-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: var(--shadow-xs);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .moc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .moc-id {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--navy);
+    }
+
+    .moc-id span {
+      color: var(--gold);
+    }
+
+    .moc-customer-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .moc-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-light);
+    }
+
+    .moc-customer-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .moc-phone-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--navy);
+      font-weight: 600;
+      font-size: 0.92rem;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .moc-phone-btn:active, .moc-phone-btn:hover {
+      border-color: var(--gold);
+      background: var(--white);
+    }
+
+    .moc-section-box {
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .moc-section-box .props-grid {
+      min-width: 0;
+      width: 100%;
+    }
+
+    .moc-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .moc-meta-item {
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .moc-meta-val {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--navy);
+    }
+
+    .order-details-extra {
+      display: none;
+      background: #F8FAFC;
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .order-details-extra.open {
+      display: flex;
+    }
+
+    .moc-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-top: 6px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .moc-actions-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .moc-btn-secondary {
+      min-height: 44px;
+      padding: 10px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--navy);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .moc-status-select {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+    }
 
     /* ══════════════════════════════════════════════════════════
        SERVICES MANAGEMENT CMS
@@ -1562,13 +1746,30 @@
     }
 
     @media (max-width: 768px) {
+      html, body {
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+      .main-content {
+        min-width: 0;
+        overflow-x: hidden;
+      }
+      .table-responsive {
+        display: none;
+      }
+      .mobile-cards-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: 14px;
+      }
       .search-bar {
         width: 44px;
         padding: 10px;
         overflow: hidden;
       }
       .search-bar:focus-within {
-        width: 200px;
+        width: 190px;
       }
       .search-bar input {
         width: 0;
@@ -1580,7 +1781,7 @@
         display: none;
       }
       .page-title {
-        font-size: 1.45rem;
+        font-size: 1.4rem;
       }
       .stats-grid {
         grid-template-columns: 1fr 1fr;
@@ -1588,14 +1789,36 @@
       .table-header {
         flex-direction: column;
         align-items: flex-start;
+        padding: 16px;
       }
       .table-header-actions {
         width: 100%;
         justify-content: space-between;
       }
+      .table-filter-pills {
+        flex-wrap: wrap;
+        width: 100%;
+      }
+      .table-filter-pill {
+        flex: 1 1 auto;
+        min-height: 38px;
+        text-align: center;
+      }
       .btn-export {
         width: 100%;
         justify-content: center;
+        min-height: 44px;
+      }
+      .services-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .settings-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .modal-overlay .login-card {
+        padding: 24px 18px;
+        max-height: 92vh;
+        overflow-y: auto;
       }
     }
 
@@ -1607,8 +1830,11 @@
         height: 62px;
         padding: 0 12px;
       }
+      .user-profile-meta {
+        display: none;
+      }
       .dashboard-content {
-        padding: 16px 12px;
+        padding: 16px 12px 32px;
       }
       .quick-actions-bar {
         display: grid;
@@ -1617,14 +1843,45 @@
       .quick-action-btn {
         justify-content: center;
         font-size: 0.78rem;
-        padding: 9px 8px;
+        padding: 10px 8px;
+        min-height: 44px;
       }
       .status-dist-legend {
         grid-template-columns: 1fr;
       }
-      th, td {
-        padding: 10px 12px;
-        font-size: 0.78rem;
+      .mobile-cards-list {
+        padding: 12px;
+      }
+      .mobile-order-card {
+        padding: 14px;
+      }
+      .moc-meta-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .moc-actions-row {
+        grid-template-columns: 1fr;
+      }
+      .form-input, .form-textarea, .form-select {
+        font-size: 16px;
+      }
+      .nav-item {
+        min-height: 46px;
+      }
+    }
+
+    @media (max-width: 375px) {
+      .page-title {
+        font-size: 1.25rem;
+      }
+      .quick-actions-bar {
+        grid-template-columns: 1fr;
+      }
+      .moc-meta-grid {
+        grid-template-columns: 1fr;
+      }
+      .prop-row {
+        flex-wrap: wrap;
+        gap: 4px;
       }
     }
 
@@ -2370,6 +2627,9 @@
             </tbody>
           </table>
         </div>
+        <div id="inquiries-mobile-cards" class="mobile-cards-list">
+          <div style="text-align:center; padding: 24px; color: var(--text-muted); font-size:0.9rem;">Ma'lumotlar yuklanmoqda...</div>
+        </div>
       </div>
     </div>
 
@@ -2686,6 +2946,9 @@
             </tbody>
           </table>
         </div>
+        <div id="orders-mobile-cards" class="mobile-cards-list">
+          <div style="text-align:center; padding:24px; color:var(--text-muted); font-size:0.9rem;">Ma'lumotlar yuklanmoqda...</div>
+        </div>
       </div>
 
       <!-- Maintenance Requests Table -->
@@ -2712,6 +2975,9 @@
               <tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">Talablar yo'q</td></tr>
             </tbody>
           </table>
+        </div>
+        <div id="maintenance-mobile-cards" class="mobile-cards-list">
+          <div style="text-align:center; padding:24px; color:var(--text-muted); font-size:0.9rem;">Talablar yo'q</div>
         </div>
       </div>
     </div>
@@ -3084,10 +3350,16 @@
 
       // Update expanded analytics with real data
       window.updateDashboardAnalytics(inquiriesArray);
+
+      const mobileContainer = document.getElementById('inquiries-mobile-cards');
       
       if (!inquiriesArray.length) {
         tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 36px; color: var(--text-muted); font-size:0.9rem;">Hozircha arizalar mavjud emas. Saytdan xabar yuborilganda bu yerda avtomatik paydo bo\'ladi.</td></tr>';
+        if (mobileContainer) {
+          mobileContainer.innerHTML = '<div style="text-align:center; padding: 24px; color: var(--text-muted); font-size:0.9rem;">Hozircha arizalar mavjud emas.</div>';
+        }
       } else {
+        const mobileCardsHtml = [];
         tbody.innerHTML = inquiriesArray.map(inq => {
           let dateStr = 'Sana noma\'lum';
           try {
@@ -3114,6 +3386,39 @@
           if (inq.id && inq.id.length < 4) shortId = inq.id;
 
           const customerInitial = (inq.name && inq.name.trim().length > 0) ? inq.name.trim().charAt(0).toUpperCase() : 'M';
+
+          mobileCardsHtml.push(`
+            <div class="mobile-order-card searchable-row" data-status="${inq.status || 'new'}">
+              <div class="moc-header">
+                <div class="moc-id">ARIZA <span>#${shortId}</span></div>
+                <span class="status-badge ${statusClass}" onclick="changeStatus('${inq.id}')">${statusText}</span>
+              </div>
+              <div class="moc-customer-block">
+                <span class="moc-label">Mijoz</span>
+                <div class="moc-customer-name">${inq.name || 'Noma\'lum'}</div>
+              </div>
+              <a href="tel:${inq.phone}" class="moc-phone-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                <span>${inq.phone || 'Noma\'lum'}</span>
+              </a>
+              <div class="moc-meta-grid">
+                <div class="moc-meta-item">
+                  <span class="moc-label">Xizmat turi</span>
+                  <span class="moc-meta-val">${catName}</span>
+                </div>
+                <div class="moc-meta-item">
+                  <span class="moc-label">Sana</span>
+                  <span class="moc-meta-val" style="font-size:0.82rem;">${dateStr}</span>
+                </div>
+              </div>
+              <div class="moc-actions">
+                <div class="moc-actions-row">
+                  <button class="moc-btn-secondary" onclick="changeStatus('${inq.id}')">Holatni o'zgartirish</button>
+                  <button class="moc-btn-secondary" style="color:var(--danger); border-color:var(--danger-border); background:var(--danger-bg);" onclick="deleteInquiry('${inq.id}')">O'chirish</button>
+                </div>
+              </div>
+            </div>
+          `);
           
           return `
             <tr class="searchable-row" data-status="${inq.status || 'new'}">
@@ -3150,14 +3455,17 @@
             </tr>
           `;
         }).join('');
+        if (mobileContainer) {
+          mobileContainer.innerHTML = mobileCardsHtml.join('');
+        }
       }
     };
 
-    // Filter table rows by status pills
+    // Filter table rows & mobile cards by status pills
     window.filterInquiriesTable = function(status, btnEl) {
       document.querySelectorAll('.table-filter-pill').forEach(b => b.classList.remove('active'));
       if (btnEl) btnEl.classList.add('active');
-      const rows = document.querySelectorAll('#inquiries-tbody tr');
+      const rows = document.querySelectorAll('#inquiries-tbody tr, #inquiries-mobile-cards .mobile-order-card');
       rows.forEach(r => {
         if (!r.dataset.status) return;
         const rowStatus = r.dataset.status;
@@ -3787,17 +4095,29 @@
     }, 10 * 60 * 1000);
 
     window.formatInfoBadges = function(info) {
-      if (!info) return '<span style="color:var(--text-muted);font-size:0.75rem;">—</span>';
+      if (!info) return '<span style="color:var(--text-muted);font-size:0.78rem;">Ma\'lumot yo\'q</span>';
 
-      const knownKeys = ['Oyna Rangi', 'Material', 'Oyna', 'Turi', 'Profil'];
+      // Normalize newlines/semicolons into comma-separated tokens for safe parsing
+      const normalized = String(info).replace(/[\r\n;]+/g, ', ');
+      const knownKeys = ['Oyna Rangi', 'Oyna Turi', 'Profil Rangi', 'Material', 'Oyna', 'Turi', 'Profil'];
       const pairs = [];
-      let remaining = info;
+      let remaining = normalized;
 
       for (const key of knownKeys) {
-        const pattern = new RegExp(key + ':\\s*([^,]+(?:,\\s*(?!' + knownKeys.join('|') + ')[^,]+)*)', 'i');
+        const pattern = new RegExp('(?:^|,|\\s)' + key + ':\\s*([^,]+(?:,\\s*(?!' + knownKeys.join('|') + ')[^,]+)*)', 'i');
         const match = pattern.exec(remaining);
         if (match) {
-          pairs.push({ key, val: match[1].trim() });
+          // Canonicalize key
+          let canonKey = key;
+          if (/^oyna rangi$/i.test(key)) canonKey = 'Oyna Rangi';
+          else if (/^oyna turi$/i.test(key) || /^turi$/i.test(key)) canonKey = 'Turi';
+          else if (/^profil rangi$/i.test(key) || /^profil$/i.test(key)) canonKey = 'Profil';
+          else if (/^material$/i.test(key)) canonKey = 'Material';
+          else if (/^oyna$/i.test(key)) canonKey = 'Oyna';
+
+          if (!pairs.some(p => p.key === canonKey)) {
+            pairs.push({ key: canonKey, val: match[1].trim() });
+          }
           remaining = remaining.replace(match[0], '').replace(/^[,\s]+/, '').replace(/[,\s]+$/, '');
         }
       }
@@ -3805,16 +4125,33 @@
       const order = ['Material', 'Oyna', 'Oyna Rangi', 'Turi', 'Profil'];
       pairs.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key));
 
-      if (pairs.length === 0) {
-        return `<span style="font-size:0.78rem;color:var(--text-muted);">${info}</span>`;
+      // Preserve any unknown leftover text safely
+      const leftover = remaining.replace(/^[,\s]+|[,\s]+$/g, '').trim();
+      if (leftover && leftover.length > 0) {
+        pairs.push({ key: 'Qo\'shimcha', val: leftover });
       }
 
-      const iconMap = {
-        'Material':   '🏗',
-        'Oyna':       '🪟',
-        'Oyna Rangi': '🎨',
-        'Turi':       '✨',
-        'Profil':     '🖌️',
+      if (pairs.length === 0) {
+        return `<span style="font-size:0.8rem;color:var(--text-secondary);">${info}</span>`;
+      }
+
+      const labelMap = {
+        'Material':   'Material',
+        'Oyna':       'Oyna',
+        'Oyna Rangi': 'Oyna rangi',
+        'Turi':       'Oyna turi',
+        'Profil':     'Profil rangi',
+        'Qo\'shimcha': 'Qo\'shimcha'
+      };
+
+      const formatVal = (key, val) => {
+        if (key === 'Material') {
+          if (/^alyumin$/i.test(val.trim())) return 'Alyuminiy';
+        }
+        if (key === 'Oyna Rangi') {
+          if (/^shaffof\s*\(oq\)$/i.test(val.trim())) return 'Shaffof (oq)';
+        }
+        return val;
       };
 
       const classMap = (key, val) => {
@@ -3842,13 +4179,23 @@
       };
 
       return `<div class="props-grid">${pairs.map(p => {
-        const icon = iconMap[p.key] || '•';
-        const cls  = classMap(p.key, p.val);
+        const label = labelMap[p.key] || p.key;
+        const displayVal = formatVal(p.key, p.val);
+        const cls = classMap(p.key, p.val);
         return `<div class="prop-row">
-          <span class="prop-label">${icon} ${p.key}</span>
-          <span class="prop-val ${cls}">${p.val}</span>
+          <span class="prop-label">${label}:</span>
+          <span class="prop-val ${cls}">${displayVal}</span>
         </div>`;
       }).join('')}</div>`;
+    };
+
+    window.toggleOrderDetails = function(btn) {
+      const card = btn.closest('.mobile-order-card');
+      if (!card) return;
+      const extra = card.querySelector('.order-details-extra');
+      if (!extra) return;
+      const isOpen = extra.classList.toggle('open');
+      btn.textContent = isOpen ? 'Yopish' : 'Batafsil';
     };
 
     window.loadBotOrders = async function() {
@@ -3857,6 +4204,7 @@
         if (!ordRes.ok) throw new Error('API error');
         const orders = await ordRes.json();
         const tbody = document.getElementById('orders-tbody');
+        const mobileOrders = document.getElementById('orders-mobile-cards');
 
         // Update orders stat card
         const elStatOrd = document.getElementById('stat-orders-val');
@@ -3866,21 +4214,97 @@
         
         if (orders.length === 0) {
           tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">Buyurtmalar mavjud emas</td></tr>';
+          if (mobileOrders) {
+            mobileOrders.innerHTML = '<div style="text-align:center; padding:24px; color:var(--text-muted); font-size:0.9rem;">Buyurtmalar mavjud emas</div>';
+          }
         } else {
+          const mobileOrderCardsHtml = [];
           tbody.innerHTML = orders.map(o => {
             const ost = o.status || 'pending';
             const statusStyle = ost === 'ready' 
-              ? 'background: rgba(34, 197, 94, 0.1); color: #22C55E; border-color: rgba(34, 197, 94, 0.2);' 
+              ? 'background: rgba(34, 197, 94, 0.1); color: #16A36A; border-color: rgba(34, 197, 94, 0.25);' 
               : ost === 'pending' 
-                ? 'background: rgba(59, 130, 246, 0.1); color: #3B82F6; border-color: rgba(59, 130, 246, 0.2);' 
-                : 'background: rgba(245, 158, 11, 0.1); color: #F59E0B; border-color: rgba(245, 158, 11, 0.2);';
+                ? 'background: rgba(59, 130, 246, 0.1); color: #2563EB; border-color: rgba(59, 130, 246, 0.25);' 
+                : 'background: rgba(245, 158, 11, 0.1); color: #D97706; border-color: rgba(245, 158, 11, 0.25);';
+            const statusLabelMap = {
+              'pending': 'Kutilmoqda',
+              'material_delivered': '1-bosqich: Material',
+              'assembling': '2-bosqich: Yasash',
+              'cutting': '3-bosqich: Oynak',
+              'ready': '4-bosqich: Tayyor'
+            };
+            const statusBadgeClass = ost === 'ready' ? 'status-done' : (ost === 'pending' ? 'status-new' : 'status-process');
+            const statusBadgeText = statusLabelMap[ost] || ost;
+            const qtyText = /^\d+$/.test(String(o.quantity || 1)) ? (o.quantity || 1) + ' ta' : (o.quantity || 1);
+            const fullName = `${o.name || ''} ${o.surname || ''}`.trim() || 'Mijoz';
+            const infoHtml = formatInfoBadges(o.info);
+
+            mobileOrderCardsHtml.push(`
+              <div class="mobile-order-card searchable-row">
+                <div class="moc-header">
+                  <div class="moc-id">BUYURTMA <span>#${o.order_id}</span></div>
+                  <span class="status-badge ${statusBadgeClass}">${statusBadgeText}</span>
+                </div>
+
+                <div class="moc-customer-block">
+                  <span class="moc-label">Mijoz</span>
+                  <div class="moc-customer-name search-target">${fullName}</div>
+                </div>
+
+                <a href="tel:${o.phone || ''}" class="moc-phone-btn search-target">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  <span>${o.phone || 'Telefon kiritilmagan'}</span>
+                </a>
+
+                <div class="moc-section-box">
+                  <span class="moc-label" style="display:block; margin-bottom:8px;">Xususiyatlar</span>
+                  ${infoHtml}
+                </div>
+
+                <div class="moc-meta-grid">
+                  <div class="moc-meta-item">
+                    <span class="moc-label">O'lcham</span>
+                    <span class="moc-meta-val">${o.dimensions || '—'}</span>
+                  </div>
+                  <div class="moc-meta-item">
+                    <span class="moc-label">Soni</span>
+                    <span class="moc-meta-val">${qtyText}</span>
+                  </div>
+                </div>
+
+                <div class="order-details-extra">
+                  <div><strong>Buyurtma ID:</strong> #${o.order_id}</div>
+                  ${o.created_at ? `<div><strong>Sana:</strong> ${o.created_at}</div>` : ''}
+                  ${o.info ? `<div><strong>To'liq ma'lumot:</strong> ${o.info}</div>` : ''}
+                  ${o.address ? `<div><strong>Manzil:</strong> ${o.address}</div>` : ''}
+                  ${o.comment ? `<div><strong>Izoh:</strong> ${o.comment}</div>` : ''}
+                </div>
+
+                <div class="moc-actions">
+                  <select onchange="updateOrderStatus('${o.order_id}', this.value)" class="status-select-dropdown moc-status-select" style="${statusStyle}">
+                    <option value="pending" ${ost === 'pending' ? 'selected' : ''}>⏳ Kutilmoqda</option>
+                    <option value="material_delivered" ${ost === 'material_delivered' ? 'selected' : ''}>1-bosqich: 🚚 Material</option>
+                    <option value="assembling" ${ost === 'assembling' ? 'selected' : ''}>2-bosqich: 🛠 Yasash</option>
+                    <option value="cutting" ${ost === 'cutting' ? 'selected' : ''}>3-bosqich: ✨ Oynak</option>
+                    <option value="ready" ${ost === 'ready' ? 'selected' : ''}>4-bosqich: 🎉 Tayyor</option>
+                  </select>
+                  <div class="moc-actions-row">
+                    <button type="button" class="moc-btn-secondary" onclick="toggleOrderDetails(this)">Batafsil</button>
+                    <button type="button" class="btn-export" onclick="sendOrderId('${o.order_id}')" style="min-height:44px; justify-content:center; border-radius:10px;">
+                      <span>✉️ ID Yuborish</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `);
+
             return `
               <tr class="searchable-row">
                 <td style="font-weight:700; color:var(--gold); font-family:'Montserrat',sans-serif;">#${o.order_id}</td>
-                <td class="search-target" style="font-weight:600; color:var(--navy);">${o.name || ''} ${o.surname || ''}</td>
-                <td>${formatInfoBadges(o.info)}</td>
+                <td class="search-target" style="font-weight:600; color:var(--navy);">${fullName}</td>
+                <td>${infoHtml}</td>
                 <td style="font-size:0.85rem;">${o.dimensions || ''}</td>
-                <td style="font-weight:600;">${/^\d+$/.test(String(o.quantity || 1)) ? (o.quantity || 1) + ' ta' : (o.quantity || 1)}</td>
+                <td style="font-weight:600;">${qtyText}</td>
                 <td class="search-target">
                   <a href="tel:${o.phone}" class="phone-link">${o.phone || ''}</a>
                 </td>
@@ -3903,6 +4327,9 @@
               </tr>
             `;
           }).join('');
+          if (mobileOrders) {
+            mobileOrders.innerHTML = mobileOrderCardsHtml.join('');
+          }
         }
 
         // Load Maintenance
@@ -3910,24 +4337,56 @@
         if (!mntRes.ok) throw new Error('API error');
         const mnts = await mntRes.json();
         const mtbody = document.getElementById('maintenance-tbody');
+        const mobileMnt = document.getElementById('maintenance-mobile-cards');
         if (!mtbody) return;
         
         if (mnts.length === 0) {
           mtbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">Profilaktika talablari yo\'q</td></tr>';
+          if (mobileMnt) {
+            mobileMnt.innerHTML = '<div style="text-align:center; padding:24px; color:var(--text-muted); font-size:0.9rem;">Profilaktika talablari yo\'q</div>';
+          }
         } else {
+          const mobileMntCardsHtml = [];
           mtbody.innerHTML = mnts.map(m => {
             const mst = m.status || 'pending';
             const statusStyle = mst === 'ready'
-              ? 'background: rgba(34, 197, 94, 0.1); color: #22C55E; border-color: rgba(34, 197, 94, 0.2);'
+              ? 'background: rgba(34, 197, 94, 0.1); color: #16A36A; border-color: rgba(34, 197, 94, 0.25);'
               : mst === 'pending'
-                ? 'background: rgba(59, 130, 246, 0.1); color: #3B82F6; border-color: rgba(59, 130, 246, 0.2);'
-                : 'background: rgba(245, 158, 11, 0.1); color: #F59E0B; border-color: rgba(245, 158, 11, 0.2);';
+                ? 'background: rgba(59, 130, 246, 0.1); color: #2563EB; border-color: rgba(59, 130, 246, 0.25);'
+                : 'background: rgba(245, 158, 11, 0.1); color: #D97706; border-color: rgba(245, 158, 11, 0.25);';
+            const mntDate = m.created_at ? m.created_at.split(' ')[0] : '—';
+            const mntType = m.type === 'auto' ? '🤖 Auto' : '👤 Manuel';
+
+            mobileMntCardsHtml.push(`
+              <div class="mobile-order-card searchable-row">
+                <div class="moc-header">
+                  <div class="moc-id" style="font-size:0.85rem;">${mntDate}</div>
+                  <span class="category-badge-pill">${mntType}</span>
+                </div>
+                <div class="moc-customer-block">
+                  <span class="moc-label">Mijoz</span>
+                  <div class="moc-customer-name search-target">${m.name || 'Noma\'lum'}</div>
+                </div>
+                <div class="moc-section-box">
+                  <span class="moc-label" style="display:block; margin-bottom:4px;">Muammo tafsiloti</span>
+                  <div style="font-size:0.88rem; color:var(--text-primary); line-height:1.45;">${m.problem || '—'}</div>
+                </div>
+                <div class="moc-actions">
+                  <select onchange="updateMntStatus(${m.id}, this.value)" class="status-select-dropdown moc-status-select" style="${statusStyle}">
+                    <option value="pending" ${mst === 'pending' ? 'selected' : ''}>⏳ Kutilmoqda</option>
+                    <option value="accepted" ${mst === 'accepted' ? 'selected' : ''}>✅ Qabul qilindi</option>
+                    <option value="ready" ${mst === 'ready' ? 'selected' : ''}>🏁 Yakunlandi</option>
+                  </select>
+                </div>
+              </div>
+            `);
+
             return `
               <tr class="searchable-row">
                 <td style="font-size:0.85rem; color:var(--text-secondary);">${m.created_at ? m.created_at.split(' ')[0] : ''}</td>
                 <td class="search-target" style="font-weight:600; color:var(--navy);">${m.name || ''}</td>
                 <td style="font-size:0.85rem;">${m.problem || ''}</td>
-                <td><span class="category-badge-pill">${m.type==='auto'?'🤖 Auto':'👤 Manuel'}</span></td>
+                <td><span class="category-badge-pill">${mntType}</span></td>
                 <td>
                   <select onchange="updateMntStatus(${m.id}, this.value)" class="status-select-dropdown" style="${statusStyle}">
                     <option value="pending" ${mst === 'pending' ? 'selected' : ''}>⏳ Kutilmoqda</option>
@@ -3938,12 +4397,19 @@
               </tr>
             `;
           }).join('');
+          if (mobileMnt) {
+            mobileMnt.innerHTML = mobileMntCardsHtml.join('');
+          }
         }
       } catch(e) {
         console.error("Fetch error:", e);
         const tbody = document.getElementById('orders-tbody');
         if (tbody) {
           tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:24px; color:#DC2626;">API ga ulanib bo\'lmadi.</td></tr>';
+        }
+        const mobileOrders = document.getElementById('orders-mobile-cards');
+        if (mobileOrders) {
+          mobileOrders.innerHTML = '<div style="text-align:center; padding:24px; color:#DC2626;">API ga ulanib bo\'lmadi.</div>';
         }
       }
     };
