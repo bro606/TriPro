@@ -4,28 +4,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TriPro Admin Dashboard</title>
+  <title>TriPro Admin — Premium Boshqaruv Paneli</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&family=Montserrat:wght@500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
     rel="stylesheet">
   <style>
+    /* ══════════════════════════════════════════════════════════
+       TRIPRO PREMIUM DESIGN SYSTEM — CSS VARIABLES & RESET
+    ══════════════════════════════════════════════════════════ */
     :root {
-      --navy: #0F172A;
-      --navy-light: #1E293B;
+      /* Brand Color Palette */
+      --navy: #101B35;
+      --navy-dark: #0B1224;
+      --navy-deep: #172542;
+      --navy-surface: #1E2D4E;
+      --navy-border: rgba(212, 175, 55, 0.22);
+      
       --gold: #D4AF37;
-      --gold-light: #E8C84E;
-      --gold-dim: rgba(212, 175, 55, 0.15);
+      --gold-light: #E8D18A;
+      --gold-dim: rgba(212, 175, 55, 0.12);
+      --gold-glow: rgba(212, 175, 55, 0.25);
+      
+      --bg: #F4F6FA;
+      --surface: #F8FAFC;
       --white: #FFFFFF;
       --off-white: #F8FAFC;
-      --surface: #F1F5F9;
-      --text: #0F172A;
+      
+      --text: #1E293B;
+      --text-primary: #1E293B;
+      --text-secondary: #64748B;
       --text-muted: #64748B;
-      --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.05);
-      --border: rgba(51, 65, 85, 0.12);
+      --text-light: #94A3B8;
+      
+      --border: #E2E8F0;
+      --border-subtle: #EDF2F7;
+      --border-focus: #D4AF37;
+      
+      --success: #16A36A;
+      --success-bg: rgba(22, 163, 106, 0.1);
+      --success-border: rgba(22, 163, 106, 0.25);
+      
+      --warning: #F59E0B;
+      --warning-bg: rgba(245, 158, 11, 0.1);
+      --warning-border: rgba(245, 158, 11, 0.25);
+      
+      --danger: #DC2626;
+      --danger-bg: rgba(220, 38, 38, 0.1);
+      --danger-border: rgba(220, 38, 38, 0.25);
+      
+      --info: #3B82F6;
+      --info-bg: rgba(59, 130, 246, 0.1);
+      --info-border: rgba(59, 130, 246, 0.25);
+
+      /* Geometry & Effects */
+      --radius-sm: 8px;
+      --radius-md: 12px;
       --radius: 16px;
-      --transition: all 0.3s ease;
+      --radius-lg: 18px;
+      --radius-xl: 22px;
+      
+      --shadow-xs: 0 1px 3px rgba(16, 27, 53, 0.04);
+      --shadow-sm: 0 4px 14px rgba(16, 27, 53, 0.05);
+      --shadow-md: 0 8px 24px -4px rgba(16, 27, 53, 0.08);
+      --shadow-lg: 0 16px 36px -6px rgba(16, 27, 53, 0.12);
+      
+      --transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     * {
@@ -35,91 +80,167 @@
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--surface);
-      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
       display: flex;
       height: 100vh;
       overflow: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Sidebar */
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.03);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       PREMIUM SIDEBAR NAVIGATION
+    ══════════════════════════════════════════════════════════ */
     .sidebar {
       width: 280px;
       background: var(--navy);
       color: var(--white);
       display: flex;
       flex-direction: column;
-      border-right: 1px solid rgba(212, 175, 55, 0.2);
+      border-right: 1px solid var(--navy-border);
+      position: relative;
+      z-index: 50;
+      user-select: none;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), left 0.3s ease;
     }
 
     .brand {
-      padding: 30px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 24px 22px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
       display: flex;
       align-items: center;
-      gap: 10px;
-      color: var(--white);
+      gap: 14px;
+      background: linear-gradient(180deg, rgba(23, 37, 66, 0.6) 0%, rgba(16, 27, 53, 0.4) 100%);
     }
 
     .logo-img {
-      height: 48px;
-      width: 48px;
+      height: 44px;
+      width: 44px;
       object-fit: contain;
-      border-radius: 8px;
+      border-radius: 10px;
       flex-shrink: 0;
-      filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.3));
+      filter: drop-shadow(0 4px 10px rgba(212, 175, 55, 0.35));
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      padding: 3px;
+      background: rgba(255, 255, 255, 0.05);
     }
 
     .brand-text {
       display: flex;
       flex-direction: column;
-      line-height: 1.1;
+      line-height: 1.15;
     }
 
     .brand-text-main {
-      font-size: 1.6rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      color: var(--white);
     }
 
-    .brand-text-sub {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    .brand span {
+    .brand-text-main span {
       color: var(--gold);
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      background: rgba(212, 175, 55, 0.15);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      padding: 2px 7px;
+      border-radius: 20px;
+      margin-top: 4px;
+      width: fit-content;
+    }
+
+    .brand-badge-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 6px var(--success);
+    }
+
+    .nav-group-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #64748B;
+      padding: 16px 22px 6px;
     }
 
     .nav-links {
       flex: 1;
-      padding: 20px 15px;
+      padding: 14px 12px;
       display: flex;
       flex-direction: column;
       gap: 5px;
+      overflow-y: auto;
     }
 
     .nav-item {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 14px 20px;
-      color: rgba(255, 255, 255, 0.7);
+      gap: 13px;
+      padding: 12px 16px;
+      color: #94A3B8;
       text-decoration: none;
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       font-weight: 500;
+      font-size: 0.92rem;
       transition: var(--transition);
+      position: relative;
     }
 
-    .nav-item:hover, .nav-item.active {
-      background: var(--gold-dim);
-      color: var(--gold);
-      transform: translateX(5px);
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--white);
+      transform: translateX(3px);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(90deg, var(--gold-dim) 0%, rgba(212, 175, 55, 0.05) 100%);
+      color: var(--gold-light);
+      font-weight: 600;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 18%;
+      bottom: 18%;
+      width: 3.5px;
+      background: var(--gold);
+      border-radius: 0 4px 4px 0;
+      box-shadow: 0 0 8px var(--gold);
     }
 
     .nav-item svg {
@@ -130,49 +251,200 @@
       stroke-width: 2;
       stroke-linecap: round;
       stroke-linejoin: round;
+      flex-shrink: 0;
+      transition: var(--transition);
     }
 
-    .secret-link {
-      margin-top: auto;
-      background: rgba(239, 68, 68, 0.1);
+    .nav-item:hover svg, .nav-item.active svg {
+      stroke: var(--gold);
+    }
+
+    /* Sidebar Footer / User Profile */
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      background: rgba(11, 18, 36, 0.5);
+    }
+
+    .user-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .user-avatar-sm {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+    }
+
+    .user-meta {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+      overflow: hidden;
+    }
+
+    .user-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--white);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .user-role {
+      font-size: 0.7rem;
+      color: #94A3B8;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .status-indicator-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      display: inline-block;
+    }
+
+    .btn-logout-icon {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.25);
       color: #EF4444;
-      border: 1px solid rgba(239, 68, 68, 0.2);
-    }
-    
-    .secret-link:hover {
-      background: #EF4444;
-      color: white;
-      transform: translateY(-2px);
+      border-radius: 8px;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      flex-shrink: 0;
     }
 
-    /* Main Content */
+    .btn-logout-icon:hover {
+      background: #EF4444;
+      color: var(--white);
+      transform: scale(1.05);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       MAIN CONTENT & STICKY TOPBAR
+    ══════════════════════════════════════════════════════════ */
     .main-content {
       flex: 1;
       display: flex;
       flex-direction: column;
       overflow-y: auto;
+      background: var(--bg);
     }
 
     .topbar {
-      height: 80px;
-      background: var(--white);
+      height: 72px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 40px;
+      padding: 0 36px;
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 30;
+      box-shadow: 0 1px 4px rgba(16, 27, 53, 0.02);
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .topbar-live-badge {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 20px;
+    }
+
+    .topbar-live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0 2px rgba(22, 163, 106, 0.2);
+      animation: pulseLive 2s infinite;
+    }
+
+    @keyframes pulseLive {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.15); }
+    }
+
+    .date-display-badge {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .search-bar {
       display: flex;
       align-items: center;
       background: var(--surface);
-      padding: 10px 20px;
+      border: 1.5px solid var(--border);
+      padding: 9px 16px;
       border-radius: 30px;
-      width: 300px;
+      width: 320px;
+      transition: var(--transition);
+    }
+
+    .search-bar:focus-within {
+      background: var(--white);
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+      width: 360px;
+    }
+
+    .search-bar svg {
+      color: var(--text-muted);
+      flex-shrink: 0;
     }
 
     .search-bar input {
@@ -182,182 +454,813 @@
       margin-left: 10px;
       width: 100%;
       font-family: inherit;
+      font-size: 0.88rem;
+      color: var(--text-primary);
+    }
+
+    .search-bar input::placeholder {
+      color: var(--text-light);
     }
 
     .user-profile {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 12px;
     }
 
     .avatar {
-      width: 45px;
-      height: 45px;
-      background: var(--gold);
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
       color: var(--navy);
+      font-size: 0.95rem;
+      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.25);
+      border: 2px solid var(--white);
+      cursor: pointer;
     }
 
+    .logout-pill {
+      font-size: 0.78rem;
+      color: var(--danger);
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      padding: 4px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+    }
+
+    .logout-pill:hover {
+      background: var(--danger);
+      color: var(--white);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       DASHBOARD CONTENT & SECTIONS
+    ══════════════════════════════════════════════════════════ */
     .dashboard-content {
-      padding: 40px;
+      padding: 32px 36px 48px;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Section Header */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 16px;
     }
 
     .page-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem;
-      margin-bottom: 30px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 800;
       color: var(--navy);
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
     }
 
+    .page-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 400;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       QUICK ACTIONS BAR
+    ══════════════════════════════════════════════════════════ */
+    .quick-actions-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .quick-action-btn {
+      background: var(--white);
+      border: 1px solid var(--border);
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .quick-action-btn:hover {
+      border-color: var(--gold);
+      color: var(--navy);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .quick-action-btn.primary {
+      background: linear-gradient(135deg, var(--navy), var(--navy-deep));
+      color: var(--white);
+      border-color: var(--navy);
+    }
+
+    .quick-action-btn.primary:hover {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--navy);
+      border-color: var(--gold);
+    }
+
+    .quick-action-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke-width: 2.2;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       EXPANDED KPI STATISTIC CARDS
+    ══════════════════════════════════════════════════════════ */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      margin-bottom: 40px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
     }
 
     .stat-card {
       background: var(--white);
-      padding: 24px;
-      border-radius: var(--radius);
+      padding: 22px 20px;
+      border-radius: var(--radius-lg);
       box-shadow: var(--shadow-sm);
       border: 1px solid var(--border);
       transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .stat-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-      border-color: var(--gold);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(212, 175, 55, 0.4);
     }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: transparent;
+      transition: var(--transition);
+    }
+
+    .stat-card.accent-blue::before { background: var(--info); }
+    .stat-card.accent-green::before { background: var(--success); }
+    .stat-card.accent-gold::before { background: var(--gold); }
+    .stat-card.accent-amber::before { background: var(--warning); }
+    .stat-card.accent-purple::before { background: #8B5CF6; }
+    .stat-card.accent-indigo::before { background: #6366F1; }
 
     .stat-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
 
     .stat-title {
-      color: var(--text-muted);
-      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-size: 0.82rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.6px;
     }
 
     .stat-icon {
-      width: 40px;
-      height: 40px;
-      background: var(--gold-dim);
-      border-radius: 10px;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .stat-icon.blue   { background: var(--info-bg); color: var(--info); }
+    .stat-icon.green  { background: var(--success-bg); color: var(--success); }
+    .stat-icon.gold   { background: var(--gold-dim); color: var(--gold); }
+    .stat-icon.amber  { background: var(--warning-bg); color: var(--warning); }
+    .stat-icon.purple { background: rgba(139, 92, 246, 0.1); color: #8B5CF6; }
+    .stat-icon.indigo { background: rgba(99, 102, 241, 0.1); color: #6366F1; }
+
+    .stat-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 2.2;
+    }
+
+    .stat-body {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
     }
 
     .stat-value {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--navy);
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .stat-value-sub {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--navy);
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .stat-trend {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .stat-trend.positive {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .stat-trend.neutral {
+      background: var(--surface);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .stat-desc {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      margin-top: 8px;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       VISUAL ANALYTICS CENTER (100% REAL DATA)
+    ══════════════════════════════════════════════════════════ */
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1.2fr 1fr;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .analytics-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .analytics-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .analytics-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .analytics-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    /* Segmented Progress Bar for Status Distribution */
+    .status-dist-bar {
+      height: 12px;
+      width: 100%;
+      background: #E2E8F0;
+      border-radius: 8px;
+      display: flex;
+      overflow: hidden;
+      margin: 12px 0 18px;
+    }
+
+    .dist-seg {
+      height: 100%;
+      transition: width 0.5s ease;
+    }
+    .dist-seg.new { background: #3B82F6; }
+    .dist-seg.process { background: #F59E0B; }
+    .dist-seg.done { background: #16A36A; }
+
+    .status-dist-legend {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .dist-legend-item {
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .legend-top {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .legend-dot.new { background: #3B82F6; }
+    .legend-dot.process { background: #F59E0B; }
+    .legend-dot.done { background: #16A36A; }
+
+    .legend-val {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    /* Category Breakdown List */
+    .category-breakdown-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .category-stat-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cat-stat-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .cat-stat-name {
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cat-stat-num {
+      color: var(--text-secondary);
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .cat-progress-track {
+      height: 8px;
+      background: var(--surface);
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .cat-progress-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.5s ease;
+    }
+
+    .cat-progress-fill.akfa { background: linear-gradient(90deg, #DC2626, #EF4444); }
+    .cat-progress-fill.glass { background: linear-gradient(90deg, #0891B2, #06B6D4); }
+    .cat-progress-fill.wood { background: linear-gradient(90deg, #D97706, #F59E0B); }
+    .cat-progress-fill.other { background: linear-gradient(90deg, #64748B, #94A3B8); }
+
+    /* 7-Day Trend Bar Chart (Inline CSS) */
+    .trend-bars-container {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 8px;
+      height: 120px;
+      padding: 10px 0 0;
+      border-bottom: 1.5px solid var(--border);
+      position: relative;
+    }
+
+    .trend-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .trend-bar-fill {
+      width: 100%;
+      max-width: 24px;
+      background: linear-gradient(180deg, var(--gold), var(--navy));
+      border-radius: 4px 4px 0 0;
+      min-height: 4px;
+      transition: height 0.4s ease;
+      position: relative;
+    }
+
+    .trend-bar-fill:hover {
+      background: linear-gradient(180deg, var(--gold-light), var(--gold));
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+    }
+
+    .trend-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    .trend-count-badge {
+      font-size: 0.7rem;
       font-weight: 700;
       color: var(--navy);
       font-family: 'Montserrat', sans-serif;
     }
 
-    /* Table Section */
-    .table-section {
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-sm);
+    /* Recent Activity Feed */
+    .activity-feed-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      background: var(--surface);
       border: 1px solid var(--border);
+      transition: var(--transition);
+    }
+
+    .activity-item:hover {
+      background: var(--white);
+      border-color: var(--gold);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .activity-icon-wrap {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.9rem;
+    }
+
+    .activity-icon-wrap.lead { background: var(--info-bg); color: var(--info); }
+    .activity-icon-wrap.order { background: var(--warning-bg); color: var(--warning); }
+    .activity-icon-wrap.service { background: var(--gold-dim); color: var(--gold); }
+
+    .activity-content {
+      flex: 1;
       overflow: hidden;
     }
 
+    .activity-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .activity-time {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       TABLE SECTION (INQUIRIES / ORDERS)
+    ══════════════════════════════════════════════════════════ */
+    .table-section {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
     .table-header {
-      padding: 20px 24px;
+      padding: 20px 28px;
       border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      background: var(--white);
+    }
+
+    .table-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .table-header h3 {
       font-family: 'Montserrat', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .table-count-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      background: var(--surface);
+      color: var(--text-secondary);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .table-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .table-filter-pills {
+      display: flex;
+      gap: 6px;
+      background: var(--surface);
+      padding: 3px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .table-filter-pill {
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 7px;
+      border: none;
+      background: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .table-filter-pill.active, .table-filter-pill:hover {
+      background: var(--white);
+      color: var(--navy);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
     }
 
     .btn-export {
-      background: var(--navy);
+      background: linear-gradient(135deg, var(--navy), var(--navy-deep));
       color: white;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
-      font-weight: 500;
+      padding: 9px 18px;
+      border: 1px solid var(--navy);
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.85rem;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
       transition: var(--transition);
+      box-shadow: var(--shadow-xs);
     }
     
     .btn-export:hover {
-      background: var(--gold);
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
       color: var(--navy);
+      border-color: var(--gold);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+    }
+
+    .btn-export svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
+      text-align: left;
     }
 
     th, td {
       padding: 16px 24px;
-      text-align: left;
       border-bottom: 1px solid var(--border);
+      vertical-align: middle;
     }
 
     th {
-      background: var(--off-white);
-      color: var(--text-muted);
-      font-weight: 600;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    tr:hover {
       background: var(--surface);
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      white-space: nowrap;
     }
 
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr {
+      transition: background 0.15s ease;
+    }
+
+    tbody tr:hover {
+      background: rgba(248, 250, 252, 0.8);
+    }
+
+    /* Customer Cell with Initials Avatar */
+    .customer-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .customer-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #E2E8F0, #CBD5E1);
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .customer-details {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.25;
+    }
+
+    .customer-name {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 0.9rem;
+    }
+
+    .phone-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--navy);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      transition: var(--transition);
+    }
+
+    .phone-link:hover {
+      background: var(--white);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .category-badge-pill {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+    }
+
+    /* Status Badges */
     .status-badge {
       display: inline-flex;
       align-items: center;
+      gap: 6px;
       padding: 6px 12px;
       border-radius: 20px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
+      user-select: none;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .status-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .status-badge:hover {
+      transform: scale(1.04);
+      box-shadow: var(--shadow-xs);
     }
 
     .status-new {
-      background: rgba(59, 130, 246, 0.1);
-      color: #3B82F6;
+      background: var(--info-bg);
+      color: var(--info);
+      border: 1px solid var(--info-border);
     }
 
     .status-process {
-      background: rgba(245, 158, 11, 0.1);
-      color: #F59E0B;
+      background: var(--warning-bg);
+      color: var(--warning);
+      border: 1px solid var(--warning-border);
     }
 
     .status-done {
-      background: rgba(34, 197, 94, 0.1);
-      color: #22C55E;
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid var(--success-border);
     }
 
     .status-select-dropdown {
-      padding: 6px 12px;
+      padding: 7px 12px;
       border-radius: 20px;
       border: 1px solid var(--border);
       font-family: inherit;
@@ -367,30 +1270,49 @@
       outline: none;
       transition: var(--transition);
     }
-    .status-select-dropdown:hover {
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+    .status-select-dropdown:hover, .status-select-dropdown:focus {
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
       border-color: var(--gold);
     }
 
     .action-btns {
       display: flex;
-      gap: 10px;
+      align-items: center;
+      gap: 8px;
     }
 
     .btn-icon {
-      background: none;
-      border: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
       cursor: pointer;
-      color: var(--text-muted);
+      color: var(--text-secondary);
+      border-radius: 8px;
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       transition: var(--transition);
     }
 
     .btn-icon:hover {
       color: var(--navy);
-      transform: scale(1.1);
+      background: var(--white);
+      border-color: var(--gold);
+      transform: scale(1.08);
+      box-shadow: var(--shadow-xs);
     }
-    
-    /* ══ XUSUSIYATLAR BADGES ══ */
+
+    .btn-icon.danger:hover {
+      color: var(--danger);
+      background: var(--danger-bg);
+      border-color: var(--danger-border);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       ORDER ATTRIBUTES & BADGES
+    ══════════════════════════════════════════════════════════ */
     .props-grid {
       display: flex;
       flex-direction: column;
@@ -435,22 +1357,146 @@
     .prop-val.pat-gulli    { background: rgba(236,72,153,0.08);  border-color: rgba(236,72,153,0.25); color: #DB2777; }
     .prop-val.pat-oddiy    { background: rgba(148,163,184,0.1);  border-color: rgba(148,163,184,0.3); color: #64748B; }
 
-    .service-card {
-      background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px;
-      display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow-sm); position: relative;
-    }
-    .service-thumb {
-      height: 140px; background: var(--off-white); border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center;
-    }
-    .service-thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .service-cat {
-      position: absolute; top: 15px; left: 15px; background: var(--navy); color: white; font-size: 0.6rem; 
-      padding: 3px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase;
+    /* ══════════════════════════════════════════════════════════
+       SERVICES MANAGEMENT CMS
+    ══════════════════════════════════════════════════════════ */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 22px;
     }
 
-    /* ══════════════════════════════════════
+    .service-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      transition: var(--transition);
+      overflow: hidden;
+    }
+
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(212, 175, 55, 0.4);
+    }
+
+    .service-thumb {
+      height: 150px;
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .service-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .service-card:hover .service-thumb img {
+      transform: scale(1.04);
+    }
+
+    .service-cat {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(16, 27, 53, 0.88);
+      backdrop-filter: blur(4px);
+      color: var(--white);
+      font-size: 0.68rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      z-index: 2;
+    }
+
+    .service-price-pill {
+      font-weight: 700;
+      color: var(--navy);
+      padding: 6px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: inline-block;
+      border-radius: 8px;
+      font-size: 0.88rem;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       SETTINGS & FORM STYLING
+    ══════════════════════════════════════════════════════════ */
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+    }
+
+    .form-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .form-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.92rem;
+      color: var(--text-primary);
+      background: var(--surface);
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+      background: var(--white);
+    }
+
+    /* ══════════════════════════════════════════════════════════
        RESPONSIVE DESIGN (MOBILE & TABLET)
-    ══════════════════════════════════════ */
+    ══════════════════════════════════════════════════════════ */
     .mobile-toggle {
       display: none;
       background: none;
@@ -458,15 +1504,29 @@
       cursor: pointer;
       color: var(--navy);
       padding: 8px;
+      border-radius: 8px;
+    }
+
+    .mobile-toggle:hover {
+      background: var(--surface);
     }
 
     .sidebar-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.4);
+      background: rgba(16, 27, 53, 0.6);
       backdrop-filter: blur(4px);
-      z-index: 99;
+      z-index: 45;
+    }
+
+    @media (max-width: 1180px) {
+      .analytics-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .analytics-grid > div:last-child {
+        grid-column: span 2;
+      }
     }
 
     @media (max-width: 1024px) {
@@ -476,7 +1536,7 @@
         top: 0;
         bottom: 0;
         z-index: 100;
-        transition: left 0.3s ease;
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2);
       }
       .sidebar.open {
         left: 0;
@@ -491,19 +1551,24 @@
         padding: 0 20px;
       }
       .dashboard-content {
-        padding: 20px;
+        padding: 24px 20px;
+      }
+      .analytics-grid {
+        grid-template-columns: 1fr;
+      }
+      .analytics-grid > div:last-child {
+        grid-column: span 1;
       }
     }
 
     @media (max-width: 768px) {
       .search-bar {
-        width: 40px;
+        width: 44px;
         padding: 10px;
         overflow: hidden;
-        transition: width 0.3s ease;
       }
       .search-bar:focus-within {
-        width: 180px;
+        width: 200px;
       }
       .search-bar input {
         width: 0;
@@ -511,268 +1576,66 @@
       .search-bar:focus-within input {
         width: 100%;
       }
+      .topbar-live-badge, .date-display-badge {
+        display: none;
+      }
       .page-title {
-        font-size: 1.5rem;
+        font-size: 1.45rem;
       }
       .stats-grid {
-        grid-template-columns: 1fr;
-      }
-      .table-section {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+        grid-template-columns: 1fr 1fr;
       }
       .table-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 15px;
+      }
+      .table-header-actions {
+        width: 100%;
+        justify-content: space-between;
       }
       .btn-export {
         width: 100%;
         justify-content: center;
       }
-      .user-profile {
-        gap: 10px;
-      }
-      .nav-item {
-        padding: 14px 20px;
-        font-size: 0.9rem;
-      }
-      .nav-item svg {
-        width: 20px;
-        height: 20px;
-      }
     }
 
     @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
       .topbar {
-        height: 60px;
-        padding: 0 10px;
-      }
-      .avatar {
-        width: 32px;
-        height: 32px;
-        font-size: 0.75rem;
-      }
-      .user-profile > div:first-child {
-        font-size: 0.75rem;
-      }
-      .user-profile > div:first-child div:first-child {
-        font-size: 0.8rem !important;
-      }
-      .user-profile > div:first-child div:last-child {
-        font-size: 0.7rem !important;
+        height: 62px;
+        padding: 0 12px;
       }
       .dashboard-content {
-        padding: 12px;
+        padding: 16px 12px;
       }
-      .page-title {
-        font-size: 1.2rem;
-        margin-bottom: 16px;
+      .quick-actions-bar {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
       }
-      .stat-card {
-        padding: 14px;
+      .quick-action-btn {
+        justify-content: center;
+        font-size: 0.78rem;
+        padding: 9px 8px;
       }
-      .stat-value {
-        font-size: 1.6rem;
-      }
-      .stat-title {
-        font-size: 0.75rem;
-      }
-      .stat-icon {
-        width: 34px;
-        height: 34px;
-      }
-      .search-bar {
-        width: 32px;
-        padding: 6px;
-      }
-      .search-bar:focus-within {
-        width: 130px;
-      }
-      .services-grid {
-        grid-template-columns: 1fr !important;
-        gap: 12px;
-      }
-      .service-card {
-        padding: 12px;
-      }
-      .service-thumb {
-        height: 100px;
-      }
-      #svc-filter-bar {
-        gap: 5px;
-      }
-      #svc-filter-bar .btn-export {
-        font-size: 0.7rem;
-        padding: 5px 10px;
-      }
-      #homepage-editor > div {
-        padding: 16px !important;
-      }
-      #homepage-editor > div > div[style*="display:flex"]:first-child {
-        flex-direction: column;
-        gap: 10px;
-      }
-      #homepage-editor > div:first-child .section-label,
-      #homepage-editor > div:first-child p {
-        font-size: 0.75rem;
+      .status-dist-legend {
+        grid-template-columns: 1fr;
       }
       th, td {
-        padding: 8px 10px;
-        font-size: 0.72rem;
-      }
-      th {
-        font-size: 0.65rem;
-      }
-      .action-btns .btn-icon svg {
-        width: 16px;
-        height: 16px;
-      }
-      .table-section {
-        padding: 12px !important;
-        border-radius: 12px;
-      }
-      .table-header h3 {
-        font-size: 1rem;
-      }
-      #modal-title {
-        font-size: 1.1rem;
-      }
-      .modal-overlay > div {
-        padding: 18px !important;
-        margin: 10px;
-      }
-      .settings-grid {
-        grid-template-columns: 1fr !important;
-      }
-      .sidebar {
-        width: 260px;
-      }
-      .section-title {
-        font-size: 1rem;
-      }
-      /* Touch-friendly improvements */
-      .nav-item {
-        padding: 16px 20px;
-        font-size: 0.9rem;
-      }
-      .nav-item svg {
-        width: 20px;
-        height: 20px;
-      }
-      button, .btn-export, button[onclick] {
-        min-height: 44px;
-        font-size: 0.9rem;
-      }
-      input, select, textarea {
-        font-size: 16px !important;
-      }
-      .login-card {
-        padding: 28px 18px 22px;
-        max-width: 340px;
-      }
-      .login-field input {
-        padding: 14px 16px;
-        font-size: 1rem;
-      }
-      .login-btn {
-        padding: 16px;
-        font-size: 1rem;
-      }
-      #tab-contacts input {
-        font-size: 16px;
-        padding: 14px 12px;
-      }
-      #tab-contacts button {
-        min-height: 48px;
-        font-size: 1rem;
-        padding: 14px 32px;
-      }
-      .date-time {
-        display: inline;
-      }
-    }
-    @media (max-width: 480px) {
-      .date-time {
-        display: none;
+        padding: 10px 12px;
+        font-size: 0.78rem;
       }
     }
 
-    @media (max-width: 380px) {
-      .topbar {
-        padding: 0 6px;
-        height: 56px;
-      }
-      .user-profile > div:first-child {
-        display: none;
-      }
-      .mobile-toggle {
-        padding: 4px;
-      }
-      .search-bar {
-        display: none;
-      }
-      .page-title {
-        font-size: 1rem;
-      }
-      .dashboard-content {
-        padding: 8px;
-      }
-      th, td {
-        padding: 6px;
-        font-size: 0.65rem;
-      }
-      .service-card h3 {
-        font-size: 0.9rem;
-      }
-      #svc-filter-bar .btn-export {
-        font-size: 0.6rem;
-        padding: 4px 6px;
-      }
-      .services-grid {
-        gap: 8px;
-      }
-      .stat-value {
-        font-size: 1.3rem;
-      }
-      .stat-card {
-        padding: 10px;
-      }
-      #homepage-editor input,
-      #homepage-editor textarea,
-      #homepage-editor select {
-        font-size: 0.8rem !important;
-        padding: 8px 10px !important;
-      }
-      .btn-export,
-      button[onclick*="saveHomeContent"],
-      button[onclick*="openServiceModal"] {
-        font-size: 0.75rem !important;
-        padding: 10px !important;
-      }
-      .nav-item {
-        padding: 14px 16px;
-        font-size: 0.85rem;
-      }
-      .login-card {
-        padding: 24px 14px 18px;
-      }
-      .login-logo-text {
-        font-size: 1.4rem;
-      }
-      .login-btn {
-        padding: 14px;
-      }
-    }
-
-    /* ══════════════════════════════════════
-       LOGIN SCREEN
-    ══════════════════════════════════════ */
+    /* ══════════════════════════════════════════════════════════
+       PREMIUM LOGIN SCREEN (PRESERVED AUTH LOGIC)
+    ══════════════════════════════════════════════════════════ */
     .login-screen {
       position: fixed;
       inset: 0;
       z-index: 9999;
-      background: var(--navy);
+      background: radial-gradient(circle at 50% 20%, #172542 0%, #101B35 60%, #0B1224 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -780,19 +1643,25 @@
     }
 
     .login-screen.hidden {
-      display: none;
+      display: none !important;
     }
 
     .login-card {
       background: var(--white);
-      border-radius: 20px;
-      padding: 48px 40px 40px;
+      border-radius: var(--radius-xl);
+      padding: 44px 38px 36px;
       width: 100%;
-      max-width: 400px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+      max-width: 420px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
       text-align: center;
       position: relative;
       overflow: hidden;
+      animation: modalFadeIn 0.3s ease;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .login-card::before {
@@ -801,7 +1670,7 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 3px;
+      height: 4px;
       background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
     }
 
@@ -818,7 +1687,7 @@
       height: 56px;
       object-fit: contain;
       border-radius: 12px;
-      filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.3));
+      filter: drop-shadow(0 4px 10px rgba(212, 175, 55, 0.3));
     }
 
     .login-logo-text {
@@ -826,7 +1695,7 @@
       font-size: 2rem;
       font-weight: 800;
       color: var(--navy);
-      letter-spacing: 1.5px;
+      letter-spacing: 1px;
     }
 
     .login-logo-text span {
@@ -840,16 +1709,16 @@
       letter-spacing: 3px;
       text-transform: uppercase;
       color: var(--text-muted);
-      margin-bottom: 32px;
+      margin-bottom: 28px;
     }
 
     .login-error {
       background: #FEF2F2;
       color: #DC2626;
       font-size: 0.85rem;
-      padding: 10px 14px;
-      border-radius: 8px;
-      margin-bottom: 16px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin-bottom: 18px;
       display: none;
       font-weight: 500;
       border: 1px solid #FCA5A5;
@@ -857,7 +1726,7 @@
     }
 
     .login-error.show {
-      display: block;
+      display: block !important;
     }
 
     @keyframes shakeX {
@@ -869,7 +1738,7 @@
     }
 
     .login-field {
-      margin-bottom: 16px;
+      margin-bottom: 18px;
       text-align: left;
     }
 
@@ -880,26 +1749,26 @@
       font-weight: 700;
       letter-spacing: 0.5px;
       text-transform: uppercase;
-      color: var(--text-muted);
+      color: var(--text-secondary);
       margin-bottom: 6px;
     }
 
     .login-field input {
       width: 100%;
-      padding: 12px 16px;
+      padding: 13px 16px;
       border: 1.5px solid var(--border);
       border-radius: 10px;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-family: inherit;
-      color: var(--text);
-      background: var(--off-white);
+      color: var(--text-primary);
+      background: var(--surface);
       outline: none;
       transition: var(--transition);
     }
 
     .login-field input:focus {
       border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
       background: var(--white);
     }
 
@@ -915,12 +1784,13 @@
       font-size: 0.95rem;
       cursor: pointer;
       transition: var(--transition);
-      margin-top: 8px;
+      margin-top: 6px;
+      box-shadow: 0 4px 14px rgba(212, 175, 55, 0.3);
     }
 
     .login-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(212, 175, 55, 0.35);
+      box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
     }
 
     .login-btn:disabled {
@@ -935,27 +1805,22 @@
       margin-top: 24px;
     }
 
-    @media (max-width: 480px) {
-      .login-card {
-        padding: 36px 24px 28px;
-      }
-      .login-logo-text {
-        font-size: 1.6rem;
-      }
-      .login-logo-img {
-        width: 44px;
-        height: 44px;
-      }
+    /* Modal Backdrop */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(16, 27, 53, 0.75);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+      padding: 15px;
     }
-
-    .login-error.show {
-      display: block !important;
-    }
-
   </style>
 
   <script>
-    // LOGIN — oddiy script (module emas), tugma bosilganda darhol ishlaydi
+    // LOGIN — Oddiy script (module emas), tugma bosilganda darhol ishlaydi
     function doLogin() {
       var usernameEl = document.getElementById('login-username');
       var passwordEl = document.getElementById('login-password');
@@ -1035,7 +1900,7 @@
     // Enter tugmasi bilan kirish
     document.addEventListener('keydown', function(e) {
       var ls = document.getElementById('login-screen');
-      if (e.key === 'Enter' && ls && ls.style.display !== 'none') {
+      if (e.key === 'Enter' && ls && ls.style.display !== 'none' && !ls.classList.contains('hidden')) {
         doLogin();
       }
     });
@@ -1044,14 +1909,16 @@
 
 <body>
 
-  <!-- Login Screen -->
+  <!-- ══════════════════════════════════════════════════════════
+       LOGIN SCREEN MODAL
+  ══════════════════════════════════════════════════════════ -->
   <div class="login-screen" id="login-screen">
     <div class="login-card">
       <div class="login-logo">
         <img src="logo.png" alt="TriPro" class="login-logo-img">
         <div class="login-logo-text">Tri<span>Pro</span></div>
       </div>
-      <div class="login-sub">Admin Panel</div>
+      <div class="login-sub">Admin Boshqaruv Markazi</div>
 
       <div class="login-error" id="login-error">Noto'g'ri login yoki parol</div>
 
@@ -1067,324 +1934,740 @@
 
       <button class="login-btn" id="login-btn" onclick="doLogin()">Kirish</button>
 
-      <div class="login-footer">TriPro © 2026</div>
-      <div style="margin-top:10px; font-size:0.75rem;">
-        <span id="login-default-link" style="color:var(--text-muted); cursor:pointer; text-decoration:underline;">Default login bilan kirish</span>
+      <div class="login-footer">TriPro Manufacturing & Services © 2026</div>
+      <div style="margin-top:12px; font-size:0.75rem;">
+        <span id="login-default-link" style="color:var(--text-muted); cursor:pointer; text-decoration:underline;">Standart login bilan tezkor kirish</span>
       </div>
     </div>
   </div>
 
-  <!-- Sidebar -->
+  <!-- ══════════════════════════════════════════════════════════
+       PREMIUM SIDEBAR
+  ══════════════════════════════════════════════════════════ -->
   <aside class="sidebar">
     <div class="brand">
       <img src="logo.png" alt="TriPro Logo" class="logo-img">
       <div class="brand-text">
         <div class="brand-text-main">Tri<span>Pro</span></div>
-        <div class="brand-text-sub">Admin</div>
+        <div class="brand-badge">
+          <span class="brand-badge-dot"></span>
+          <span>Admin v2.0</span>
+        </div>
       </div>
     </div>
+
     <div class="nav-links">
+      <div class="nav-group-label">Asosiy Bo'limlar</div>
+      
       <a href="#" class="nav-item active" onclick="switchTab('dashboard', this)">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-        Dashboard
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect></svg>
+        <span>Dashboard</span>
       </a>
+
       <a href="#" class="nav-item" onclick="switchTab('dashboard', this)">
         <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-        Mijozlar (Leads)
+        <span>Mijozlar (Leads)</span>
       </a>
-      <a href="#" class="nav-item" onclick="switchTab('services', this)">
-        <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-        Xizmatlar
-      </a>
-      <a href="#" class="nav-item" onclick="switchTab('settings', this)">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-        Sozlamalar
-      </a>
+
       <a href="#" class="nav-item" onclick="switchTab('orders', this)">
         <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"></path><rect x="9" y="3" width="6" height="4" rx="1"></rect><line x1="9" y1="12" x2="15" y2="12"></line><line x1="9" y1="16" x2="13" y2="16"></line></svg>
-        Buyurtmalar
+        <span>Buyurtmalar & Bot</span>
       </a>
+
+      <div class="nav-group-label">Kontent & Xizmatlar</div>
+
+      <a href="#" class="nav-item" onclick="switchTab('services', this)">
+        <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+        <span>Xizmatlar & CMS</span>
+      </a>
+
+      <div class="nav-group-label">Tizim Sozlamalari</div>
+
       <a href="#" class="nav-item" onclick="switchTab('contacts', this)">
         <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-        Bog'lanish
+        <span>Bog'lanish</span>
       </a>
-      
-      <div style="flex-grow: 1;"></div>
+
+      <a href="#" class="nav-item" onclick="switchTab('settings', this)">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        <span>Sozlamalar</span>
+      </a>
+    </div>
+
+    <!-- Sidebar Bottom / User Card -->
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-info">
+          <div class="user-avatar-sm">T</div>
+          <div class="user-meta">
+            <span class="user-name">Administrator</span>
+            <span class="user-role"><span class="status-indicator-dot"></span> Onlayn</span>
+          </div>
+        </div>
+        <button class="btn-logout-icon" onclick="logoutAdmin()" title="Tizimdan chiqish">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        </button>
+      </div>
     </div>
   </aside>
 
-  <!-- Main Content -->
+  <!-- ══════════════════════════════════════════════════════════
+       MAIN CONTENT CONTAINER
+  ══════════════════════════════════════════════════════════ -->
   <main class="main-content">
     <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sticky Topbar -->
     <header class="topbar">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <button class="mobile-toggle" onclick="toggleSidebar()">
+      <div class="topbar-left">
+        <button class="mobile-toggle" onclick="toggleSidebar()" title="Menyuni ochish">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
         <div class="search-bar">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-muted)"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <input type="text" id="global-search" placeholder="Ism, Familiya yoki ID..." onkeyup="handleGlobalSearch()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="global-search" placeholder="Ism, telefon yoki buyurtma ID..." onkeyup="handleGlobalSearch()">
         </div>
       </div>
-      <div class="user-profile">
-        <div style="text-align: right;">
-          <div style="font-weight: 600; font-size: 0.9rem;">Admin Panel</div>
-          <div style="color: var(--gold); font-size: 0.8rem; cursor:pointer; text-decoration:underline;" onclick="logoutAdmin()" title="Chiqish">Chiqish</div>
+
+      <div class="topbar-right">
+        <div class="topbar-live-badge">
+          <span class="topbar-live-dot"></span>
+          <span>Firebase Sinxron</span>
         </div>
-        <div class="avatar">T</div>
+
+        <div class="date-display-badge">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted);"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <span id="topbar-current-date">Bugun</span>
+        </div>
+
+        <div class="user-profile">
+          <div style="text-align: right;" class="user-profile-meta">
+            <div style="font-weight: 600; font-size: 0.88rem; color: var(--navy);">Admin Panel</div>
+            <div class="logout-pill" onclick="logoutAdmin()" title="Chiqish">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              <span>Chiqish</span>
+            </div>
+          </div>
+          <div class="avatar" title="Administrator">T</div>
+        </div>
       </div>
     </header>
 
+    <!-- ══════════════════════════════════════════════════════════
+         TAB: DASHBOARD & REAL-DATA ANALYTICS
+    ══════════════════════════════════════════════════════════ -->
     <div class="dashboard-content" id="tab-dashboard">
-      <h1 class="page-title">Umumiy ko'rinish</h1>
-      
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-header">
-            <span class="stat-title">Yangi Arizalar</span>
-            <div class="stat-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-            </div>
-          </div>
-          <div class="stat-value">124</div>
+      <div class="section-header">
+        <div>
+          <h1 class="page-title">Umumiy ko'rinish va Tahlil</h1>
+          <p class="page-subtitle">TriPro korxonasining arizalari, ishlab chiqarish buyurtmalari va xizmatlar statistikasi.</p>
         </div>
-        <div class="stat-card">
-          <div class="stat-header">
-            <span class="stat-title">Tasdiqlangan</span>
-            <div class="stat-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            </div>
-          </div>
-          <div class="stat-value">84</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-header">
-            <span class="stat-title">Mijozlar Bazasi</span>
-            <div class="stat-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-            </div>
-          </div>
-          <div class="stat-value">3,492</div>
-        </div>
-      </div>
-
-      <div class="table-section">
-        <div class="table-header">
-          <h3>So'nggi arizalar</h3>
+        <div>
           <button class="btn-export" onclick="window.exportToCSV()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            CSV Yuklash
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>CSV Eksport</span>
           </button>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Mijoz Ismi</th>
-              <th>Telefon</th>
-              <th>Xizmat Turi</th>
-              <th>Sana</th>
-              <th>Holat</th>
-              <th>Amallar</th>
-            </tr>
-          </thead>
-          <tbody id="inquiries-tbody">
-            <tr><td colspan="7" style="text-align: center; padding: 20px;">Ma'lumotlar yuklanmoqda...</td></tr>
-          </tbody>
-        </table>
       </div>
-    </div>
 
-    <!-- SERVICES CMS CONTENT -->
-    <div class="dashboard-content" id="tab-services" style="display: none;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px;">
-        <h1 class="page-title" style="margin: 0;">Xizmatlarni Boshqarish</h1>
-        <button class="btn-export" onclick="openServiceModal()" style="background: var(--gold); color: white; border: none;">
-          + Yangi Xizmat
+      <!-- Quick Action Buttons -->
+      <div class="quick-actions-bar">
+        <button class="quick-action-btn primary" onclick="openServiceModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+          <span>+ Yangi Xizmat</span>
+        </button>
+        <button class="quick-action-btn" onclick="switchTab('orders', document.querySelectorAll('.nav-item')[2])">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"></path><rect x="9" y="3" width="6" height="4" rx="1"></rect></svg>
+          <span>Buyurtmalarni Ko'rish</span>
+        </button>
+        <button class="quick-action-btn" onclick="switchTab('services', document.querySelectorAll('.nav-item')[3]); showHomepageEditor();">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+          <span>Bosh Sahifa Tahriri</span>
+        </button>
+        <button class="quick-action-btn" onclick="switchTab('contacts', document.querySelectorAll('.nav-item')[4])">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+          <span>Bog'lanish Raqamlari</span>
         </button>
       </div>
 
-      <!-- Filters -->
-      <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;" id="svc-filter-bar">
-        <button class="btn-export" id="filter-btn-all" style="background: var(--navy); color: white;" onclick="filterServices('all')">Barchasi</button>
-        <button class="btn-export" id="filter-btn-home" onclick="showHomepageEditor()">🏠 Bosh sahifa (Tahrir)</button>
-        <button class="btn-export" id="filter-btn-akfa" onclick="filterServices('akfa')">AKFA Romlar</button>
-        <button class="btn-export" id="filter-btn-glass" onclick="filterServices('glass')">Oynak Xizmatlari</button>
-        <button class="btn-export" id="filter-btn-wood" onclick="filterServices('wood')">Taxta Cex</button>
-        <button class="btn-export" id="filter-btn-portfolio" onclick="filterServices('portfolio')">Portfolio</button>
+      <!-- KPI Stat Cards Grid (The first 3 .stat-value elements match original JS index) -->
+      <div class="stats-grid">
+        <!-- 1. Yangi Arizalar (Original statCards[0]) -->
+        <div class="stat-card accent-blue">
+          <div class="stat-header">
+            <span class="stat-title">Yangi Arizalar</span>
+            <div class="stat-icon blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+          </div>
+          <div class="stat-body">
+            <div class="stat-value" id="stat-new-val">0</div>
+            <span class="stat-trend neutral">Kutilmoqda</span>
+          </div>
+          <div class="stat-desc">Ko'rib chiqilishi kerak bo'lgan arizalar</div>
+        </div>
+
+        <!-- 2. Tugallangan (Original statCards[1]) -->
+        <div class="stat-card accent-green">
+          <div class="stat-header">
+            <span class="stat-title">Tugallangan</span>
+            <div class="stat-icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+          </div>
+          <div class="stat-body">
+            <div class="stat-value" id="stat-done-val">0</div>
+            <span class="stat-trend positive">Yakunlangan</span>
+          </div>
+          <div class="stat-desc">Muvaffaqiyatli xizmat ko'rsatilganlar</div>
+        </div>
+
+        <!-- 3. Jami Arizalar (Original statCards[2]) -->
+        <div class="stat-card accent-gold">
+          <div class="stat-header">
+            <span class="stat-title">Mijozlar Bazasi</span>
+            <div class="stat-icon gold">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+          </div>
+          <div class="stat-body">
+            <div class="stat-value" id="stat-total-val">0</div>
+            <span class="stat-trend neutral">Jami Leads</span>
+          </div>
+          <div class="stat-desc">Tizimga kelib tushgan barcha arizalar</div>
+        </div>
+
+        <!-- 4. Jarayondagi Arizalar (Expanded Stat) -->
+        <div class="stat-card accent-amber">
+          <div class="stat-header">
+            <span class="stat-title">Jarayonda</span>
+            <div class="stat-icon amber">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+          </div>
+          <div class="stat-body">
+            <div class="stat-value-sub" id="stat-process-val">0</div>
+            <span class="stat-trend neutral">Amalda</span>
+          </div>
+          <div class="stat-desc">Hozirda ustalar ishlayotgan arizalar</div>
+        </div>
+
+        <!-- 5. Bot Buyurtmalari (Expanded Stat) -->
+        <div class="stat-card accent-purple">
+          <div class="stat-header">
+            <span class="stat-title">Bot Buyurtmalari</span>
+            <div class="stat-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            </div>
+          </div>
+          <div class="stat-body">
+            <div class="stat-value-sub" id="stat-orders-val">0</div>
+            <span class="stat-trend neutral">Telegram</span>
+          </div>
+          <div class="stat-desc">Telegram bot orqali rasmiylashtirilgan</div>
+        </div>
+
+        <!-- 6. Faol Xizmatlar (Expanded Stat) -->
+        <div class="stat-card accent-indigo">
+          <div class="stat-header">
+            <span class="stat-title">Faol Xizmatlar</span>
+            <div class="stat-icon indigo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            </div>
+          </div>
+          <div class="stat-body">
+            <div class="stat-value-sub" id="stat-services-val">0</div>
+            <span class="stat-trend positive">Katalog</span>
+          </div>
+          <div class="stat-desc">Saytda taklif etilayotgan xizmat turlari</div>
+        </div>
       </div>
 
-      <!-- Homepage Content Editor -->
-      <div id="homepage-editor" style="display:none;">
-        <div style="background:white; border-radius:16px; padding:30px; border:1px solid var(--border); margin-bottom:20px;">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;">
-            <div>
-              <h3 style="font-family:'Montserrat',sans-serif; color:var(--navy); margin-bottom:6px; display:flex; align-items:center; gap:8px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                Hero Qism
-              </h3>
-              <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">Bosh sahifaning yuqori (hero) qismidagi matnlarni tahrirlang.</p>
+      <!-- Real-Data Analytics Widgets -->
+      <div class="analytics-grid">
+        <!-- Widget 1: Status Distribution -->
+        <div class="analytics-card">
+          <div class="analytics-card-header">
+            <div class="analytics-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+              <span>Arizalar Holati Taqsimoti</span>
             </div>
-            <button onclick="restoreDefaultBento()" style="padding:8px 12px; background:#F0F9FF; color:#0369A1; border:1px solid #BAE6FD; border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
-              Standart bloklarni tiklash
-            </button>
+            <span class="analytics-badge" id="dist-total-badge">0 ariza</span>
           </div>
-          <div style="display:grid; gap:15px;">
-            <div>
-              <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase;">Badge matni</label>
-              <input type="text" id="hc-badge" value="Ishonchli Ishlab Chiqarish цexi" style="width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:8px; font-family:inherit; font-size:0.9rem; outline:none;">
+
+          <!-- Multi-segment progress bar -->
+          <div class="status-dist-bar">
+            <div class="dist-seg new" id="dist-bar-new" style="width: 0%;" title="Yangi"></div>
+            <div class="dist-seg process" id="dist-bar-process" style="width: 0%;" title="Jarayonda"></div>
+            <div class="dist-seg done" id="dist-bar-done" style="width: 0%;" title="Tugallangan"></div>
+          </div>
+
+          <div class="status-dist-legend">
+            <div class="dist-legend-item">
+              <div class="legend-top">
+                <span class="legend-dot new"></span>
+                <span>Yangi</span>
+              </div>
+              <div class="legend-val" id="legend-new-val">0</div>
+              <span style="font-size: 0.72rem; color: var(--text-muted);" id="legend-new-pct">0%</span>
             </div>
-            <div>
-              <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase;">Sarlavha (birinchi qism)</label>
-              <input type="text" id="hc-title" value="Sifatli" style="width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:8px; font-family:inherit; font-size:0.9rem; outline:none;">
+
+            <div class="dist-legend-item">
+              <div class="legend-top">
+                <span class="legend-dot process"></span>
+                <span>Jarayonda</span>
+              </div>
+              <div class="legend-val" id="legend-process-val">0</div>
+              <span style="font-size: 0.72rem; color: var(--text-muted);" id="legend-process-pct">0%</span>
             </div>
-            <div>
-              <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase;">Sarlavha (accent — sariq rang)</label>
-              <input type="text" id="hc-accent" value="AKFA Romlar" style="width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:8px; font-family:inherit; font-size:0.9rem; outline:none;">
-            </div>
-            <div>
-              <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase;">Sarlavha (ikkinchi qator)</label>
-              <input type="text" id="hc-title2" value="Oynak va Yog'och Mahsulotlar" style="width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:8px; font-family:inherit; font-size:0.9rem; outline:none;">
-            </div>
-            <div>
-              <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase;">Tavsif matni</label>
-              <textarea id="hc-desc" rows="3" style="width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:8px; font-family:inherit; font-size:0.9rem; outline:none; resize:vertical;">TriPro — AKFA romlar, oynak xizmatlari va asalari yashiklari ishlab chiqarish bilan shug'ullanuvchi ishonchli цex.</textarea>
+
+            <div class="dist-legend-item">
+              <div class="legend-top">
+                <span class="legend-dot done"></span>
+                <span>Tugallangan</span>
+              </div>
+              <div class="legend-val" id="legend-done-val">0</div>
+              <span style="font-size: 0.72rem; color: var(--text-muted);" id="legend-done-pct">0%</span>
             </div>
           </div>
         </div>
 
-        <!-- Stats -->
-        <div style="background:white; border-radius:16px; padding:30px; border:1px solid var(--border); margin-bottom:20px;">
-          <h3 style="font-family:'Montserrat',sans-serif; color:var(--navy); margin-bottom:6px;">📊 Statistikalar (4 dona)</h3>
-          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:20px;">Hero va stats strip qismidagi raqam va labellarni tahrirlang.</p>
-          <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:16px;">
-            <div style="padding:16px; border:1px solid var(--border); border-radius:10px;">
-              <div style="font-weight:700; font-size:0.8rem; color:var(--text-muted); margin-bottom:10px; text-transform:uppercase;">Stat 1</div>
-              <div style="display:grid; gap:8px;">
-                <input type="text" id="hc-s1-num" value="500+" placeholder="Raqam" style="padding:9px 12px; border:1.5px solid var(--border); border-radius:6px; font-family:inherit; outline:none;">
-                <input type="text" id="hc-s1-lbl" value="Bajarilgan loyihalar" placeholder="Label" style="padding:9px 12px; border:1.5px solid var(--border); border-radius:6px; font-family:inherit; outline:none;">
+        <!-- Widget 2: Service Category Distribution -->
+        <div class="analytics-card">
+          <div class="analytics-card-header">
+            <div class="analytics-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+              <span>Xizmat Yo'nalishlari Bo'yicha</span>
+            </div>
+            <span class="analytics-badge">Kategoriya</span>
+          </div>
+
+          <div class="category-breakdown-list">
+            <!-- AKFA Rom -->
+            <div class="category-stat-row">
+              <div class="cat-stat-meta">
+                <span class="cat-stat-name">
+                  <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#DC2626;"></span>
+                  <span>AKFA Romlar</span>
+                </span>
+                <span class="cat-stat-num" id="cat-count-akfa">0 ta (0%)</span>
+              </div>
+              <div class="cat-progress-track">
+                <div class="cat-progress-fill akfa" id="cat-bar-akfa" style="width: 0%;"></div>
               </div>
             </div>
-            <div style="padding:16px; border:1px solid var(--border); border-radius:10px;">
-              <div style="font-weight:700; font-size:0.8rem; color:var(--text-muted); margin-bottom:10px; text-transform:uppercase;">Stat 2</div>
-              <div style="display:grid; gap:8px;">
-                <input type="text" id="hc-s2-num" value="15+" placeholder="Raqam" style="padding:9px 12px; border:1.5px solid var(--border); border-radius:6px; font-family:inherit; outline:none;">
-                <input type="text" id="hc-s2-lbl" value="Yillik tajriba" placeholder="Label" style="padding:9px 12px; border:1.5px solid var(--border); border-radius:6px; font-family:inherit; outline:none;">
+
+            <!-- Oynak Xizmatlari -->
+            <div class="category-stat-row">
+              <div class="cat-stat-meta">
+                <span class="cat-stat-name">
+                  <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#0891B2;"></span>
+                  <span>Oynak Xizmatlari</span>
+                </span>
+                <span class="cat-stat-num" id="cat-count-glass">0 ta (0%)</span>
+              </div>
+              <div class="cat-progress-track">
+                <div class="cat-progress-fill glass" id="cat-bar-glass" style="width: 0%;"></div>
               </div>
             </div>
-            <div style="padding:16px; border:1px solid var(--border); border-radius:10px;">
-              <div style="font-weight:700; font-size:0.8rem; color:var(--text-muted); margin-bottom:10px; text-transform:uppercase;">Stat 3</div>
-              <div style="display:grid; gap:8px;">
-                <input type="text" id="hc-s3-num" value="3" placeholder="Raqam" style="padding:9px 12px; border:1.5px solid var(--border); border-radius:6px; font-family:inherit; outline:none;">
-                <input type="text" id="hc-s3-lbl" value="Asosiy xizmat yo'nalishi" placeholder="Label" style="padding:9px 12px; border:1.5px solid var(--border); border-radius:6px; font-family:inherit; outline:none;">
+
+            <!-- Taxta Cex / Asalari -->
+            <div class="category-stat-row">
+              <div class="cat-stat-meta">
+                <span class="cat-stat-name">
+                  <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#D97706;"></span>
+                  <span>Taxta Cex (Asalari)</span>
+                </span>
+                <span class="cat-stat-num" id="cat-count-wood">0 ta (0%)</span>
+              </div>
+              <div class="cat-progress-track">
+                <div class="cat-progress-fill wood" id="cat-bar-wood" style="width: 0%;"></div>
               </div>
             </div>
-            <div style="padding:16px; border:1px solid var(--border); border-radius:10px;">
-              <div style="font-weight:700; font-size:0.8rem; color:var(--text-muted); margin-bottom:10px; text-transform:uppercase;">Stat 4</div>
-              <div style="display:grid; gap:8px;">
-                <input type="text" id="hc-s4-num" value="100%" placeholder="Raqam" style="padding:9px 12px; border:1.5px solid var(--border); border-radius:6px; font-family:inherit; outline:none;">
-                <input type="text" id="hc-s4-lbl" value="Mijoz mamnuniyati" placeholder="Label" style="padding:9px 12px; border:1.5px solid var(--border); border-radius:6px; font-family:inherit; outline:none;">
+
+            <!-- Boshqa -->
+            <div class="category-stat-row">
+              <div class="cat-stat-meta">
+                <span class="cat-stat-name">
+                  <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#64748B;"></span>
+                  <span>Boshqa arizalar</span>
+                </span>
+                <span class="cat-stat-num" id="cat-count-other">0 ta (0%)</span>
               </div>
+              <div class="cat-progress-track">
+                <div class="cat-progress-fill other" id="cat-bar-other" style="width: 0%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Widget 3: 7-Day Activity Trend & Recent Feed -->
+        <div class="analytics-card">
+          <div class="analytics-card-header">
+            <div class="analytics-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+              <span>So'nggi 7 Kunlik Faollik</span>
+            </div>
+            <span class="analytics-badge">Dinamika</span>
+          </div>
+
+          <!-- Trend Bar Chart -->
+          <div class="trend-bars-container" id="trend-bars-container">
+            <!-- Rendered dynamically by updateDashboardAnalytics -->
+            <div style="width:100%; text-align:center; color:var(--text-muted); font-size:0.8rem; padding: 30px 0;">
+              Yuklanmoqda...
+            </div>
+          </div>
+
+          <div style="margin-top: 14px;">
+            <div style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:8px;">So'nggi Harakatlar</div>
+            <div class="activity-feed-list" id="activity-feed-list">
+              <div style="text-align:center; padding:15px; color:var(--text-muted); font-size:0.8rem;">Ma'lumotlar kutilmoqda...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inquiries Table Section -->
+      <div class="table-section">
+        <div class="table-header">
+          <div class="table-header-left">
+            <h3>So'nggi arizalar</h3>
+            <span class="table-count-badge" id="table-inquiries-count">0 ta ariza</span>
+          </div>
+
+          <div class="table-header-actions">
+            <!-- Status filter tabs -->
+            <div class="table-filter-pills">
+              <button class="table-filter-pill active" onclick="filterInquiriesTable('all', this)">Barchasi</button>
+              <button class="table-filter-pill" onclick="filterInquiriesTable('new', this)">Yangi</button>
+              <button class="table-filter-pill" onclick="filterInquiriesTable('process', this)">Jarayonda</button>
+              <button class="table-filter-pill" onclick="filterInquiriesTable('done', this)">Tugallangan</button>
+            </div>
+
+            <button class="btn-export" onclick="window.exportToCSV()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>CSV Yuklash</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Mijoz Ismi</th>
+                <th>Telefon</th>
+                <th>Xizmat Turi</th>
+                <th>Sana</th>
+                <th>Holat</th>
+                <th style="text-align: right;">Amallar</th>
+              </tr>
+            </thead>
+            <tbody id="inquiries-tbody">
+              <tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--text-muted);">Ma'lumotlar yuklanmoqda...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         TAB: SERVICES CMS CONTENT
+    ══════════════════════════════════════════════════════════ -->
+    <div class="dashboard-content" id="tab-services" style="display: none;">
+      <div class="section-header">
+        <div>
+          <h1 class="page-title">Xizmatlarni Boshqarish & CMS</h1>
+          <p class="page-subtitle">Veb-sayt xizmatlar katalogi, narxlar va bosh sahifa bento-bloklarini tahrirlash.</p>
+        </div>
+        <button class="btn-export" onclick="openServiceModal()" style="background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--navy); border-color: var(--gold);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+          <span>+ Yangi Xizmat Qo'shish</span>
+        </button>
+      </div>
+
+      <!-- Filters Bar -->
+      <div class="quick-actions-bar" id="svc-filter-bar" style="margin-bottom: 24px;">
+        <button class="quick-action-btn primary" id="filter-btn-all" onclick="filterServices('all')">Barchasi</button>
+        <button class="quick-action-btn" id="filter-btn-home" onclick="showHomepageEditor()">🏠 Bosh sahifa (Tahrir)</button>
+        <button class="quick-action-btn" id="filter-btn-akfa" onclick="filterServices('akfa')">AKFA Romlar</button>
+        <button class="quick-action-btn" id="filter-btn-glass" onclick="filterServices('glass')">Oynak Xizmatlari</button>
+        <button class="quick-action-btn" id="filter-btn-wood" onclick="filterServices('wood')">Taxta Cex</button>
+        <button class="quick-action-btn" id="filter-btn-portfolio" onclick="filterServices('portfolio')">Portfolio</button>
+      </div>
+
+      <!-- Homepage Content Editor -->
+      <div id="homepage-editor" style="display:none; margin-bottom: 30px;">
+        <!-- Hero section edit -->
+        <div class="form-card" style="margin-bottom: 22px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
+            <div>
+              <h3 style="font-family:'Montserrat',sans-serif; color:var(--navy); margin-bottom:4px; display:flex; align-items:center; gap:8px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <span>Bosh Sahifa Hero Qismi</span>
+              </h3>
+              <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">Bosh sahifaning yuqori (hero) qismidagi sarlavha va ta'rif matnlarini tahrirlang.</p>
+            </div>
+            <button onclick="restoreDefaultBento()" style="padding:8px 14px; background:#F0F9FF; color:#0369A1; border:1px solid #BAE6FD; border-radius:8px; font-size:0.78rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
+              <span>Standart bloklarni tiklash</span>
+            </button>
+          </div>
+
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:16px;">
+            <div class="form-group">
+              <label class="form-label" for="hc-badge">Badge matni</label>
+              <input type="text" id="hc-badge" value="Ishonchli Ishlab Chiqarish цexi" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="hc-title">Sarlavha (1-qism)</label>
+              <input type="text" id="hc-title" value="Sifatli" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="hc-accent">Sarlavha (Accent — Oltin rang)</label>
+              <input type="text" id="hc-accent" value="AKFA Romlar" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="hc-title2">Sarlavha (2-qator)</label>
+              <input type="text" id="hc-title2" value="Oynak va Yog'och Mahsulotlar" class="form-input">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="hc-desc">Tavsif matni</label>
+            <textarea id="hc-desc" rows="3" class="form-textarea">TriPro — AKFA romlar, oynak xizmatlari va asalari yashiklari ishlab chiqarish bilan shug'ullanuvchi ishonchli цex.</textarea>
+          </div>
+        </div>
+
+        <!-- Stats Section Edit -->
+        <div class="form-card" style="margin-bottom: 22px;">
+          <h3 style="font-family:'Montserrat',sans-serif; color:var(--navy); margin-bottom:4px; display:flex; align-items:center; gap:8px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            <span>Bosh Sahifa Statistikalar (4 ta ko'rsatkich)</span>
+          </h3>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:16px;">Hero va stats strip qismidagi raqam va matnlarni tahrirlang.</p>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:16px;">
+            <div class="form-card" style="padding:16px; background:var(--surface);">
+              <div class="form-label" style="color:var(--gold);">Ko'rsatkich 1</div>
+              <input type="text" id="hc-s1-num" value="500+" placeholder="Raqam" class="form-input" style="margin-bottom:8px;">
+              <input type="text" id="hc-s1-lbl" value="Bajarilgan loyihalar" placeholder="Tavsif" class="form-input">
+            </div>
+
+            <div class="form-card" style="padding:16px; background:var(--surface);">
+              <div class="form-label" style="color:var(--gold);">Ko'rsatkich 2</div>
+              <input type="text" id="hc-s2-num" value="15+" placeholder="Raqam" class="form-input" style="margin-bottom:8px;">
+              <input type="text" id="hc-s2-lbl" value="Yillik tajriba" placeholder="Tavsif" class="form-input">
+            </div>
+
+            <div class="form-card" style="padding:16px; background:var(--surface);">
+              <div class="form-label" style="color:var(--gold);">Ko'rsatkich 3</div>
+              <input type="text" id="hc-s3-num" value="3" placeholder="Raqam" class="form-input" style="margin-bottom:8px;">
+              <input type="text" id="hc-s3-lbl" value="Asosiy xizmat yo'nalishi" placeholder="Tavsif" class="form-input">
+            </div>
+
+            <div class="form-card" style="padding:16px; background:var(--surface);">
+              <div class="form-label" style="color:var(--gold);">Ko'rsatkich 4</div>
+              <input type="text" id="hc-s4-num" value="100%" placeholder="Raqam" class="form-input" style="margin-bottom:8px;">
+              <input type="text" id="hc-s4-lbl" value="Mijoz mamnuniyati" placeholder="Tavsif" class="form-input">
             </div>
           </div>
         </div>
 
         <!-- Save Button for Homepage Content -->
-        <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:20px;">
-          <button onclick="saveHomeContent(event)" style="flex:1; padding:14px; background:var(--gold); color:white; border:none; border-radius:8px; font-weight:700; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; min-width:200px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-            Hero va Statslarni Saqlash
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <button onclick="saveHomeContent(event)" class="btn-export" style="background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--navy); border-color: var(--gold); padding: 12px 24px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            <span>Hero va Statistikani Saqlash</span>
           </button>
-          <div id="hc-save-msg" style="display:none; background:#D1FAE5; color:#065F46; padding:14px 24px; border-radius:8px; font-weight:600; font-size:0.9rem; align-items:center; gap:8px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            Muvaffaqiyatli saqlandi!
+          <div id="hc-save-msg" style="display:none; background:#D1FAE5; color:#065F46; padding:10px 18px; border-radius:8px; font-weight:600; font-size:0.85rem; display:inline-flex; align-items:center; gap:6px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Muvaffaqiyatli saqlandi!</span>
           </div>
         </div>
 
         <!-- Dynamic Blocks Header -->
-        <div style="margin-top: 40px; margin-bottom: 20px; border-top: 1px dashed var(--border); padding-top: 30px;">
-          <h3 style="font-family:'Montserrat',sans-serif; color:var(--navy); margin-bottom:6px;">🗂️ Bosh sahifa bloklari (Dinamik)</h3>
-          <p style="color:var(--text-muted); font-size:0.85rem;">Bosh sahifadagi bento grid bloklarini boshqarish. Yangi blok qo'shish uchun "+ Yangi Xizmat" tugmasidan foydalaning.</p>
+        <div style="margin-top: 36px; margin-bottom: 18px; border-top: 1px dashed var(--border); padding-top: 24px;">
+          <h3 style="font-family:'Montserrat',sans-serif; color:var(--navy); margin-bottom:4px;">🗂️ Bosh Sahifa Bento Bloklari</h3>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Bosh sahifadagi dinamik bloklarni boshqarish. Yangi blok qo'shish uchun "+ Yangi Xizmat" tugmasidan foydalaning.</p>
         </div>
       </div>
 
-      <!-- Services Grid -->
-      <div class="services-grid" id="services-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px;">
-        <!-- Services will render here -->
+      <!-- Services Cards Grid -->
+      <div class="services-grid" id="services-grid">
+        <!-- Rendered dynamically by renderServices -->
       </div>
     </div>
 
-    <!-- SETTINGS CONTENT -->
+    <!-- ══════════════════════════════════════════════════════════
+         TAB: SETTINGS (ADMIN & SYSTEM)
+    ══════════════════════════════════════════════════════════ -->
     <div class="dashboard-content" id="tab-settings" style="display: none;">
-      <h1 class="page-title">Sozlamalar</h1>
-      
-      <div class="table-section" style="padding: 30px;">
-        <h3 style="font-family: 'Montserrat', sans-serif; margin-bottom: 20px; color: var(--navy);">Sayt va Ma'lumotlar Sozlamalari</h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
-          <div style="padding: 20px; border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; gap: 15px;">
-             <h4 style="color: var(--text);">Barcha Arizalarni Tozalash</h4>
-             <p style="color: var(--text-muted); font-size: 0.85rem; flex: 1;">Tizimdagi barcha arizalarni qaytarib bo'lmaydigan holatda o'chirish. O'chirishdan oldin CSV eksport qilib oling.</p>
-             <button onclick="clearAllInquiries()" style="background: rgba(239, 68, 68, 0.1); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer;">Barchasini O'chirish</button>
+      <div class="section-header">
+        <div>
+          <h1 class="page-title">Tizim Sozlamalari</h1>
+          <p class="page-subtitle">Admin hisob ma'lumotlari, xavfsizlik va ma'lumotlar bazasi boshqaruvi.</p>
+        </div>
+      </div>
+
+      <div class="settings-grid">
+        <!-- Admin Password Card -->
+        <div class="form-card">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div class="stat-icon gold" style="width:36px; height:36px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </div>
+            <h3 style="font-family: 'Montserrat', sans-serif; color: var(--navy); font-size: 1.05rem;">Admin Login & Parol</h3>
           </div>
-          <div style="padding: 20px; border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; gap: 15px;">
-             <h4 style="color: var(--text);">Admin Login va Parolni O'zgartirish</h4>
-             <p style="color: var(--text-muted); font-size: 0.85rem; flex: 1;">Yangi login va parol Firebase'ga saqlanadi. Default: login = <strong>tripro</strong>, parol = <strong>2025</strong></p>
-             <input type="text" id="setting-admin-login" placeholder="Yangi login (kamida 3 belgi)" style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:6px; outline:none; font-family:inherit; margin-bottom:10px;">
-             <input type="password" id="setting-admin-password" placeholder="Yangi parol (kamida 4 belgi)" style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:6px; outline:none; font-family:inherit;">
-             <button onclick="saveAdminPassword()" style="padding:10px; background:var(--navy); color:white; border:none; border-radius:6px; font-weight:600; cursor:pointer; margin-top:10px;">Login/Parolni Saqlash</button>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">Yangi login va parol Firebase ma'lumotlar bazasida xavfsiz saqlanadi.</p>
+
+          <div class="form-group">
+            <label class="form-label" for="setting-admin-login">Yangi Login</label>
+            <input type="text" id="setting-admin-login" placeholder="Yangi login (kamida 3 belgi)" class="form-input">
           </div>
-          <div style="padding: 20px; border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; gap: 15px;">
-             <h4 style="color: var(--text);">Tizim haqida</h4>
-             <p style="color: var(--text-muted); font-size: 0.85rem; flex: 1;">TriPro jamoasi uchun ishlab chiqilgan maxsus Admin Panel. Versiya 1.0. 
-             Mijozlar bazasi to'g'ridan-to'g'iri Firebase Realtime Database bilan sinxronizatsiya qilinadi.</p>
+
+          <div class="form-group">
+            <label class="form-label" for="setting-admin-password">Yangi Parol</label>
+            <input type="password" id="setting-admin-password" placeholder="Yangi parol (kamida 4 belgi)" class="form-input">
+          </div>
+
+          <button onclick="saveAdminPassword()" class="btn-export" style="margin-top: 6px; justify-content: center;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            <span>Login/Parolni Saqlash</span>
+          </button>
+        </div>
+
+        <!-- Database Maintenance (Danger Zone) -->
+        <div class="form-card" style="border-color: rgba(239, 68, 68, 0.25);">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div class="stat-icon" style="width:36px; height:36px; background:var(--danger-bg); color:var(--danger);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            </div>
+            <h3 style="font-family: 'Montserrat', sans-serif; color: var(--danger); font-size: 1.05rem;">Barcha Arizalarni Tozalash</h3>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.85rem; flex: 1;">Tizimdagi barcha mijozlar arizalarini qaytarib bo'lmaydigan holatda o'chirish. O'chirishdan avval ma'lumotlarni CSV qilib yuklab oling.</p>
+
+          <button onclick="clearAllInquiries()" style="background: rgba(239, 68, 68, 0.1); color: #EF4444; border: 1.5px solid rgba(239, 68, 68, 0.3); padding: 12px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; transition: var(--transition); display:flex; align-items:center; justify-content:center; gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            <span>Barcha Arizalarni Butunlay O'chirish</span>
+          </button>
+        </div>
+
+        <!-- System Information -->
+        <div class="form-card">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div class="stat-icon blue" style="width:36px; height:36px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            </div>
+            <h3 style="font-family: 'Montserrat', sans-serif; color: var(--navy); font-size: 1.05rem;">TriPro Tizim Holati</h3>
+          </div>
+          
+          <div style="display:flex; flex-direction:column; gap:10px; font-size:0.85rem; color:var(--text-secondary); flex:1;">
+            <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-subtle);">
+              <span>Tizim Versiyasi:</span>
+              <strong style="color:var(--navy);">v2.0 Premium</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-subtle);">
+              <span>Ma'lumotlar Bazasi:</span>
+              <strong style="color:var(--success);">Firebase Realtime DB</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-subtle);">
+              <span>Telegram Bot API:</span>
+              <strong style="color:var(--info);">OnRender Server</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:8px 0;">
+              <span>Sinxronizatsiya:</span>
+              <strong style="color:var(--success);">Avtomatik (Jonli)</strong>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Contacts Tab -->
+    <!-- ══════════════════════════════════════════════════════════
+         TAB: CONTACT SETTINGS
+    ══════════════════════════════════════════════════════════ -->
     <div class="dashboard-content" id="tab-contacts" style="display: none;">
-      <h1 class="page-title">Bog'lanish Sozlamalari</h1>
-      <div class="table-section" style="padding: 30px;">
-        <h3 style="font-family: 'Montserrat', sans-serif; margin-bottom: 20px; color: var(--navy);">Telefon Raqamlar va WhatsApp</h3>
-        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Asosiy sahifadagi barcha telefon raqamlar va WhatsApp havolalarni o'zgartirish.</p>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-          <div style="padding: 20px; border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; gap: 12px;">
-            <label style="font-weight: 600; font-size: 0.85rem; color: var(--text);">Telefon raqam 1 (Asosiy)</label>
-            <input type="text" id="contact-phone1" placeholder="+998906335787" style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:6px; outline:none; font-family:inherit;">
+      <div class="section-header">
+        <div>
+          <h1 class="page-title">Bog'lanish Sozlamalari</h1>
+          <p class="page-subtitle">Asosiy veb-saytdagi telefon raqamlar, WhatsApp va aloqa havolalarini boshqaring.</p>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <h3 style="font-family: 'Montserrat', sans-serif; color: var(--navy); margin-bottom: 4px; display:flex; align-items:center; gap:8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+          <span>Telefon Raqamlar va WhatsApp</span>
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Kiritilgan raqamlar saytdagi barcha qo'ng'iroq va yozishmalarga avtomatik ulanadi.</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+          <div class="form-group">
+            <label class="form-label" for="contact-phone1">Telefon 1 (Asosiy Raqam)</label>
+            <input type="text" id="contact-phone1" placeholder="+998906335787" class="form-input">
           </div>
-          <div style="padding: 20px; border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; gap: 12px;">
-            <label style="font-weight: 600; font-size: 0.85rem; color: var(--text);">Telefon raqam 2</label>
-            <input type="text" id="contact-phone2" placeholder="+998958936787" style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:6px; outline:none; font-family:inherit;">
+
+          <div class="form-group">
+            <label class="form-label" for="contact-phone2">Telefon 2</label>
+            <input type="text" id="contact-phone2" placeholder="+998958936787" class="form-input">
           </div>
-          <div style="padding: 20px; border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; gap: 12px;">
-            <label style="font-weight: 600; font-size: 0.85rem; color: var(--text);">Telefon raqam 3</label>
-            <input type="text" id="contact-phone3" placeholder="+998996156006" style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:6px; outline:none; font-family:inherit;">
+
+          <div class="form-group">
+            <label class="form-label" for="contact-phone3">Telefon 3</label>
+            <input type="text" id="contact-phone3" placeholder="+998996156006" class="form-input">
           </div>
-          <div style="padding: 20px; border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; gap: 12px;">
-            <label style="font-weight: 600; font-size: 0.85rem; color: var(--text);">WhatsApp raqam</label>
-            <input type="text" id="contact-whatsapp" placeholder="+998906335787" style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:6px; outline:none; font-family:inherit;">
+
+          <div class="form-group">
+            <label class="form-label" for="contact-whatsapp">WhatsApp Raqam</label>
+            <input type="text" id="contact-whatsapp" placeholder="+998906335787" class="form-input">
           </div>
         </div>
-        <div style="margin-top: 25px; display: flex; gap: 12px; flex-wrap: wrap;">
-          <button onclick="saveContactSettings()" style="padding:12px 28px; background:var(--navy); color:white; border:none; border-radius:6px; font-weight:600; cursor:pointer;">Saqlash</button>
-          <span id="contact-save-msg" style="display:none; padding:12px 20px; background:#DCFCE7; color:#166534; border-radius:6px; font-weight:500;">Saqlandi!</span>
+
+        <div style="margin-top: 24px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
+          <button onclick="saveContactSettings()" class="btn-export" style="padding: 12px 28px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            <span>Raqamlarni Saqlash</span>
+          </button>
+          <span id="contact-save-msg" style="display:none; padding:10px 18px; background:#DCFCE7; color:#166534; border-radius:8px; font-weight:600; font-size:0.85rem; align-items:center; gap:6px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Muvaffaqiyatli saqlandi!</span>
+          </span>
         </div>
       </div>
     </div>
 
-    <!-- Orders Tab (Telegram Bot) -->
+    <!-- ══════════════════════════════════════════════════════════
+         TAB: ORDERS & TELEGRAM BOT INTEGRATION
+    ══════════════════════════════════════════════════════════ -->
     <div class="dashboard-content" id="tab-orders" style="display: none;">
-      <h1 class="page-title">Buyurtmalar va Profilaktika</h1>
-      
-      <!-- Akfa Orders -->
-      <div class="table-section" style="padding: 20px; margin-bottom: 30px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
-          <h3 style="font-family:'Montserrat',sans-serif; color:var(--navy);">🪟 Akfa Buyurtmalari</h3>
-          <button onclick="loadBotOrders()" class="btn-export">🔄 Yangilash</button>
+      <div class="section-header">
+        <div>
+          <h1 class="page-title">Buyurtmalar va Profilaktika</h1>
+          <p class="page-subtitle">Telegram bot orqali rasmiylashtirilgan AKFA buyurtmalari va usta chaqirish so'rovlari.</p>
         </div>
-        <div style="overflow-x:auto;">
+        <button onclick="loadBotOrders()" class="btn-export">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+          <span>Jonli Yangilash</span>
+        </button>
+      </div>
+
+      <!-- Akfa Orders Table -->
+      <div class="table-section" style="margin-bottom: 30px;">
+        <div class="table-header">
+          <div class="table-header-left">
+            <h3>🪟 AKFA Buyurtmalari</h3>
+            <span class="table-count-badge">Telegram Bot</span>
+          </div>
+          <button onclick="loadBotOrders()" class="btn-export" style="font-size: 0.8rem; padding: 7px 14px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"></path></svg>
+            <span>Yangilash</span>
+          </button>
+        </div>
+
+        <div class="table-responsive">
           <table id="akfa-table">
             <thead>
               <tr>
@@ -1394,54 +2677,61 @@
                 <th>O'lcham</th>
                 <th>Soni</th>
                 <th>Telefon</th>
-                <th>Holat</th>
-                <th>Amal</th>
+                <th>Bosqich (Holat)</th>
+                <th style="text-align: right;">Amal</th>
               </tr>
             </thead>
             <tbody id="orders-tbody">
-              <tr><td colspan="8" style="text-align:center; padding:30px;">Ma'lumotlar yuklanmoqda...</td></tr>
+              <tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">Ma'lumotlar yuklanmoqda...</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- Maintenance Requests -->
-      <div class="table-section" style="padding: 20px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
-          <h3 style="font-family:'Montserrat',sans-serif; color:var(--navy);">🛠 Profilaktika (Usta chaqirish)</h3>
+      <!-- Maintenance Requests Table -->
+      <div class="table-section">
+        <div class="table-header">
+          <div class="table-header-left">
+            <h3>🛠 Profilaktika (Usta chaqirish)</h3>
+            <span class="table-count-badge">Xizmat ko'rsatish</span>
+          </div>
         </div>
-        <div style="overflow-x:auto;">
+
+        <div class="table-responsive">
           <table id="maintenance-table">
             <thead>
               <tr>
                 <th>Sana</th>
                 <th>Mijoz</th>
-                <th>Muammo</th>
+                <th>Muammo Tafsiloti</th>
                 <th>Turi</th>
                 <th>Holat</th>
               </tr>
             </thead>
             <tbody id="maintenance-tbody">
-              <tr><td colspan="5" style="text-align:center; padding:30px;">Talablar yo'q</td></tr>
+              <tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">Talablar yo'q</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
   </main>
-  
-  <!-- Add/Edit Service Modal -->
-  <div id="service-modal" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.8); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 15px;">
-    <div style="background: white; border-radius: 12px; padding: 25px; width: 100%; max-width: 500px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
-      <button onclick="closeServiceModal()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted);">&times;</button>
-      <h2 id="modal-title" style="font-family: 'Playfair Display', serif; color: var(--navy); margin-bottom: 20px; padding-right: 30px;">Yangi Xizmat Qo'shish</h2>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ADD / EDIT SERVICE MODAL
+  ══════════════════════════════════════════════════════════ -->
+  <div id="service-modal" class="modal-overlay">
+    <div class="login-card" style="max-width: 540px; text-align: left; padding: 32px 30px;">
+      <button onclick="closeServiceModal()" style="position: absolute; top: 18px; right: 18px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); line-height: 1;">&times;</button>
       
+      <h2 id="modal-title" style="font-family: 'Montserrat', sans-serif; font-size: 1.35rem; color: var(--navy); margin-bottom: 20px; padding-right: 30px;">Yangi Xizmat Qo'shish</h2>
+
       <form id="service-form" onsubmit="saveService(event)">
         <input type="hidden" id="sv-id">
-        
-        <div style="margin-bottom: 15px;">
-          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 5px;">Bo'lim (Kategoriya)</label>
-          <select id="sv-category" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; outline: none; font-family: inherit;">
+
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label" for="sv-category">Bo'lim (Kategoriya)</label>
+          <select id="sv-category" required class="form-select">
             <option value="home">Bosh sahifa</option>
             <option value="akfa">AKFA Romlar</option>
             <option value="glass">Oynak Xizmatlari</option>
@@ -1450,40 +2740,43 @@
           </select>
         </div>
 
-        <div style="margin-bottom: 15px;">
-          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 5px;">Xizmat nomi</label>
-          <input type="text" id="sv-title" required placeholder="Masalan: Plastik AKFA Rom" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; outline: none; font-family: inherit;">
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label" for="sv-title">Xizmat nomi</label>
+          <input type="text" id="sv-title" required placeholder="Masalan: Plastik AKFA Rom" class="form-input">
         </div>
 
-        <div style="margin-bottom: 15px;">
-          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 5px;">Qisqacha ta'rif</label>
-          <textarea id="sv-desc" required rows="3" placeholder="Sifatli va hamyonbop..." style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; outline: none; font-family: inherit; resize: vertical;"></textarea>
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label" for="sv-desc">Qisqacha ta'rif</label>
+          <textarea id="sv-desc" required rows="3" placeholder="Sifatli va hamyonbop xizmat turi..." class="form-textarea"></textarea>
         </div>
 
-        <div style="margin-bottom: 15px;">
-          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 5px;">Narx</label>
-          <input type="text" id="sv-price" required placeholder="Masalan: $35 / m² yoki Kelishilgan narx" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; outline: none; font-family: inherit;">
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label" for="sv-price">Narx</label>
+          <input type="text" id="sv-price" required placeholder="Masalan: $35 / m² yoki Kelishilgan narx" class="form-input">
         </div>
 
-        <div style="margin-bottom: 15px;">
-          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 5px;">Aksiya / Skitka (Ixtiyoriy)</label>
-          <input type="text" id="sv-promo" placeholder="Masalan: Aksiya yoki -20%" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; outline: none; font-family: inherit; color: #DC2626; font-weight: 600;">
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label" for="sv-promo">Aksiya / Chegirma (Ixtiyoriy)</label>
+          <input type="text" id="sv-promo" placeholder="Masalan: Aksiya yoki -20%" class="form-input" style="color: #DC2626; font-weight: 600;">
         </div>
 
-        <div style="margin-bottom: 20px;">
-          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 5px;">Rasm yuklash (Ixtiyoriy)</label>
-          <input type="file" id="sv-image" accept="image/png, image/jpeg, image/webp" style="width: 100%; padding: 8px; border: 1px dashed var(--border); border-radius: 6px; font-family: inherit;">
+        <div class="form-group" style="margin-bottom: 22px;">
+          <label class="form-label" for="sv-image">Rasm yuklash (Ixtiyoriy)</label>
+          <input type="file" id="sv-image" accept="image/png, image/jpeg, image/webp" class="form-input" style="padding: 8px;">
           <input type="hidden" id="sv-image-b64">
-          <div id="image-preview" style="margin-top: 10px; max-height: 120px; overflow: hidden; border-radius: 6px; display: none;"></div>
+          <div id="image-preview" style="margin-top: 10px; max-height: 130px; overflow: hidden; border-radius: 8px; display: none; border: 1px solid var(--border);"></div>
         </div>
 
-        <button type="submit" id="sv-submit-btn" style="width: 100%; padding: 12px; background: var(--navy); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Saqlash</button>
+        <button type="submit" id="sv-submit-btn" class="login-btn" style="margin-top: 0;">Saqlash</button>
       </form>
     </div>
   </div>
 
+  <!-- ══════════════════════════════════════════════════════════
+       FIREBASE SDK & CORE APPLICATION SCRIPT
+  ══════════════════════════════════════════════════════════ -->
   <script type="module">
-    // FIREBASE SDK
+    // FIREBASE SDK CONFIGURATION (STRICTLY PRESERVED)
     const firebaseConfig = {
       apiKey: "AIzaSyCzSFLTNJQItcW8RF1LteZ1pWi4aXX5ZJk",
       authDomain: "tripro-d6f16.firebaseapp.com",
@@ -1494,15 +2787,12 @@
       appId: "1:581495600669:web:da0d2727be542bec0178f4"
     };
 
-
-
-
     window.saveAdminPassword = async function() {
       if (!window._firebaseDB) { alert('Firebase ulanmagan'); return; }
       const newLogin = document.getElementById('setting-admin-login').value.trim();
       const newPw = document.getElementById('setting-admin-password').value.trim();
-      if (newLogin && newLogin.length < 3) { alert('Login kamida 3 belgidan iborat bo\'lishi kerak'); return; }
-      if (newPw && newPw.length < 4) { alert('Parol kamida 4 belgidan iborat bo\'lishi kerak'); return; }
+      if (newLogin && newLogin.length < 3) { alert('Login kamida 3 belgidan iborat bo'lishi kerak'); return; }
+      if (newPw && newPw.length < 4) { alert('Parol kamida 4 belgidan iborat bo'lishi kerak'); return; }
 
       const data = {};
       if (newLogin) data.login = newLogin;
@@ -1517,7 +2807,7 @@
           if (newPw) updates.password = newPw;
           await window._firebaseUpdate(window._firebaseRef(window._firebaseDB, 'adminSettings'), updates);
         }
-        alert('Login/parol muvaffaqiyatli o\'zgartirildi!');
+        alert('Login/parol muvaffaqiyatli o'zgartirildi!');
         document.getElementById('setting-admin-login').value = '';
         document.getElementById('setting-admin-password').value = '';
       } catch(e) {
@@ -1538,7 +2828,7 @@
         await window._firebaseSet(window._firebaseRef(window._firebaseDB, 'contactSettings'), data);
         localStorage.setItem('tripro_contact_settings', JSON.stringify(data));
         const msg = document.getElementById('contact-save-msg');
-        msg.style.display = 'inline-block';
+        msg.style.display = 'inline-flex';
         setTimeout(() => msg.style.display = 'none', 3000);
       } catch(e) {
         alert('Xatolik: ' + e.message);
@@ -1573,17 +2863,26 @@
 
     window.loginWithDefault = function() {
       sessionStorage.setItem('tripro_logged_in', 'true');
-      document.getElementById('login-screen').classList.add('hidden');
+      var ls = document.getElementById('login-screen');
+      if (ls) {
+        ls.style.display = 'none';
+        ls.classList.add('hidden');
+      }
       document.body.style.overflow = '';
     };
 
-    // Attach login event listeners (no onclick attributes)
-    document.getElementById('login-btn').addEventListener('click', window.handleLogin);
-    document.getElementById('login-default-link').addEventListener('click', window.loginWithDefault);
+    // Attach login event listener to ensure both inline and script handlers work
+    window.handleLogin = doLogin;
+    document.getElementById('login-btn')?.addEventListener('click', doLogin);
+    document.getElementById('login-default-link')?.addEventListener('click', window.loginWithDefault);
 
     window.logoutAdmin = function() {
       sessionStorage.removeItem('tripro_logged_in');
-      document.getElementById('login-screen').classList.remove('hidden');
+      var ls = document.getElementById('login-screen');
+      if (ls) {
+        ls.style.display = 'flex';
+        ls.classList.remove('hidden');
+      }
       document.getElementById('login-username').value = '';
       document.getElementById('login-password').value = '';
       document.getElementById('login-error').classList.remove('show');
@@ -1612,6 +2911,158 @@
       sidebar.classList.toggle('open');
     };
 
+    // ─── REAL DATA ANALYTICS UPDATER ───
+    window.updateDashboardAnalytics = function(inquiriesArray) {
+      if (!Array.isArray(inquiriesArray)) return;
+      const total = inquiriesArray.length;
+      const newCount = inquiriesArray.filter(i => i.status === 'new' || !i.status).length;
+      const processCount = inquiriesArray.filter(i => i.status === 'process').length;
+      const doneCount = inquiriesArray.filter(i => i.status === 'done' || i.status === 'read').length;
+
+      // 1. Update expanded stat badges
+      const elProcess = document.getElementById('stat-process-val');
+      if (elProcess) elProcess.textContent = processCount;
+
+      const elCountBadge = document.getElementById('table-inquiries-count');
+      if (elCountBadge) elCountBadge.textContent = total + " ta ariza";
+
+      const elDistTotal = document.getElementById('dist-total-badge');
+      if (elDistTotal) elDistTotal.textContent = total + " ariza";
+
+      // 2. Status distribution percentages & segmented bar
+      const newPct = total > 0 ? Math.round((newCount / total) * 100) : 0;
+      const processPct = total > 0 ? Math.round((processCount / total) * 100) : 0;
+      const donePct = total > 0 ? (100 - newPct - processPct) : 0;
+
+      const barNew = document.getElementById('dist-bar-new');
+      const barProcess = document.getElementById('dist-bar-process');
+      const barDone = document.getElementById('dist-bar-done');
+      if (barNew) barNew.style.width = newPct + '%';
+      if (barProcess) barProcess.style.width = processPct + '%';
+      if (barDone) barDone.style.width = donePct + '%';
+
+      const legNewVal = document.getElementById('legend-new-val');
+      const legNewPct = document.getElementById('legend-new-pct');
+      if (legNewVal) legNewVal.textContent = newCount;
+      if (legNewPct) legNewPct.textContent = newPct + '%';
+
+      const legProcVal = document.getElementById('legend-process-val');
+      const legProcPct = document.getElementById('legend-process-pct');
+      if (legProcVal) legProcVal.textContent = processCount;
+      if (legProcPct) legProcPct.textContent = processPct + '%';
+
+      const legDoneVal = document.getElementById('legend-done-val');
+      const legDonePct = document.getElementById('legend-done-pct');
+      if (legDoneVal) legDoneVal.textContent = doneCount;
+      if (legDonePct) legDonePct.textContent = donePct + '%';
+
+      // 3. Category Breakdown (AKFA, Glass, Wood, Other)
+      const akfaCount = inquiriesArray.filter(i => i.category === 'akfa').length;
+      const glassCount = inquiriesArray.filter(i => i.category === 'glass').length;
+      const woodCount = inquiriesArray.filter(i => i.category === 'wood').length;
+      const otherCount = total - (akfaCount + glassCount + woodCount);
+
+      const akfaPct = total > 0 ? Math.round((akfaCount / total) * 100) : 0;
+      const glassPct = total > 0 ? Math.round((glassCount / total) * 100) : 0;
+      const woodPct = total > 0 ? Math.round((woodCount / total) * 100) : 0;
+      const otherPct = total > 0 ? Math.round((otherCount / total) * 100) : 0;
+
+      const elAkfaCount = document.getElementById('cat-count-akfa');
+      const elAkfaBar = document.getElementById('cat-bar-akfa');
+      if (elAkfaCount) elAkfaCount.textContent = akfaCount + ` ta (${akfaPct}%)`;
+      if (elAkfaBar) elAkfaBar.style.width = akfaPct + '%';
+
+      const elGlassCount = document.getElementById('cat-count-glass');
+      const elGlassBar = document.getElementById('cat-bar-glass');
+      if (elGlassCount) elGlassCount.textContent = glassCount + ` ta (${glassPct}%)`;
+      if (elGlassBar) elGlassBar.style.width = glassPct + '%';
+
+      const elWoodCount = document.getElementById('cat-count-wood');
+      const elWoodBar = document.getElementById('cat-bar-wood');
+      if (elWoodCount) elWoodCount.textContent = woodCount + ` ta (${woodPct}%)`;
+      if (elWoodBar) elWoodBar.style.width = woodPct + '%';
+
+      const elOtherCount = document.getElementById('cat-count-other');
+      const elOtherBar = document.getElementById('cat-bar-other');
+      if (elOtherCount) elOtherCount.textContent = otherCount + ` ta (${otherPct}%)`;
+      if (elOtherBar) elOtherBar.style.width = otherPct + '%';
+
+      // 4. 7-Day Trend Chart from Real Timestamps
+      const trendContainer = document.getElementById('trend-bars-container');
+      if (trendContainer) {
+        const days = ['Yak', 'Dush', 'Sesh', 'Chor', 'Pay', 'Jum', 'Shan'];
+        const today = new Date();
+        const trendData = [];
+
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date(today);
+          d.setDate(d.getDate() - i);
+          const dayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0).getTime();
+          const dayEnd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59).getTime();
+
+          const dayCount = inquiriesArray.filter(inq => {
+            if (!inq.timestamp) return false;
+            const t = Number(inq.timestamp);
+            return t >= dayStart && t <= dayEnd;
+          }).length;
+
+          trendData.push({
+            dayLabel: days[d.getDay()],
+            dateStr: (d.getDate()) + '.' + (d.getMonth() + 1),
+            count: dayCount
+          });
+        }
+
+        const maxCount = Math.max(...trendData.map(t => t.count), 1);
+        trendContainer.innerHTML = trendData.map(td => {
+          const heightPct = Math.max(Math.round((td.count / maxCount) * 85), 6);
+          return `
+            <div class="trend-col" title="${td.dateStr}: ${td.count} ta ariza">
+              <span class="trend-count-badge">${td.count > 0 ? td.count : ''}</span>
+              <div class="trend-bar-fill" style="height: ${heightPct}%;"></div>
+              <span class="trend-label">${td.dayLabel}</span>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 5. Recent Activity Feed (Top 4 latest inquiries)
+      const activityFeed = document.getElementById('activity-feed-list');
+      if (activityFeed) {
+        if (!inquiriesArray.length) {
+          activityFeed.innerHTML = '<div style="text-align:center; padding:15px; color:var(--text-muted); font-size:0.8rem;">Arizalar mavjud emas</div>';
+        } else {
+          const recentList = inquiriesArray.slice(0, 4);
+          activityFeed.innerHTML = recentList.map(inq => {
+            let catName = inq.category === 'akfa' ? 'AKFA Rom' : (inq.category === 'glass' ? 'Oynak' : (inq.category === 'wood' ? 'Yog'och' : 'Ariza'));
+            let timeStr = 'Yangi';
+            try {
+              if (inq.timestamp) {
+                const diffMs = Date.now() - Number(inq.timestamp);
+                const diffMin = Math.floor(diffMs / 60000);
+                const diffHour = Math.floor(diffMin / 60);
+                if (diffMin < 60) timeStr = diffMin > 0 ? diffMin + ' daqiqa oldin' : 'Hozirgina';
+                else if (diffHour < 24) timeStr = diffHour + ' soat oldin';
+                else timeStr = Math.floor(diffHour / 24) + ' kun oldin';
+              }
+            } catch(e) {}
+
+            return `
+              <div class="activity-item">
+                <div class="activity-icon-wrap lead">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-title">${inq.name || 'Mijoz'} — ${catName}</div>
+                  <div class="activity-time">${timeStr}</div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+    };
+
     window.loadInquiries = function(inquiriesArray) {
       if (!inquiriesArray) {
         inquiriesArray = JSON.parse(localStorage.getItem('tripro_inquiries') || '[]');
@@ -1624,17 +3075,21 @@
       const doneCount = inquiriesArray.filter(i => i.status === 'done' || i.status === 'read').length;
       const statCards = document.querySelectorAll('.stat-value');
       
+      // Update first 3 cards as originally written
       if (statCards.length >= 3) {
         statCards[0].textContent = newCount;
         statCards[1].textContent = doneCount;
         statCards[2].textContent = inquiriesArray.length;
       }
+
+      // Update expanded analytics with real data
+      window.updateDashboardAnalytics(inquiriesArray);
       
       if (!inquiriesArray.length) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 30px; color: var(--text-muted);">Arizalar topilmadi. Saytdan xabar yuborilganda bu yerda ko\'rinadi.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 36px; color: var(--text-muted); font-size:0.9rem;">Hozircha arizalar mavjud emas. Saytdan xabar yuborilganda bu yerda avtomatik paydo bo'ladi.</td></tr>';
       } else {
         tbody.innerHTML = inquiriesArray.map(inq => {
-          let dateStr = 'Sana noma\'lum';
+          let dateStr = 'Sana noma'lum';
           try {
             const d = new Date(inq.timestamp || Date.now());
             if (!isNaN(d.getTime())) {
@@ -1642,7 +3097,7 @@
               const m = String(d.getMonth() + 1).padStart(2, '0');
               const day = String(d.getDate()).padStart(2, '0');
               const tt = d.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute:'2-digit' });
-              dateStr = day + '.' + m + '.' + y + ' <span class="date-time">' + tt + '</span>';
+              dateStr = day + '.' + m + '.' + y + ' <span class="date-time" style="color:var(--text-light); font-size:0.8em; margin-left:4px;">' + tt + '</span>';
             }
           } catch(e) {}
           
@@ -1653,29 +3108,71 @@
           
           const catName = inq.category === 'akfa' ? 'AKFA Rom' : 
                           inq.category === 'glass' ? 'Oynak' : 
-                          inq.category === 'wood' ? 'Yog\'och' : 'Boshqa';
+                          inq.category === 'wood' ? 'Yog'och' : 'Boshqa';
           
           let shortId = inq.id ? String(inq.id).substring(String(inq.id).length - 4) : Math.floor(Math.random()*10000);
           if (inq.id && inq.id.length < 4) shortId = inq.id;
+
+          const customerInitial = (inq.name && inq.name.trim().length > 0) ? inq.name.trim().charAt(0).toUpperCase() : 'M';
           
           return `
-            <tr>
-              <td style="color: var(--text-muted); font-size:0.85em;">#${shortId}</td>
-              <td style="font-weight: 500;">${inq.name || 'Noma\'lum'}</td>
-              <td><a href="tel:${inq.phone}" style="color:var(--navy); text-decoration:none;">${inq.phone || 'Noma\'lum'}</a></td>
-              <td>${catName}</td>
-              <td style="font-size:0.9em; color:var(--text-muted);">${dateStr}</td>
-              <td><span class="status-badge ${statusClass}" onclick="changeStatus('${inq.id}')" style="cursor:pointer;" title="Holatni o'zgartirish">${statusText}</span></td>
+            <tr class="searchable-row" data-status="${inq.status || 'new'}">
+              <td style="font-weight: 600; color: var(--text-muted); font-size:0.85rem; font-family:'Montserrat',sans-serif;">#${shortId}</td>
               <td>
-                <div class="action-btns">
-                  <button class="btn-icon" onclick="changeStatus('${inq.id}')" title="Holatni almashtirish"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></button>
-                  <button class="btn-icon" onclick="deleteInquiry('${inq.id}')" title="O'chirish"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                <div class="customer-cell">
+                  <div class="customer-avatar">${customerInitial}</div>
+                  <div class="customer-details">
+                    <span class="customer-name">${inq.name || 'Noma'lum'}</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <a href="tel:${inq.phone}" class="phone-link">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  <span>${inq.phone || 'Noma'lum'}</span>
+                </a>
+              </td>
+              <td><span class="category-badge-pill">${catName}</span></td>
+              <td style="font-size:0.85rem; color:var(--text-secondary);">${dateStr}</td>
+              <td>
+                <span class="status-badge ${statusClass}" onclick="changeStatus('${inq.id}')" title="Holatni almashtirish uchun bosing">${statusText}</span>
+              </td>
+              <td style="text-align: right;">
+                <div class="action-btns" style="justify-content: flex-end;">
+                  <button class="btn-icon" onclick="changeStatus('${inq.id}')" title="Holatni almashtirish">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                  </button>
+                  <button class="btn-icon danger" onclick="deleteInquiry('${inq.id}')" title="O'chirish">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  </button>
                 </div>
               </td>
             </tr>
           `;
         }).join('');
       }
+    };
+
+    // Filter table rows by status pills
+    window.filterInquiriesTable = function(status, btnEl) {
+      document.querySelectorAll('.table-filter-pill').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      const rows = document.querySelectorAll('#inquiries-tbody tr');
+      rows.forEach(r => {
+        if (!r.dataset.status) return;
+        const rowStatus = r.dataset.status;
+        if (status === 'all') {
+          r.style.display = '';
+        } else if (status === 'new' && (rowStatus === 'new' || !rowStatus)) {
+          r.style.display = '';
+        } else if (status === 'process' && rowStatus === 'process') {
+          r.style.display = '';
+        } else if (status === 'done' && (rowStatus === 'done' || rowStatus === 'read')) {
+          r.style.display = '';
+        } else {
+          r.style.display = 'none';
+        }
+      });
     };
 
     window.changeStatus = async function(id) {
@@ -1776,7 +3273,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Export globals (needed for login check too)
+        // Export globals
         window._firebaseDB = db;
         window._firebaseRef = ref;
         window._firebaseUpdate = update;
@@ -1787,7 +3284,6 @@
         window._firebaseGet = get;
         window._firebaseChild = child;
 
-        // If lightweight (just for login check), stop here
         if (lightweight) return;
 
         // Setup real-time listener for INQUIRIES
@@ -1817,19 +3313,19 @@
           { category: 'akfa', title: 'AKFA Eshiklari', description: 'Kirish va ichki eshiklar uchun mustahkam va chiroyli AKFA romlar.', price: '$40 / m²' },
           { category: 'akfa', title: 'Boshqa turdagi romlar', description: 'Boshqa brend nomidagi sifatli plastik va alyumin romlar.', price: '$38 / m²' },
           { category: 'akfa', title: 'Boshqa turdagi eshiglar', description: 'Boshqa brend nomidagi sifatli plastik va alyumin eshiglar. ', price: '$50 / m²' },
-          { category: 'akfa', title: 'Qo\'shimcha Xizmatlar', description: 'Romlarni ta\'mirlash, moslash, qo\'shimcha aksessuarlar o\'rnatish xizmatlari.', price: 'Narx so\'rash' },
-          { category: 'glass', title: 'Oynak Kesish', description: 'Har qanday o\'lcham va shaklda oynak kesish xizmati. Aniq va tez bajariladi.', price: '$5 / dona' },
+          { category: 'akfa', title: 'Qo'shimcha Xizmatlar', description: 'Romlarni ta'mirlash, moslash, qo'shimcha aksessuarlar o'rnatish xizmatlari.', price: 'Narx so'rash' },
+          { category: 'glass', title: 'Oynak Kesish', description: 'Har qanday o'lcham va shaklda oynak kesish xizmati. Aniq va tez bajariladi.', price: '$5 / dona' },
           { category: 'glass', title: 'Stiklopaket Qilish', description: 'Ikki va uch qatlamli stiklopaket tayyorlash. Issiqlik va shovqin izolyatsiyasi.', price: '$20 / m²' },
-          { category: 'glass', title: 'Germetika Ishlari', description: 'Romlar atrofini germetik yopish. Suv o\'tkazmaydigan professional germetika.', price: '$3 / m/p' },
-          { category: 'glass', title: 'Shatlanka O\'rnatish', description: 'Katta o\'lchamdagi oynalarga shatlanka o\'rnatish xizmati.', price: '$15 / dona' },
+          { category: 'glass', title: 'Germetika Ishlari', description: 'Romlar atrofini germetik yopish. Suv o'tkazmaydigan professional germetika.', price: '$3 / m/p' },
+          { category: 'glass', title: 'Shatlanka O'rnatish', description: 'Katta o'lchamdagi oynalarga shatlanka o'rnatish xizmati.', price: '$15 / dona' },
           { category: 'glass', title: 'Oynak Almashtirish', description: 'Singan yoki eskirgan oynakni tez almashtirish. Sifat kafolati bilan.', price: '$10 dan' },
-          { category: 'glass', title: 'Kalyonniy Oynalar', description: 'Qalin va mustahkam bo\'lgan sifatli kalyonniy oynalar ', price: '$25 / m²' },
-          { category: 'wood', title: 'Asalari Yashiklari', description: 'Professional asalari uchun maxsus yashiklar. Qulay va bardoshli yog\'och materialdan.', price: '$25 / dona' },
+          { category: 'glass', title: 'Kalyonniy Oynalar', description: 'Qalin va mustahkam bo'lgan sifatli kalyonniy oynalar ', price: '$25 / m²' },
+          { category: 'wood', title: 'Asalari Yashiklari', description: 'Professional asalari uchun maxsus yashiklar. Qulay va bardoshli yog'och materialdan.', price: '$25 / dona' },
           { category: 'wood', title: 'Randetal', description: 'Sifatli asalari yashiki uchun maxsus taxta.Faqat zagatovkasi.', price: '$10 / dona' },
-          { category: 'wood', title: 'Karmushka', description: 'Asalari yashiklariga maxsus karmushkalar. Aniq o\'lchamda ishlab chiqarish.', price: '$5 / dona' },
+          { category: 'wood', title: 'Karmushka', description: 'Asalari yashiklariga maxsus karmushkalar. Aniq o'lchamda ishlab chiqarish.', price: '$5 / dona' },
           { category: 'wood', title: 'Yashik Tagi', description: 'Asalari yashiklariga mos tagliklar. Mustahkam va yengil konstruksiya.', price: '$8 / dona' },
-          { category: 'wood', title: 'Asalari Uyasi (Nuc)', description: 'Yangi oilalar uchun kichik asalari uylari. Standart o\'lchamda.', price: '$18 / dona' },
-          { category: 'wood', title: 'Maxsus Buyurtmalar', description: 'O\'zingizning loyihangiz asosida individual yog\'och mahsulotlar ishlab chiqarish.', price: 'Narx so\'rash' },
+          { category: 'wood', title: 'Asalari Uyasi (Nuc)', description: 'Yangi oilalar uchun kichik asalari uylari. Standart o'lchamda.', price: '$18 / dona' },
+          { category: 'wood', title: 'Maxsus Buyurtmalar', description: 'O'zingizning loyihangiz asosida individual yog'och mahsulotlar ishlab chiqarish.', price: 'Narx so'rash' },
           { category: 'portfolio', title: 'AKFA Plastik Rom', description: 'Bajarilgan loyiha', price: 'Portfolio' },
           { category: 'portfolio', title: 'AKFA Alyumin Rom', description: 'Bajarilgan loyiha', price: 'Portfolio' },
           { category: 'portfolio', title: 'AKFA Eshiklari', description: 'Bajarilgan loyiha', price: 'Portfolio' },
@@ -1854,11 +3350,9 @@
              window.cmsServices = fbServices;
              window.renderServices();
           } else {
-             // Agar Firebase bo'sh bo'lsa (yangi arxiv), default namuna yordamida uni to'ldiramiz.
              window.cmsServices = [];
              window.renderServices();
              
-             // Bir martalik avto-sayflash amaliyoti (Faqatgina ma'lumotlar mavjud bo'lmasa ishlaydi)
              defaultServices.forEach(sv => {
                const newRef = push(ref(db, 'services'));
                set(newRef, sv).catch(console.error);
@@ -1887,7 +3381,6 @@
             };
             set(homeContentRef, initialHomeData).catch(console.error);
 
-            // Seed initial bento blocks to services node
             const bentoSeeds = [
               { category: "home", label: "AKFA Romlar", title: "AKFA Romlar", desc: "Alyumin, plastik va balkon AKFA romlarini professional o'rnatish. Yuqori sifat va kafolat.", price: "$35 / m²" },
               { category: "home", label: "Oynak Xizmatlari", title: "Oynak Xizmatlari", desc: "Oynak kesish, stiklopaket qilish va germetika xizmatlari. Tez va sifatli.", price: "$5 dan boshlab" },
@@ -1919,12 +3412,10 @@
         reader.onload = function(evt) {
           const img = new Image();
           img.onload = function() {
-            // Canvas orqali rasmni siqish
             const canvas = document.createElement('canvas');
             let width = img.width;
             let height = img.height;
             
-            // Maksimal o'lcham 800px qilib belgilaymiz
             const MAX_SIZE = 800;
             if (width > height) {
               if (width > MAX_SIZE) {
@@ -1943,16 +3434,12 @@
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
             
-            // Sifatni 0.7 (70%) qilib belgilaymiz - bu hajmni keskin kamaytiradi
             const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
             
             document.getElementById('sv-image-b64').value = compressedBase64;
             const preview = document.getElementById('image-preview');
             preview.innerHTML = `<img src="${compressedBase64}" style="width:100%; height:100%; display:block; object-fit:cover;">`;
             preview.style.display = 'block';
-            
-            console.log('Original size:', (evt.target.result.length / 1024).toFixed(2), 'KB');
-            console.log('Compressed size:', (compressedBase64.length / 1024).toFixed(2), 'KB');
           };
           img.src = evt.target.result;
         };
@@ -1968,7 +3455,7 @@
       document.getElementById('tab-orders').style.display = tabName === 'orders' ? 'block' : 'none';
       
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-      linkEl.classList.add('active');
+      if (linkEl) linkEl.classList.add('active');
 
       // Close sidebar on mobile after selection
       if (window.innerWidth <= 1024) {
@@ -1978,24 +3465,27 @@
     };
 
     window.filterServices = function(cat) {
-      // Hide homepage editor, show services grid
       document.getElementById('homepage-editor').style.display = 'none';
       document.getElementById('services-grid').style.display = 'grid';
-      document.querySelectorAll('#svc-filter-bar button').forEach(b => b.style.background = '');
-      document.getElementById(`filter-btn-${cat}`).style.background = 'var(--navy)';
-      document.getElementById(`filter-btn-${cat}`).style.color = 'white';
+      document.querySelectorAll('#svc-filter-bar button').forEach(b => {
+        b.classList.remove('primary');
+      });
+      const targetBtn = document.getElementById(`filter-btn-${cat}`);
+      if (targetBtn) targetBtn.classList.add('primary');
+
       window.currentServiceFilter = cat;
       window.renderServices();
     };
 
     window.showHomepageEditor = function() {
-      // Load current Firebase data into fields
       document.getElementById('homepage-editor').style.display = 'block';
       document.getElementById('services-grid').style.display = 'grid';
-      // Highlight active button
-      document.querySelectorAll('#svc-filter-bar button').forEach(b => b.style.background = '');
-      document.getElementById('filter-btn-home').style.background = 'var(--navy)';
-      document.getElementById('filter-btn-home').style.color = 'white';
+
+      document.querySelectorAll('#svc-filter-bar button').forEach(b => {
+        b.classList.remove('primary');
+      });
+      const homeBtn = document.getElementById('filter-btn-home');
+      if (homeBtn) homeBtn.classList.add('primary');
 
       window.currentServiceFilter = 'home';
       window.renderServices();
@@ -2004,7 +3494,6 @@
         window._firebaseOnValue(window._firebaseRef(window._firebaseDB, 'homeContent'), (snap) => {
           if (snap.exists()) {
             const d = snap.val();
-            // Hero
             if (d.hero) {
               if (d.hero.badge)  document.getElementById('hc-badge').value  = d.hero.badge;
               if (d.hero.title)  document.getElementById('hc-title').value  = d.hero.title;
@@ -2012,7 +3501,6 @@
               if (d.hero.title2) document.getElementById('hc-title2').value = d.hero.title2;
               if (d.hero.desc)   document.getElementById('hc-desc').value   = d.hero.desc;
             }
-            // Stats
             if (d.stats) {
               if (d.stats.s1) { document.getElementById('hc-s1-num').value = d.stats.s1.num || ''; document.getElementById('hc-s1-lbl').value = d.stats.s1.label || ''; }
               if (d.stats.s2) { document.getElementById('hc-s2-num').value = d.stats.s2.num || ''; document.getElementById('hc-s2-lbl').value = d.stats.s2.label || ''; }
@@ -2051,7 +3539,7 @@
       try {
         await window._firebaseSet(window._firebaseRef(window._firebaseDB, 'homeContent'), data);
         const msg = document.getElementById('hc-save-msg');
-        msg.style.display = 'block';
+        msg.style.display = 'inline-flex';
         setTimeout(() => msg.style.display = 'none', 3000);
       } catch(e) {
         console.error(e);
@@ -2125,10 +3613,8 @@
 
       try {
         if (id) {
-          // Edit existing
           await window._firebaseUpdate(window._firebaseRef(window._firebaseDB, `services/${id}`), data);
         } else {
-          // Add new
           const newRef = window._firebasePush(window._firebaseRef(window._firebaseDB, 'services'));
           await window._firebaseSet(newRef, data);
         }
@@ -2153,13 +3639,11 @@
         const push = window._firebasePush;
         const set = window._firebaseSet;
 
-        // 1. Delete existing category: 'home' services
         const homeServices = window.cmsServices.filter(s => s.category === 'home');
         for (const s of homeServices) {
            await remove(ref(db, `services/${s.id}`));
         }
 
-        // 2. Add standard seeds
         const seeds = [
           { category: "home", label: "AKFA Romlar", title: "AKFA Romlar", description: "Alyumin, plastik va balkon AKFA romlarini professional o'rnatish. Yuqori sifat va kafolat.", price: "$35 / m²" },
           { category: "home", label: "Oynak Xizmatlari", title: "Oynak Xizmatlari", description: "Oynak kesish, stiklopaket qilish va germetika xizmatlari. Tez va sifatli.", price: "$5 dan boshlab" },
@@ -2194,8 +3678,12 @@
          filtered = window.cmsServices.filter(s => s.category === window.currentServiceFilter);
       }
 
+      // Update stat card for total services
+      const elStatSvc = document.getElementById('stat-services-val');
+      if (elStatSvc) elStatSvc.textContent = window.cmsServices.length;
+
       if(filtered.length === 0) {
-        grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-muted); background: white; border-radius: 12px; border: 1px dashed var(--border);">Hozircha xizmatlar qo'shilmagan.</div>`;
+        grid.innerHTML = `<div style="grid-column: 1/-1; padding: 48px; text-align: center; color: var(--text-muted); background: white; border-radius: var(--radius-lg); border: 1.5px dashed var(--border);">Hozircha xizmatlar qo'shilmagan. Yuqoridagi "+ Yangi Xizmat" tugmasi orqali qo'shishingiz mumkin.</div>`;
         return;
       }
 
@@ -2203,51 +3691,71 @@
         let catText = sv.category === 'home' ? 'Bosh sahifa' : (sv.category === 'akfa' ? 'AKFA Romlar' : (sv.category === 'glass' ? 'Oynak Xizmatlari' : (sv.category === 'wood' ? 'Taxta Cex' : 'Portfolio')));
         
         let thumbContent = 
-          sv.category === 'home' ? `<svg viewBox="0 0 24 24" stroke="#10B981" style="width:60px; height:60px; fill:none; stroke-width:2;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>` :
-          sv.category === 'akfa' ? `<svg viewBox="0 0 24 24" stroke="#DC2626" style="width:60px; height:60px; fill:none; stroke-width:2;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="12" y1="3" x2="12" y2="21" /><line x1="3" y1="12" x2="21" y2="12" /></svg>` :
-          sv.category === 'glass' ? `<svg viewBox="0 0 24 24" stroke="#0891B2" style="width:60px; height:60px; fill:none; stroke-width:2;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>` : 
-          sv.category === 'portfolio' ? `<svg viewBox="0 0 24 24" stroke="#D4AF37" style="width:60px; height:60px; fill:none; stroke-width:2;"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"></path></svg>` :
-          `<svg viewBox="0 0 24 24" stroke="#92400E" style="width:60px; height:60px; fill:none; stroke-width:2;"><path d="M20 14c0 4.418-3.582 8-8 8S4 18.418 4 14C4 9.582 12 2 12 2s8 7.582 8 12z"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="12" y1="9" x2="12" y2="15"/></svg>`;
+          sv.category === 'home' ? `<svg viewBox="0 0 24 24" stroke="#10B981" style="width:52px; height:52px; fill:none; stroke-width:2;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>` :
+          sv.category === 'akfa' ? `<svg viewBox="0 0 24 24" stroke="#DC2626" style="width:52px; height:52px; fill:none; stroke-width:2;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="12" y1="3" x2="12" y2="21" /><line x1="3" y1="12" x2="21" y2="12" /></svg>` :
+          sv.category === 'glass' ? `<svg viewBox="0 0 24 24" stroke="#0891B2" style="width:52px; height:52px; fill:none; stroke-width:2;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>` : 
+          sv.category === 'portfolio' ? `<svg viewBox="0 0 24 24" stroke="#D4AF37" style="width:52px; height:52px; fill:none; stroke-width:2;"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"></path></svg>` :
+          `<svg viewBox="0 0 24 24" stroke="#D97706" style="width:52px; height:52px; fill:none; stroke-width:2;"><path d="M20 14c0 4.418-3.582 8-8 8S4 18.418 4 14C4 9.582 12 2 12 2s8 7.582 8 12z"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="12" y1="9" x2="12" y2="15"/></svg>`;
           
         if (sv.imageB64) {
-          thumbContent = `<img src="${sv.imageB64}">`;
+          thumbContent = `<img src="${sv.imageB64}" alt="${sv.title || ''}">`;
         }
 
-        let promoBadge = sv.promo ? `<div style="position:absolute; top:10px; right:10px; background:#DC2626; color:white; font-size:0.7rem; font-weight:700; padding:4px 8px; border-radius:4px; text-transform:uppercase; z-index:2;">${sv.promo}</div>` : '';
+        let promoBadge = sv.promo ? `<div style="position:absolute; top:14px; right:14px; background:#DC2626; color:white; font-size:0.68rem; font-weight:700; padding:4px 8px; border-radius:6px; text-transform:uppercase; z-index:2; box-shadow:0 2px 8px rgba(220,38,38,0.3);">${sv.promo}</div>` : '';
 
         return `
-          <div class="service-card" style="position:relative;">
+          <div class="service-card">
             ${promoBadge}
             <span class="service-cat">${catText}</span>
             <div class="service-thumb">
               ${thumbContent}
             </div>
-            <div style="flex:1;">
-              <h3 style="margin:0 0 10px 0; color:var(--navy); font-size:1.1rem;">${sv.title || 'Noma\'lum'}</h3>
-              <p style="margin:0 0 15px 0; color:var(--text-muted); font-size:0.85rem; line-height:1.4;">${sv.description || ''}</p>
-              <div style="font-weight:700; color:var(--navy); padding:5px 12px; background:var(--off-white); display:inline-block; border-radius:4px;">${sv.price || ''}</div>
+            <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between;">
+              <div>
+                <h3 style="margin:0 0 8px 0; color:var(--navy); font-size:1.05rem; font-family:'Montserrat',sans-serif; font-weight:700;">${sv.title || 'Noma'lum'}</h3>
+                <p style="margin:0 0 12px 0; color:var(--text-secondary); font-size:0.85rem; line-height:1.45;">${sv.description || ''}</p>
+              </div>
+              <div class="service-price-pill">${sv.price || ''}</div>
             </div>
-            <div style="display:flex; gap:10px; margin-top:10px; border-top:1px solid var(--border); padding-top:10px;">
-              <button onclick="openServiceModal('${sv.id}')" style="flex:1; padding:8px; background:var(--navy); color:white; border:none; border-radius:4px; cursor:pointer;">Tahrirlash</button>
-              <button onclick="deleteService('${sv.id}')" style="padding:8px; background:#FEE2E2; color:#DC2626; border:none; border-radius:4px; cursor:pointer;">O'chirish</button>
+            <div style="display:flex; gap:8px; margin-top:8px; border-top:1px solid var(--border-subtle); padding-top:12px;">
+              <button onclick="openServiceModal('${sv.id}')" class="btn-export" style="flex:1; padding:8px 12px; font-size:0.8rem; justify-content:center;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                <span>Tahrirlash</span>
+              </button>
+              <button onclick="deleteService('${sv.id}')" style="padding:8px 12px; background:var(--danger-bg); color:var(--danger); border:1px solid var(--danger-border); border-radius:var(--radius-sm); font-weight:600; font-size:0.8rem; cursor:pointer; display:inline-flex; align-items:center; gap:4px; transition:var(--transition);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                <span>O'chirish</span>
+              </button>
             </div>
           </div>
         `;
       }).join('');
     };
 
-    // Initialize on file load
+    // ─── INITIALIZATION ON FILE LOAD ───
     window.onload = function() {
+      // Set current date in topbar
+      try {
+        const now = new Date();
+        const months = ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun', 'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'];
+        const dateText = now.getDate() + '-' + months[now.getMonth()] + ', ' + now.getFullYear();
+        const dateEl = document.getElementById('topbar-current-date');
+        if (dateEl) dateEl.textContent = dateText;
+      } catch(e) {}
+
       // Check if already logged in (from same browser session)
       var loginScreen = document.getElementById('login-screen');
       try {
         if (sessionStorage.getItem('tripro_logged_in') === 'true') {
-          loginScreen.style.display = 'none';
+          if (loginScreen) {
+            loginScreen.style.display = 'none';
+            loginScreen.classList.add('hidden');
+          }
           document.body.style.overflow = '';
         }
       } catch (e) {}
 
-      // Clear legacy dummy data if length is 3 (was hardcoded)
+      // Clear legacy dummy data if length is 3
       try {
          const existing = JSON.parse(localStorage.getItem('tripro_inquiries') || '[]');
          if(existing.length === 3 && existing[0].name === "Aziz Rahimov") {
@@ -2257,13 +3765,13 @@
       
       const tbody = document.getElementById('inquiries-tbody');
       if (tbody) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 30px; color: var(--text-muted);">Firebase bilan bog\'lanilmoqda...</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 30px; color: var(--text-muted);">Firebase bilan bog'lanilmoqda...</td></tr>';
       }
       
-      // Start Firebase init in background (for login check + data loading)
+      // Start Firebase init in background
       initFirebase();
       
-      // Load contact settings from cache (Firebase will update when ready)
+      // Load contact settings
       window.loadContactSettings();
 
       // Load Bot Orders from API
@@ -2273,20 +3781,18 @@
     // ─── BOT ORDERS (API) ───
     const API_BASE = 'https://tripro.onrender.com';
 
-    // ─── KEEP-ALIVE PING (har 10 daqiqada Render'ni uxlatmaslik uchun) ───
+    // ─── KEEP-ALIVE PING (Har 10 daqiqada Render'ni uyg'oq tutish uchun) ───
     setInterval(() => {
       fetch('https://tripro.onrender.com/api/orders/pending', { mode: 'cors' }).catch(() => {});
-    }, 10 * 60 * 1000); // 10 daqiqa
+    }, 10 * 60 * 1000);
 
     window.formatInfoBadges = function(info) {
       if (!info) return '<span style="color:var(--text-muted);font-size:0.75rem;">—</span>';
 
-      // Ma'lum tartibdagi kalitlar bilan ajratamiz (uzunrog'i birinchi bo'lishi kerak)
       const knownKeys = ['Oyna Rangi', 'Material', 'Oyna', 'Turi', 'Profil'];
       const pairs = [];
       let remaining = info;
 
-      // Har bir kalitni ketma-ket qidiramiz
       for (const key of knownKeys) {
         const pattern = new RegExp(key + ':\\s*([^,]+(?:,\\s*(?!' + knownKeys.join('|') + ')[^,]+)*)', 'i');
         const match = pattern.exec(remaining);
@@ -2296,7 +3802,6 @@
         }
       }
 
-      // Tartibini to'g'irlash: botdagi ketma-ketlik
       const order = ['Material', 'Oyna', 'Oyna Rangi', 'Turi', 'Profil'];
       pairs.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key));
 
@@ -2344,19 +3849,23 @@
           <span class="prop-val ${cls}">${p.val}</span>
         </div>`;
       }).join('')}</div>`;
-    }
+    };
 
     window.loadBotOrders = async function() {
       try {
-        // Load Akfa Orders
         const ordRes = await fetch(API_BASE + '/api/orders');
         if (!ordRes.ok) throw new Error('API error');
         const orders = await ordRes.json();
         const tbody = document.getElementById('orders-tbody');
+
+        // Update orders stat card
+        const elStatOrd = document.getElementById('stat-orders-val');
+        if (elStatOrd && Array.isArray(orders)) elStatOrd.textContent = orders.length;
+
         if (!tbody) return;
         
         if (orders.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px;">Buyurtmalar mavjud emas</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">Buyurtmalar mavjud emas</td></tr>';
         } else {
           tbody.innerHTML = orders.map(o => {
             const ost = o.status || 'pending';
@@ -2367,12 +3876,14 @@
                 : 'background: rgba(245, 158, 11, 0.1); color: #F59E0B; border-color: rgba(245, 158, 11, 0.2);';
             return `
               <tr class="searchable-row">
-                <td style="font-weight:600; color:var(--gold);">#${o.order_id}</td>
-                <td class="search-target">${o.name || ''} ${o.surname || ''}</td>
+                <td style="font-weight:700; color:var(--gold); font-family:'Montserrat',sans-serif;">#${o.order_id}</td>
+                <td class="search-target" style="font-weight:600; color:var(--navy);">${o.name || ''} ${o.surname || ''}</td>
                 <td>${formatInfoBadges(o.info)}</td>
-                <td>${o.dimensions || ''}</td>
-                <td>${/^\d+$/.test(String(o.quantity || 1)) ? (o.quantity || 1) + ' ta' : (o.quantity || 1)}</td>
-                <td class="search-target">${o.phone || ''}</td>
+                <td style="font-size:0.85rem;">${o.dimensions || ''}</td>
+                <td style="font-weight:600;">${/^\d+$/.test(String(o.quantity || 1)) ? (o.quantity || 1) + ' ta' : (o.quantity || 1)}</td>
+                <td class="search-target">
+                  <a href="tel:${o.phone}" class="phone-link">${o.phone || ''}</a>
+                </td>
                 <td>
                   <select onchange="updateOrderStatus('${o.order_id}', this.value)" class="status-select-dropdown" style="${statusStyle}">
                     <option value="pending" ${ost === 'pending' ? 'selected' : ''}>⏳ Kutilmoqda</option>
@@ -2382,9 +3893,9 @@
                     <option value="ready" ${ost === 'ready' ? 'selected' : ''}>4-bosqich: 🎉 Tayyor</option>
                   </select>
                 </td>
-                <td>
-                  <div class="action-btns">
-                    <button title="ID yuborish" class="btn-export" onclick="sendOrderId('${o.order_id}')" style="font-size: 0.8rem; padding: 6px 12px; min-height: unset; gap: 4px; display: inline-flex; align-items: center; border-radius: 8px;">
+                <td style="text-align: right;">
+                  <div class="action-btns" style="justify-content: flex-end;">
+                    <button title="ID yuborish" class="btn-export" onclick="sendOrderId('${o.order_id}')" style="font-size: 0.78rem; padding: 6px 12px; gap: 4px; display: inline-flex; align-items: center; border-radius: 8px;">
                       <span>✉️ ID Yuborish</span>
                     </button>
                   </div>
@@ -2402,7 +3913,7 @@
         if (!mtbody) return;
         
         if (mnts.length === 0) {
-          mtbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">Profilaktika talablari yo\'q</td></tr>';
+          mtbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">Profilaktika talablari yo'q</td></tr>';
         } else {
           mtbody.innerHTML = mnts.map(m => {
             const mst = m.status || 'pending';
@@ -2413,10 +3924,10 @@
                 : 'background: rgba(245, 158, 11, 0.1); color: #F59E0B; border-color: rgba(245, 158, 11, 0.2);';
             return `
               <tr class="searchable-row">
-                <td style="font-size:0.8rem;">${m.created_at ? m.created_at.split(' ')[0] : ''}</td>
-                <td class="search-target">${m.name || ''}</td>
-                <td style="font-size:0.8rem;">${m.problem || ''}</td>
-                <td><span style="font-size:0.7rem; background:#f0f0f0; padding:2px 6px; border-radius:4px;">${m.type==='auto'?'🤖 Auto':'👤 Manuel'}</span></td>
+                <td style="font-size:0.85rem; color:var(--text-secondary);">${m.created_at ? m.created_at.split(' ')[0] : ''}</td>
+                <td class="search-target" style="font-weight:600; color:var(--navy);">${m.name || ''}</td>
+                <td style="font-size:0.85rem;">${m.problem || ''}</td>
+                <td><span class="category-badge-pill">${m.type==='auto'?'🤖 Auto':'👤 Manuel'}</span></td>
                 <td>
                   <select onchange="updateMntStatus(${m.id}, this.value)" class="status-select-dropdown" style="${statusStyle}">
                     <option value="pending" ${mst === 'pending' ? 'selected' : ''}>⏳ Kutilmoqda</option>
@@ -2432,7 +3943,7 @@
         console.error("Fetch error:", e);
         const tbody = document.getElementById('orders-tbody');
         if (tbody) {
-          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px; color:#DC2626;">API ga ulanib bo\'lmadi.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:24px; color:#DC2626;">API ga ulanib bo'lmadi.</td></tr>';
         }
       }
     };
@@ -2452,7 +3963,7 @@
     };
 
     window.sendOrderId = async function(oid) {
-       if(!confirm('Mijozga ID raqamini va yo\'riqnomani yubormoqchimisiz?')) return;
+       if(!confirm('Mijozga ID raqamini va yo'riqnomani yubormoqchimisiz?')) return;
        try {
          const res = await fetch(API_BASE + `/api/orders/${oid}/send-id`, {
            method: 'POST'
@@ -2479,9 +3990,9 @@
        }
     };
 
-    // SEARCH LOGIC
+    // SEARCH LOGIC (Works across inquiries, bot orders, and maintenance)
     window.handleGlobalSearch = function() {
-      const q = document.getElementById('global-search').value.toLowerCase();
+      const q = document.getElementById('global-search').value.toLowerCase().trim();
       const rows = document.querySelectorAll('.searchable-row');
       rows.forEach(row => {
         const text = row.innerText.toLowerCase();
@@ -2489,10 +4000,8 @@
       });
     };
 
-    // Auto load on tab click or startup
-    setInterval(loadBotOrders, 30000); // 30s da yangilash
-
-    // The duplicate onload has been merged into the main window.onload above.
+    // Auto refresh bot orders every 30 seconds
+    setInterval(loadBotOrders, 30000);
 
   </script>
 </body>
